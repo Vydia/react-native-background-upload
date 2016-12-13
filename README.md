@@ -1,4 +1,4 @@
-# react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-camera.svg)](https://badge.fury.io/js/react-native-camera)
+# react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
 Cross platform http post file uploader with android and iOS background support
 
 ## Installation
