@@ -45,7 +45,7 @@ The only React Native http post file uploader with android and iOS background su
             );
         }
     }
-```
+    ```
 
 ## Usage
 
@@ -75,3 +75,25 @@ Upload.startUpload(options).then((uploadId) => {
   console.log('Upload error!',err)
 });
 ```
+
+## FAQs
+
+Does it support iOS camera roll assets?
+
+> No, they must be converted to a file asset.  The easist way to tell is that the url should always start with 'file://'.  If not, it won't work.  Things like [react-native-image-picker](https://github.com/marcshilling/react-native-image-picker) provide you with both.
+
+Does it support multiple file uploads?
+
+> Yes and No.  It supports multiple concurrent uploads, but only a single upload per request.  That should be fine for 90%+ of cases.
+
+Why should I use this file uploader instead of others that I've Googled?
+
+> This package has two killer features not found anywhere else (as of 12/16/2016).  First, it works on both iOS and Android.  Others are iOS only.  Second, it supports background uploading.  This means that users can background your app and the upload will continue.  This does not happen with other uploaders.
+
+## Gratitude
+
+Thanks to:
+- [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.  
+
+- [MIME type from path on iOS](http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database)  Thanks for the answer!
+
