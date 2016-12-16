@@ -80,7 +80,7 @@ Upload.startUpload(options).then((uploadId) => {
 
 Does it support iOS camera roll assets?
 
-> No, they must be converted to a file asset.  The easist way to tell is that the url should always start with 'file://'.  If not, it won't work.  Things like [react-native-image-picker](https://github.com/marcshilling/react-native-image-picker) provide you with both.
+> No, they must be converted to a file asset.  The easist way to tell is that the url should always start with 'file://'.  If not, it won't work.  Things like [react-native-image-picker](https://github.com/marcshilling/react-native-image-picker) provide you with both.  PRs are welcome for this.
 
 Does it support multiple file uploads?
 
