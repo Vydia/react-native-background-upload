@@ -3,12 +3,11 @@
 //  Vydia
 //
 //  Created by Kenneth Leland on 12/8/16.
-//  Copyright © 2016 Facebook. All rights reserved.
+//  Copyright © 2016 Vydia. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "RCTLog.h"
 #import "RCTEventEmitter.h"
 #import "RCTBridgeModule.h"
 
@@ -69,8 +68,8 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
   }
 }
 
+// Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
 - (NSString *)guessMIMETypeFromFileName: (NSString *)fileName {
-  // Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
   CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
   CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
   CFRelease(UTI);
