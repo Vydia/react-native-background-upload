@@ -1,3 +1,3 @@
-export default const function() {
-  console.log("This is a message from the react-native-background-upload package")
-}
+import * as Bridge from './bridge'
+
+export default Bridge
