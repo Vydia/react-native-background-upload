@@ -75,3 +75,5 @@ export const addListener = (eventType: UploadEvent, uploadId: string, listener: 
     }
   })
 }
+
+export default { startUpload, addListener, getFileInfo }
