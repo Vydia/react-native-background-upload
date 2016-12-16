@@ -30,8 +30,8 @@ android {
 repositories {
     mavenCentral()
 }
-
+0
 dependencies {
     compile 'net.gotev:uploadservice:3.0.3'
-    compile 'com.facebook.react:react-native:0.30.+'
+    compile 'com.facebook.react:react-native:+'
 }
