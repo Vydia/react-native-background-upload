@@ -91,6 +91,9 @@ public class UploaderModule extends ReactContextBaseJavaModule {
    */
   @ReactMethod
   public void startUpload(ReadableMap options, final Promise promise) {
+
+    String HTTPMethod = "POST";
+
     for (String key : new String[]{"url", "path"}) {
       if (!options.hasKey(key)) {
         promise.reject(new IllegalArgumentException("Missing '" + key + "' field."));
@@ -106,10 +109,15 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       return;
     }
 
+    if (options.hasKey("method") && options.getType("method") == ReadableType.String) {
+        HTTPMethod  = options.getString("method");
+    }
+
     String url = options.getString("url");
     String filePath = options.getString("path");
     try {
       final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
+              .setMethod(HTTPMethod)
               .setFileToUpload(filePath)
               .setNotificationConfig(new UploadNotificationConfig())
               .setMaxRetries(2)

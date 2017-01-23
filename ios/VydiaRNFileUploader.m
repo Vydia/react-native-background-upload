@@ -40,15 +40,15 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     @try {
         NSURL *fileUri = [NSURL URLWithString: path];
         NSString *pathWithoutProtocol = [fileUri path];
-
+        
         NSString *name = [fileUri lastPathComponent];
         NSString *extension = [name pathExtension];
         bool exists = [[NSFileManager defaultManager] fileExistsAtPath:pathWithoutProtocol];
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: name, @"name", nil];
-
+        
         [params setObject:extension forKey:@"extension"];
         [params setObject:[NSNumber numberWithBool:exists] forKey:@"exists"];
-
+        
         if (exists)
         {
             [params setObject:[self guessMIMETypeFromFileName:name] forKey:@"mimeType"];
@@ -60,7 +60,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
                 [params setObject:[NSNumber numberWithLong:fileSize] forKey:@"size"];
             }
         }
-
+        
         resolve(params);
     }
     @catch (NSException *exception) {
@@ -100,11 +100,12 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     }
     NSString *uploadUrl = options[@"url"];
     NSString *fileURI = options[@"path"];
+    NSString *HTTPMethod = options[@"method"];
     NSDictionary *headers = options[@"headers"];
-
+    
     @try {
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: uploadUrl]];
-        request.HTTPMethod = @"POST";
+        request.HTTPMethod = HTTPMethod ? HTTPMethod : @"POST";
         [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull val, BOOL * _Nonnull stop) {
             if ([val respondsToSelector:@selector(stringValue)]) {
                 val = [val stringValue];
@@ -124,11 +125,11 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 }
 
 - (NSURLSession *)urlSession: (int) thisUploadId{
-
+    
     NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:
                                                         [NSString stringWithFormat:BACKGROUND_SESSION_ID,thisUploadId]];
     _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
-
+    
     return _urlSession;
 }
 
@@ -145,7 +146,7 @@ didCompleteWithError:(NSError *)error {
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
     }
-
+    
     if (error == nil)
     {
         [self sendEventWithName:@"RNFileUploader-completed" body:data];
@@ -167,7 +168,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     {
         progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
     }
-
+    
     [self sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
