@@ -108,8 +108,10 @@ public class UploaderModule extends ReactContextBaseJavaModule {
 
     String url = options.getString("url");
     String filePath = options.getString("path");
+    String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
     try {
       final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
+              .setMethod(method)
               .setFileToUpload(filePath)
               .setNotificationConfig(new UploadNotificationConfig())
               .setMaxRetries(2)
