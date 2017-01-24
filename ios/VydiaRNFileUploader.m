@@ -20,11 +20,29 @@
 RCT_EXPORT_MODULE();
 
 static int uploadId = 0;
+static RCTEventEmitter* staticEventEmitter = nil;
 
 @synthesize bridge = _bridge;
 
 static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader";
 NSURLSession *_urlSession = nil;
+
+-(id) init {
+  self = [super init];
+  
+  if(self) {
+    staticEventEmitter = self;
+  }
+  
+  return self;
+}
+
+-(void)_sendEventWithName:(NSString *)eventName body:(id)body {
+  if(staticEventEmitter == nil)
+    return;
+  
+  [staticEventEmitter sendEventWithName:eventName body:body];
+}
 
 - (NSArray<NSString *> *)supportedEvents {
   return @[@"RNFileUploader-progress", @"RNFileUploader-error", @"RNFileUploader-completed"];
@@ -148,12 +166,12 @@ didCompleteWithError:(NSError *)error {
 
   if (error == nil)
   {
-    [self sendEventWithName:@"RNFileUploader-completed" body:data];
+    [self _sendEventWithName:@"RNFileUploader-completed" body:data];
   }
   else
   {
     [data setObject:error.localizedDescription forKey:@"error"];
-    [self sendEventWithName:@"RNFileUploader-error" body:data];
+    [self _sendEventWithName:@"RNFileUploader-error" body:data];
   }
 }
 
@@ -168,7 +186,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
   }
   
-  [self sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
+  [self _sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
 @end
