@@ -19,26 +19,22 @@
 
 RCT_EXPORT_MODULE();
 
+@synthesize bridge = _bridge;
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
-
-@synthesize bridge = _bridge;
-
 static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader-%i";
 NSURLSession *_urlSession = nil;
 
 -(id) init {
   self = [super init];
-  
   if (self) {
     staticEventEmitter = self;
   }
-  
   return self;
 }
 
--(void)_sendEventWithName:(NSString *)eventName body:(id)body {
-  if(staticEventEmitter == nil)
+- (void)_sendEventWithName:(NSString *)eventName body:(id)body {
+  if (staticEventEmitter == nil)
     return;
   [staticEventEmitter sendEventWithName:eventName body:body];
 }
