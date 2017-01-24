@@ -51,6 +51,7 @@ Options object:
   url: string.  url to post to.
   path: string.  path to the file on the device
   headers: hash of name/value header pairs
+  method: HTTP method to use.  Default is "POST"
 }
 
 Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.

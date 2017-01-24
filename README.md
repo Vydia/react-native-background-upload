@@ -53,8 +53,9 @@ The only React Native http post file uploader with android and iOS background su
 import Upload from 'react-native-background-upload'
 
 const options {
-  url: 'https://myservice.com/path/to/post'
-  path: 'file://path/to/file/on/device'
+  url: 'https://myservice.com/path/to/post',
+  path: 'file://path/to/file/on/device',
+  method: 'POST',
   headers: {
     'my-custom-header': 's3headervalueorwhateveryouneed'
   }
