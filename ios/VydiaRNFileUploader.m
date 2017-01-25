@@ -22,7 +22,7 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
-static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader-%i";
+static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader";
 NSURLSession *_urlSession = nil;
 
 -(id) init {
@@ -138,9 +138,10 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 
 - (NSURLSession *)urlSession: (int) thisUploadId{
     
-    NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:
-                                                        [NSString stringWithFormat:BACKGROUND_SESSION_ID,thisUploadId]];
-    _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
+    if(_urlSession == nil) {
+        NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
+        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
+    }
     
     return _urlSession;
 }
