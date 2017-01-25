@@ -109,6 +109,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     String url = options.getString("url");
     String filePath = options.getString("path");
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
+    final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;    
     try {
       final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
               .setMethod(method)
@@ -119,7 +120,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 @Override
                 public void onProgress(UploadInfo uploadInfo) {
                   WritableMap params = Arguments.createMap();
-                  params.putString("id", uploadInfo.getUploadId());
+                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
                   sendEvent("progress", params);
                 }
@@ -127,7 +128,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 @Override
                 public void onError(UploadInfo uploadInfo, Exception exception) {
                   WritableMap params = Arguments.createMap();
-                  params.putString("id", uploadInfo.getUploadId());
+                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putString("error", exception.getMessage());
                   sendEvent("error", params);
                 }
@@ -135,7 +136,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 @Override
                 public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
                   WritableMap params = Arguments.createMap();
-                  params.putString("id", uploadInfo.getUploadId());
+                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putInt("responseCode", serverResponse.getHttpCode());
                   params.putString("responseBody", serverResponse.getBodyAsString());
                   sendEvent("completed", params);
@@ -144,7 +145,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 @Override
                 public void onCancelled(UploadInfo uploadInfo) {
                   WritableMap params = Arguments.createMap();
-                  params.putString("id", uploadInfo.getUploadId());
+                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   sendEvent("cancelled", params);
                 }
               });

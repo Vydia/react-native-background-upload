@@ -113,6 +113,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     NSString *uploadUrl = options[@"url"];
     NSString *fileURI = options[@"path"];
     NSString *method = options[@"method"];
+    NSString *customUploadId = options[@"customUploadId"];    
     NSDictionary *headers = options[@"headers"];
     
     @try {
@@ -127,7 +128,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             }
         }];
         NSURLSessionDataTask *uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
-        uploadTask.taskDescription = [NSString stringWithFormat:@"%i", thisUploadId];
+        uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
