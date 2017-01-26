@@ -162,7 +162,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         }
       }
       String uploadId = request.startUpload();
-      promise.resolve(uploadId);
+      promise.resolve(customUploadId != null ? customUploadId : uploadId);
     } catch (Exception exc) {
       Log.e(TAG, exc.getMessage(), exc);
       promise.reject(exc);
