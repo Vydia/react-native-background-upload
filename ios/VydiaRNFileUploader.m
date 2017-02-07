@@ -22,7 +22,7 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
-static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader-%i";
+static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader";
 NSURLSession *_urlSession = nil;
 
 -(id) init {
@@ -113,6 +113,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     NSString *uploadUrl = options[@"url"];
     NSString *fileURI = options[@"path"];
     NSString *method = options[@"method"];
+    NSString *customUploadId = options[@"customUploadId"];    
     NSDictionary *headers = options[@"headers"];
     
     @try {
@@ -127,7 +128,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             }
         }];
         NSURLSessionDataTask *uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
-        uploadTask.taskDescription = [NSString stringWithFormat:@"%i", thisUploadId];
+        uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
@@ -138,9 +139,10 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 
 - (NSURLSession *)urlSession: (int) thisUploadId{
     
-    NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:
-                                                        [NSString stringWithFormat:BACKGROUND_SESSION_ID,thisUploadId]];
-    _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
+    if(_urlSession == nil) {
+        NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
+        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
+    }
     
     return _urlSession;
 }
