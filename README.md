@@ -58,6 +58,10 @@ const options {
   method: 'POST',
   headers: {
     'my-custom-header': 's3headervalueorwhateveryouneed'
+  },
+  // Below are options only supported on Android
+  notification: {
+    enabled: true
   }
 }
 
