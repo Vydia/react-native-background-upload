@@ -77,8 +77,16 @@ use it to cancel started upload.
 
 Event "cancelled" will be fired when upload is cancelled.
 
+Returns a promise with boolean true if operation was successfully completed.
+Will reject if there was an internal error or ID format is invalid.
+
 */
-export const cancelUpload = (uploadId: string) => NativeModule.cancelUpload(uploadId)
+export const cancelUpload = (cancelUploadId: string): Promise<boolean> => {
+  if (typeof cancelUploadId !== 'string') {
+    return Promise.reject(new Error('Upload ID must be a string'));
+  }
+  return NativeModule.cancelUpload(cancelUploadId);
+}
 
 /*
 Listens for the given event on the given upload ID (resolved from startUpload).  
