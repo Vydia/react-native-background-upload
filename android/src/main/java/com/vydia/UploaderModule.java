@@ -127,44 +127,50 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     String filePath = options.getString("path");
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
     final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;
+
+    ReactApplicationContext context = this.getReactApplicationContext();
+
     try {
-      final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
-              .setMethod(method)
-              .setFileToUpload(filePath)
-              .setMaxRetries(2)
-              .setDelegate(new UploadStatusDelegate() {
-                @Override
-                public void onProgress(Context context, UploadInfo uploadInfo) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
-                  sendEvent("progress", params);
-                }
+      final BinaryUploadRequest request = customUploadId != null
+        ? (BinaryUploadRequest) new BinaryUploadRequest(context, customUploadId, url)
+        : (BinaryUploadRequest) new BinaryUploadRequest(context, url);
+      request
+        .setMethod(method)
+        .setFileToUpload(filePath)
+        .setMaxRetries(2)
+        .setDelegate(new UploadStatusDelegate() {
+          @Override
+          public void onProgress(Context context, UploadInfo uploadInfo) {
+            WritableMap params = Arguments.createMap();
+            params.putString("id", uploadInfo.getUploadId());
+            params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
+            sendEvent("progress", params);
+          }
 
-                @Override
-                public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putString("error", exception.getMessage());
-                  sendEvent("error", params);
-                }
+          @Override
+          public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
+            WritableMap params = Arguments.createMap();
+            params.putString("id", uploadInfo.getUploadId());
+            params.putString("error", exception.getMessage());
+            sendEvent("error", params);
+          }
 
-                @Override
-                public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putInt("responseCode", serverResponse.getHttpCode());
-                  params.putString("responseBody", serverResponse.getBodyAsString());
-                  sendEvent("completed", params);
-                }
+          @Override
+          public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
+            WritableMap params = Arguments.createMap();
+            params.putString("id", uploadInfo.getUploadId());
+            params.putInt("responseCode", serverResponse.getHttpCode());
+            params.putString("responseBody", serverResponse.getBodyAsString());
+            sendEvent("completed", params);
+          }
 
-                @Override
-                public void onCancelled(Context context, UploadInfo uploadInfo) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  sendEvent("cancelled", params);
-                }
-              });
+          @Override
+          public void onCancelled(Context context, UploadInfo uploadInfo) {
+            WritableMap params = Arguments.createMap();
+            params.putString("id", uploadInfo.getUploadId());
+            sendEvent("cancelled", params);
+          }
+        });
       if (notification.getBoolean("enabled")) {
         request.setNotificationConfig(new UploadNotificationConfig());
       }
@@ -181,7 +187,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         }
       }
       String uploadId = request.startUpload();
-      promise.resolve(customUploadId != null ? customUploadId : uploadId);
+      promise.resolve(uploadId);
     } catch (Exception exc) {
       Log.e(TAG, exc.getMessage(), exc);
       promise.reject(exc);
