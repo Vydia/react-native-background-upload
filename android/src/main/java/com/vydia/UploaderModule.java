@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
@@ -85,6 +86,9 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   *   url: string.  url to post to.
   *   path: string.  path to the file on the device
   *   headers: hash of name/value header pairs
+  *   method: HTTP method to use.  Default is "POST"
+  *   notification: hash for customizing tray notifiaction
+  *     enabled: boolean to enable/disabled notifications, true by default.
   * }
   *
   * Returns a promise with the string ID of the upload.
@@ -105,16 +109,25 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       promise.reject(new IllegalArgumentException("headers must be a hash."));
       return;
     }
+    if (options.hasKey("notification") && options.getType("notification") != ReadableType.Map) {
+      promise.reject(new IllegalArgumentException("notification must be a hash."));
+      return;
+    }
+
+    WritableMap notification = new WritableNativeMap();
+    notification.putBoolean("enabled", true);
+    if (options.hasKey("notification")) {
+      notification.merge(options.getMap("notification"));
+    }
 
     String url = options.getString("url");
     String filePath = options.getString("path");
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
-    final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;    
+    final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;
     try {
       final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
               .setMethod(method)
               .setFileToUpload(filePath)
-              .setNotificationConfig(new UploadNotificationConfig())
               .setMaxRetries(2)
               .setDelegate(new UploadStatusDelegate() {
                 @Override
@@ -149,6 +162,9 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                   sendEvent("cancelled", params);
                 }
               });
+      if (notification.getBoolean("enabled")) {
+        request.setNotificationConfig(new UploadNotificationConfig());
+      }
       if (options.hasKey("headers")) {
         ReadableMap headers = options.getMap("headers");
         ReadableMapKeySetIterator keys = headers.keySetIterator();

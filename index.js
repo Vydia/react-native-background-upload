@@ -6,10 +6,15 @@ import { NativeModules, DeviceEventEmitter } from 'react-native'
 
 export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled'
 
+export type NotificationArgs = {
+  enabled: boolean
+}
+
 export type StartUploadArgs = {
   url: string,
   path: string,
-  headers?: Object
+  headers?: Object,
+  notification?: NotificationArgs
 }
 
 const NativeModule = NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader // iOS is VydiaRNFileUploader and Android is NativeModules 
@@ -52,6 +57,8 @@ Options object:
   path: string.  path to the file on the device
   headers: hash of name/value header pairs
   method: HTTP method to use.  Default is "POST"
+  notification: hash for customizing tray notifiaction
+    enabled: boolean to enable/disabled notifications, true by default.
 }
 
 Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.
