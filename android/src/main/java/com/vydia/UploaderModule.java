@@ -68,7 +68,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         params.putString("size",Long.toString(fileInfo.length())); //use string form of long because there is no putLong and converting to int results in a max size of 17.2 gb, which could happen.  Javascript will need to convert it to a number
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         params.putString("extension",extension);
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
         params.putString("mimeType", mimeType);
       }
 
