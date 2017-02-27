@@ -17,6 +17,10 @@
     "upload",
     "react-native"
   ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": ">=0.39.0 <0.30.0"
+  },
   "author": "Steve Potter",
   "license": "BSD-3-Clause",
   "bugs": {
