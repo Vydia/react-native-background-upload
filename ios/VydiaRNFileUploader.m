@@ -11,6 +11,11 @@
 #import "RCTEventEmitter.h"
 #import "RCTBridgeModule.h"
 
+#ifdef NsFileAttributeKey
+  typedef NsFileAttributeKey UploaderFileAttributeKey;
+#else
+  typedef NSString * UploaderFileAttributeKey;
+#endif
 
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
 @end
@@ -65,7 +70,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
         {
             [params setObject:[self guessMIMETypeFromFileName:name] forKey:@"mimeType"];
             NSError* error;
-            NSDictionary<NSFileAttributeKey, id> *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathWithoutProtocol error:&error];
+            NSDictionary<UploaderFileAttributeKey, id> *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathWithoutProtocol error:&error];
             if (error == nil)
             {
                 unsigned long long fileSize = [attributes fileSize];
