@@ -34,7 +34,7 @@ The only React Native http post file uploader with android and iOS background su
 3. Add the import and link the package in `MainApplication.java`:
 
     ```java
-    import com.vydia.UploaderReactPackage; // <-- add this import
+    import com.vydia.RNUploader.UploaderReactPackage;  <-- add this import
 
     public class MainApplication extends Application implements ReactApplication {
         @Override
@@ -46,6 +46,24 @@ The only React Native http post file uploader with android and iOS background su
         }
     }
     ```
+
+## BREAKING CHANGE IN 2.0
+The Android package name had to be changed, as it conflicted with our own internal app.  My bad.  The fix is so easy though:
+In `MainApplication.java`:
+
+Change
+
+    ```java
+    import com.vydia.UploaderReactPackage;
+    ```
+
+to
+
+    ```java
+    import com.vydia.RNUploader.UploaderReactPackage;
+    ```
+    
+Done!
 
 ## Usage
 

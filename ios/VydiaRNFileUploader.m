@@ -141,12 +141,10 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 }
 
 - (NSURLSession *)urlSession: (int) thisUploadId{
-    
     if(_urlSession == nil) {
         NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
         _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
-    }
-    
+    }    
     return _urlSession;
 }
 
@@ -162,17 +160,16 @@ didCompleteWithError:(NSError *)error {
     if (response != nil)
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
-    }
-        
+    }        
     //Add data that was collected earlier by the didReceiveData method
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
-    [_responsesData removeObjectForKey:@(task.taskIdentifier)];
     if (responseData) {
+        [_responsesData removeObjectForKey:@(task.taskIdentifier)];
         NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         [data setObject:response forKey:@"responseBody"];
     } else {
         [data setObject:[NSNull null] forKey:@"responseBody"];
-    }       
+    }
 
     if (error == nil)
     {
@@ -200,6 +197,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
+    if (!data.length) {
+        return;
+    }
     //Hold returned data so it can be picked up by the didCompleteWithError method later
     NSMutableData *responseData = _responsesData[@(dataTask.taskIdentifier)];
     if (!responseData) {

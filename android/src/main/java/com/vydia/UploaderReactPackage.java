@@ -1,4 +1,4 @@
-package com.vydia;
+package com.vydia.RNUploader;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -29,7 +29,7 @@ public class UploaderReactPackage implements ReactPackage {
   public List<NativeModule> createNativeModules(
           ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
-    modules.add(new UploaderModule(reactContext));
+    modules.add(new com.vydia.RNUploader.UploaderModule(reactContext));
     return modules;
   }
 }
