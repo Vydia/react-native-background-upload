@@ -12,6 +12,9 @@
 #import <React/RCTBridgeModule.h>
 
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
+{
+  NSMutableDictionary *_responsesData;
+}
 @end
 
 @implementation VydiaRNFileUploader
@@ -23,18 +26,12 @@ static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
 static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader";
 NSURLSession *_urlSession = nil;
-NSMutableDictionary *_responsesData = nil;
-
-+(void)initialize {
-    if(!_responsesData) {
-        _responsesData = [NSMutableDictionary dictionary];
-    }
-}
 
 -(id) init {
   self = [super init];
   if (self) {
     staticEventEmitter = self;
+    _responsesData = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -165,19 +162,18 @@ didCompleteWithError:(NSError *)error {
     if (response != nil)
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
-        
-        //Add data that was collected earlier by the didReceiveData method
-        NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
-        if (responseData) {
-            NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-            [data setObject:response forKey:@"responseBody"];
-        } else {
-            [data setObject:[NSNull null] forKey:@"responseBody"];
-        }
-        [_responsesData removeObjectForKey:@(task.taskIdentifier)];
-        
     }
-    
+        
+    //Add data that was collected earlier by the didReceiveData method
+    NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
+    [_responsesData removeObjectForKey:@(task.taskIdentifier)];
+    if (responseData) {
+        NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        [data setObject:response forKey:@"responseBody"];
+    } else {
+        [data setObject:[NSNull null] forKey:@"responseBody"];
+    }       
+
     if (error == nil)
     {
         [self _sendEventWithName:@"RNFileUploader-completed" body:data];
