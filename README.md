@@ -50,14 +50,19 @@ The only React Native http post file uploader with android and iOS background su
 ## BREAKING CHANGE IN 2.0
 The Android package name had to be changed, as it conflicted with our own internal app.  My bad.  The fix is so easy though:
 In `MainApplication.java`:
-Change 
+
+Change
+
     ```java
     import com.vydia.UploaderReactPackage;
     ```
+
 to
+
     ```java
     import com.vydia.RNUploader.UploaderReactPackage;
     ```
+    
 Done!
 
 ## Usage
