@@ -1,5 +1,6 @@
 package com.vydia.RNUploader;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -131,7 +132,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
               .setMaxRetries(2)
               .setDelegate(new UploadStatusDelegate() {
                 @Override
-                public void onProgress(UploadInfo uploadInfo) {
+                public void onProgress(Context context, UploadInfo uploadInfo) {
                   WritableMap params = Arguments.createMap();
                   params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
@@ -139,7 +140,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 }
 
                 @Override
-                public void onError(UploadInfo uploadInfo, Exception exception) {
+                public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
                   WritableMap params = Arguments.createMap();
                   params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putString("error", exception.getMessage());
@@ -147,7 +148,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 }
 
                 @Override
-                public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
+                public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
                   WritableMap params = Arguments.createMap();
                   params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   params.putInt("responseCode", serverResponse.getHttpCode());
@@ -156,7 +157,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 }
 
                 @Override
-                public void onCancelled(UploadInfo uploadInfo) {
+                public void onCancelled(Context context, UploadInfo uploadInfo) {
                   WritableMap params = Arguments.createMap();
                   params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
                   sendEvent("cancelled", params);
