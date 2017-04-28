@@ -47,8 +47,13 @@ The only React Native http post file uploader with android and iOS background su
     }
     ```
 
+4. Ensure Android SDK versions.  Open your app's `android/app/build.gradle` file.  Ensure `compileSdkVersion` and `targetSdkVersion` are 25.  Otherwise you'll get compilation errors.
+
+
 ## BREAKING CHANGE IN 2.0
-The Android package name had to be changed, as it conflicted with our own internal app.  My bad.  The fix is so easy though:
+Two big things happened in version 2.0.  First, thehe Android package name had to be changed, as it conflicted with our own internal app.  My bad.  Second, we updated the android upload service dependency to the latest, but that requires the app have a compileSdkVersion and targetSdkVersion or 25.
+
+To upgrade:
 In `MainApplication.java`:
 
 Change
@@ -63,6 +68,9 @@ to
     import com.vydia.RNUploader.UploaderReactPackage;
     ```
     
+Then open your app's `android/app/build.gradle` file.
+Ensure `compileSdkVersion` and `targetSdkVersion` are 25.
+
 Done!
 
 ## Usage
