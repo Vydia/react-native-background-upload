@@ -32,6 +32,5 @@ repositories {
 }
 dependencies {
     compile 'net.gotev:uploadservice:3.2.3'
-    compile 'net.gotev:uploadservice-okhttp:3.2.3'
     compile 'com.facebook.react:react-native:+'
 }

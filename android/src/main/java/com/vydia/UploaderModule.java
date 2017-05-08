@@ -23,7 +23,6 @@ import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.UploadStatusDelegate;
-import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.io.File;
 
@@ -36,7 +35,6 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   public UploaderModule(ReactApplicationContext reactContext) {
     super(reactContext);
     UploadService.NAMESPACE = reactContext.getApplicationInfo().packageName;
-    UploadService.HTTP_STACK = new OkHttpStack();
   }
 
   @Override
