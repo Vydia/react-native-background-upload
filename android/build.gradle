@@ -31,6 +31,18 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'net.gotev:uploadservice:3.2.3'
+    /**
+     * These versions are hard-coded because otherwise you get
+     * a RN compilation error java.util.zip.ZipException: duplicate entry: okhttp3/internal/ws/RealWebSocket$1.class
+     * This is due to a way okhttp changed in 3.5.  UploadService uses 3.+, which
+     * resolved the library to 3.7.  Long story short, it broke and this fixes it.  These 3 libs should be kept in sync
+     * with React Native, and could be removed later on if apps start compiling.  RN uses
+     * https://github.com/facebook/react-native/blob/master/ReactAndroid/build.gradle
+     * https://github.com/facebook/react-native/issues/12646
+     */
+//    compile ('com.squareup.okhttp3:okhttp:3.4.1') { force = true }
+ //   compile ('com.squareup.okhttp3:okhttp-urlconnection:3.4.1') { force = true }
+ //   compile ('com.squareup.okhttp3:okhttp-ws:3.4.1') { force = true }
     compile 'com.facebook.react:react-native:+'
+    compile 'net.gotev:uploadservice-okhttp:3.2.3'
 }
