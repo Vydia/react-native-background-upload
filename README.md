@@ -24,13 +24,6 @@ The only React Native http post file uploader with android and iOS background su
     include ':react-native-background-upload'
     project(':react-native-background-upload').projectDir = new File(settingsDir, '../node_modules/react-native-background-upload/android')
     ```
-2. Add the compile line to the dependencies in `android/app/build.gradle`:
-
-    ```gradle
-    dependencies {
-        compile project(':react-native-background-upload')
-    }
-    ```
 2. Add the compile and resolutionStrategy line to the dependencies in `android/app/build.gradle`:
 
     ```gradle
