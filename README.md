@@ -24,13 +24,17 @@ The only React Native http post file uploader with android and iOS background su
     include ':react-native-background-upload'
     project(':react-native-background-upload').projectDir = new File(settingsDir, '../node_modules/react-native-background-upload/android')
     ```
-2. Add the compile line to the dependencies in `android/app/build.gradle`:
+2. Add the compile and resolutionStrategy line to the dependencies in `android/app/build.gradle`:
 
     ```gradle
+    configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' } // required by react-native-background-upload until React Native supports okhttp >= okhttp 3.5
+
     dependencies {
         compile project(':react-native-background-upload')
     }
     ```
+
+
 3. Add the import and link the package in `MainApplication.java`:
 
     ```java
@@ -49,29 +53,6 @@ The only React Native http post file uploader with android and iOS background su
 
 4. Ensure Android SDK versions.  Open your app's `android/app/build.gradle` file.  Ensure `compileSdkVersion` and `targetSdkVersion` are 25.  Otherwise you'll get compilation errors.
 
-
-## BREAKING CHANGE IN 2.0
-Two big things happened in version 2.0.  First, thehe Android package name had to be changed, as it conflicted with our own internal app.  My bad.  Second, we updated the android upload service dependency to the latest, but that requires the app have a compileSdkVersion and targetSdkVersion or 25.
-
-To upgrade:
-In `MainApplication.java`:
-
-Change
-
-    ```java
-    import com.vydia.UploaderReactPackage;
-    ```
-
-to
-
-    ```java
-    import com.vydia.RNUploader.UploaderReactPackage;
-    ```
-    
-Then open your app's `android/app/build.gradle` file.
-Ensure `compileSdkVersion` and `targetSdkVersion` are 25.
-
-Done!
 
 ## Usage
 
@@ -120,6 +101,41 @@ Does it support multiple file uploads?
 Why should I use this file uploader instead of others that I've Googled like [react-native-uploader](https://github.com/aroth/react-native-uploader)?
 
 > This package has two killer features not found anywhere else (as of 12/16/2016).  First, it works on both iOS and Android.  Others are iOS only.  Second, it supports background uploading.  This means that users can background your app and the upload will continue.  This does not happen with other uploaders.
+
+
+## BREAKING CHANGE IN 3.0
+In 3.0, you need to add 
+```gradle
+    configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' }
+```
+to your app's app's `android/app/build.gradle` file.
+
+Just add it above (not within) `dependencies` and you'll be fine.
+
+
+## BREAKING CHANGE IN 2.0
+Two big things happened in version 2.0.  First, thehe Android package name had to be changed, as it conflicted with our own internal app.  My bad.  Second, we updated the android upload service dependency to the latest, but that requires the app have a compileSdkVersion and targetSdkVersion or 25.
+
+To upgrade:
+In `MainApplication.java`:
+
+Change
+
+    ```java
+    import com.vydia.UploaderReactPackage;
+    ```
+
+to
+
+    ```java
+    import com.vydia.RNUploader.UploaderReactPackage;
+    ```
+    
+Then open your app's `android/app/build.gradle` file.
+Ensure `compileSdkVersion` and `targetSdkVersion` are 25.
+
+Done!
+
 
 ## Gratitude
 
