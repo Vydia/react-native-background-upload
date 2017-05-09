@@ -27,7 +27,7 @@ The only React Native http post file uploader with android and iOS background su
 2. Add the compile and resolutionStrategy line to the dependencies in `android/app/build.gradle`:
 
     ```gradle
-    configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' } // required until React Native supports okhttp >= okhttp 3.5
+    configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' } // required by react-native-background-upload until React Native supports okhttp >= okhttp 3.5
 
     dependencies {
         compile project(':react-native-background-upload')
