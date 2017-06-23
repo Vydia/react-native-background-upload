@@ -1,9 +1,14 @@
 # react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
+
 ## Installation
 
 `npm install react-native-background-upload`
+
+or
+
+`yarn add react-native-background-upload`
 
 ### Automatic Native Library Linking
 
@@ -74,21 +79,28 @@ const options {
 
 Upload.startUpload(options).then((uploadId) => {
   console.log('Upload started')
-  Upload.addListener('progress',uploadId, (data) => {
+  Upload.addListener('progress', uploadId, (data) => {
     console.log(`Progress: ${data.progress}%`)
   })
-  Upload.addListener('error',uploadId, (data) => {
+  Upload.addListener('error', uploadId, (data) => {
     console.log(`Error: ${data.error}%`)
   })
-  Upload.addListener('completed',uploadId, (data) => {
-    console.log(`Completed!`)
+  Upload.addListener('completed', uploadId, (data) => {
+    console.log('Completed!')
   })
-}).catch(function(err) {
-  console.log('Upload error!',err)
-});
+}).catch((err) => {
+  console.log('Upload error!', err)
+})
 ```
 
+
 ## FAQs
+
+Is there an example/sandbox app to test out this package?
+
+> Yes, there is a simple react native app that comes with an [express](https://github.com/expressjs/express) server where you can see react-native-background-upload in action and try things out in an isolated local environment.
+
+[ReactNativeBackgroundUploadExample](https://github.com/Vydia/ReactNativeBackgroundUploadExample)
 
 Does it support iOS camera roll assets?
 
@@ -103,8 +115,13 @@ Why should I use this file uploader instead of others that I've Googled like [re
 > This package has two killer features not found anywhere else (as of 12/16/2016).  First, it works on both iOS and Android.  Others are iOS only.  Second, it supports background uploading.  This means that users can background your app and the upload will continue.  This does not happen with other uploaders.
 
 
+## Contributing
+
+See [CONTRIBUTING.md](https://github.com/Vydia/react-native-background-upload/CONTRIBUTING.md).
+
+
 ## BREAKING CHANGE IN 3.0
-In 3.0, you need to add 
+In 3.0, you need to add
 ```gradle
     configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' }
 ```
@@ -130,7 +147,7 @@ to
     ```java
     import com.vydia.RNUploader.UploaderReactPackage;
     ```
-    
+
 Then open your app's `android/app/build.gradle` file.
 Ensure `compileSdkVersion` and `targetSdkVersion` are 25.
 
@@ -143,4 +160,3 @@ Thanks to:
 - [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.  
 
 - [MIME type from path on iOS](http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database)  Thanks for the answer!
-
