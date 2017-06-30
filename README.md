@@ -64,7 +64,7 @@ or
 ```js
 import Upload from 'react-native-background-upload'
 
-const options {
+const options = {
   url: 'https://myservice.com/path/to/post',
   path: 'file://path/to/file/on/device',
   method: 'POST',
