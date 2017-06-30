@@ -113,15 +113,18 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     {
         thisUploadId = uploadId++;
     }
+    
     NSString *uploadUrl = options[@"url"];
     NSString *fileURI = options[@"path"];
-    NSString *method = options[@"method"];
-    NSString *customUploadId = options[@"customUploadId"];    
+    NSString *method = options[@"method"] ?: @"POST";
+    NSString *uploadType = options[@"type"] ?: @"raw";
+    NSString *customUploadId = options[@"customUploadId"];
     NSDictionary *headers = options[@"headers"];
-    
+
     @try {
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: uploadUrl]];
-        request.HTTPMethod = method ? method : @"POST";
+        [request setHTTPMethod: method];
+
         [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull val, BOOL * _Nonnull stop) {
             if ([val respondsToSelector:@selector(stringValue)]) {
                 val = [val stringValue];
@@ -130,8 +133,17 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
                 [request setValue:val forHTTPHeaderField:key];
             }
         }];
+
+        if ([uploadType isEqualToString:@"multipart"]) {
+            NSString *uuidStr = [[NSUUID UUID] UUIDString];
+            [request addValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", uuidStr] forHTTPHeaderField:@"Content-Type"];
+        } else {
+
+        }
+
         NSURLSessionDataTask *uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
+
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
