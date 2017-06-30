@@ -13,6 +13,10 @@ export type NotificationArgs = {
 export type StartUploadArgs = {
   url: string,
   path: string,
+  // Optional, because raw is default
+  type?: 'raw' | 'multipart',
+  // This option is needed for multipart type
+  field?: string,
   headers?: Object,
   notification?: NotificationArgs
 }
