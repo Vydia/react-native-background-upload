@@ -85,18 +85,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   }
 
   /*
-  * Starts a file upload.
-  * Options are passed in as the first argument as a js hash:
-  * {
-  *   url: string.  url to post to.
-  *   path: string.  path to the file on the device
-  *   headers: hash of name/value header pairs
-  *   method: HTTP method to use.  Default is "POST"
-  *   notification: hash for customizing tray notifiaction
-  *     enabled: boolean to enable/disabled notifications, true by default.
-  * }
-  *
-  * Returns a promise with the string ID of the upload.
+   * Starts a file upload.
+   * Returns a promise with the string ID of the upload.
    */
   @ReactMethod
   public void startUpload(ReadableMap options, final Promise promise) {
