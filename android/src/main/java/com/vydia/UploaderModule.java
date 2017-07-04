@@ -130,7 +130,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         return;
       }
 
-      if (!requestType.equals("raw") || !requestType.equals("multipart")) {
+      if (!requestType.equals("raw") && !requestType.equals("multipart")) {
         promise.reject(new IllegalArgumentException("type should be string: raw or multipart."));
         return;
       }
