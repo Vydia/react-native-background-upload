@@ -177,11 +177,13 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       HttpUploadRequest<?> request;
 
       if (requestType.equals("raw")) {
-        request = new BinaryUploadRequest(this.getReactApplicationContext(), url)
-                .setMethod(method)
-                .setFileToUpload(filePath)
-                .setMaxRetries(2)
-                .setDelegate(statusDelegate);
+        if (customUploadId != null) {
+          request = new BinaryUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                  .setFileToUpload(filePath);
+        } else {
+          request = new BinaryUploadRequest(this.getReactApplicationContext(), url)
+                  .setFileToUpload(filePath);
+        }
       } else {
         if (!options.hasKey("field")) {
           promise.reject(new IllegalArgumentException("field is required field for multipart type."));
@@ -193,12 +195,18 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           return;
         }
 
-        request = new MultipartUploadRequest(this.getReactApplicationContext(), url)
-                .setMethod(method)
-                .addFileToUpload(filePath, options.getString("field"))
-                .setMaxRetries(2)
-                .setDelegate(statusDelegate);
+        if (customUploadId != null) {
+          request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                  .addFileToUpload(filePath, options.getString("field"));
+        } else {
+          request = new MultipartUploadRequest(this.getReactApplicationContext(), url)
+                  .addFileToUpload(filePath, options.getString("field"));
+        }
       }
+
+      request.setMethod(method)
+        .setMaxRetries(2)
+        .setDelegate(statusDelegate);
 
       if (notification.getBoolean("enabled")) {
         request.setNotificationConfig(new UploadNotificationConfig());
