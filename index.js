@@ -17,6 +17,7 @@ export type StartUploadArgs = {
   type?: 'raw' | 'multipart',
   // This option is needed for multipart type
   field?: string,
+  customUploadId?: string,
   headers?: Object,
   notification?: NotificationArgs
 }
