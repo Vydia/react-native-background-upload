@@ -1,14 +1,20 @@
 # react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
+NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
+`npm show react-native-background-upload versions`
 
-## Installation
+## Installation for React Native >= 0.47
 
-`npm install react-native-background-upload`
+`npm install --save react-native-background-upload`
 
 or
 
 `yarn add react-native-background-upload`
+
+## Installation for React Native < 0.47
+
+`npm install --save react-native-background-upload@3.0.0`
 
 ### Automatic Native Library Linking
 
