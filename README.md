@@ -127,6 +127,8 @@ See [CONTRIBUTING.md](https://github.com/Vydia/react-native-background-upload/CO
 
 
 ## BREAKING CHANGE IN 3.0
+This is for 3.0 only.  This does NOT apply to 4.0, as recent React Native versions have upgraded the `okhttp` dependencies.  Anyway...
+
 In 3.0, you need to add
 ```gradle
     configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' }
