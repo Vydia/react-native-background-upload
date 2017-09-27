@@ -177,13 +177,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       HttpUploadRequest<?> request;
 
       if (requestType.equals("raw")) {
-        if (customUploadId != null) {
-          request = new BinaryUploadRequest(this.getReactApplicationContext(), customUploadId, url)
-                  .setFileToUpload(filePath);
-        } else {
-          request = new BinaryUploadRequest(this.getReactApplicationContext(), url)
-                  .setFileToUpload(filePath);
-        }
+        request = new BinaryUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                .setFileToUpload(filePath);
       } else {
         if (!options.hasKey("field")) {
           promise.reject(new IllegalArgumentException("field is required field for multipart type."));
@@ -195,13 +190,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           return;
         }
 
-        if (customUploadId != null) {
-          request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
-                  .addFileToUpload(filePath, options.getString("field"));
-        } else {
-          request = new MultipartUploadRequest(this.getReactApplicationContext(), url)
-                  .addFileToUpload(filePath, options.getString("field"));
-        }
+        request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                .addFileToUpload(filePath, options.getString("field"));
       }
 
       request.setMethod(method)
