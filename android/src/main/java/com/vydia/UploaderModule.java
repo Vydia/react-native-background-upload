@@ -205,7 +205,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
 
       if (options.hasKey("parameters")) {
         if (requestType.equals("raw")) {
-          promise.reject(new IllegalArgumentException("Parameters supported only in multipart requestType"));
+          promise.reject(new IllegalArgumentException("Parameters supported only in multipart type"));
           return;
         }
 
