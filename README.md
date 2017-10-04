@@ -74,6 +74,7 @@ const options = {
   url: 'https://myservice.com/path/to/post',
   path: 'file://path/to/file/on/device',
   method: 'POST',
+  type: 'raw',
   headers: {
     'my-custom-header': 's3headervalueorwhateveryouneed'
   },
@@ -99,6 +100,21 @@ Upload.startUpload(options).then((uploadId) => {
 })
 ```
 
+## Multipart Uploads
+
+Just set the `type` option to `multipart` and set the `field` option.  Example:
+
+```
+const options = {
+  url: 'https://myservice.com/path/to/post',
+  path: 'file://path/to/file/on/device',
+  method: 'POST',
+  field: 'uploaded_media',
+  type: 'multipart'
+}
+```
+
+Note the `field` property is required for multipart uploads.
 
 ## FAQs
 
@@ -165,6 +181,6 @@ Done!
 ## Gratitude
 
 Thanks to:
-- [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.  
+- [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.
 
 - [MIME type from path on iOS](http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database)  Thanks for the answer!
