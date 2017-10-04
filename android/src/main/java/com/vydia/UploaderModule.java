@@ -18,6 +18,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
+import net.gotev.uploadservice.HttpUploadRequest;
+import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
 import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
@@ -83,18 +85,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   }
 
   /*
-  * Starts a file upload.
-  * Options are passed in as the first argument as a js hash:
-  * {
-  *   url: string.  url to post to.
-  *   path: string.  path to the file on the device
-  *   headers: hash of name/value header pairs
-  *   method: HTTP method to use.  Default is "POST"
-  *   notification: hash for customizing tray notifiaction
-  *     enabled: boolean to enable/disabled notifications, true by default.
-  * }
-  *
-  * Returns a promise with the string ID of the upload.
+   * Starts a file upload.
+   * Returns a promise with the string ID of the upload.
    */
   @ReactMethod
   public void startUpload(ReadableMap options, final Promise promise) {
@@ -108,17 +100,35 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         return;
       }
     }
+
     if (options.hasKey("headers") && options.getType("headers") != ReadableType.Map) {
       promise.reject(new IllegalArgumentException("headers must be a hash."));
       return;
     }
+
     if (options.hasKey("notification") && options.getType("notification") != ReadableType.Map) {
       promise.reject(new IllegalArgumentException("notification must be a hash."));
       return;
     }
 
+    String requestType = "raw";
+
+    if (options.hasKey("type")) {
+      requestType = options.getString("type");
+      if (requestType == null) {
+        promise.reject(new IllegalArgumentException("type must be string."));
+        return;
+      }
+
+      if (!requestType.equals("raw") && !requestType.equals("multipart")) {
+        promise.reject(new IllegalArgumentException("type should be string: raw or multipart."));
+        return;
+      }
+    }
+
     WritableMap notification = new WritableNativeMap();
     notification.putBoolean("enabled", true);
+
     if (options.hasKey("notification")) {
       notification.merge(options.getMap("notification"));
     }
@@ -126,48 +136,72 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     String url = options.getString("url");
     String filePath = options.getString("path");
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
+
     final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;
+
     try {
-      final BinaryUploadRequest request = (BinaryUploadRequest) new BinaryUploadRequest(this.getReactApplicationContext(), url)
-              .setMethod(method)
-              .setFileToUpload(filePath)
-              .setMaxRetries(2)
-              .setDelegate(new UploadStatusDelegate() {
-                @Override
-                public void onProgress(Context context, UploadInfo uploadInfo) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
-                  sendEvent("progress", params);
-                }
+      UploadStatusDelegate statusDelegate = new UploadStatusDelegate() {
+        @Override
+        public void onProgress(Context context, UploadInfo uploadInfo) {
+          WritableMap params = Arguments.createMap();
+          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
+          params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
+          sendEvent("progress", params);
+        }
 
-                @Override
-                public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putString("error", exception.getMessage());
-                  sendEvent("error", params);
-                }
+        @Override
+        public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
+          WritableMap params = Arguments.createMap();
+          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
+          params.putString("error", exception.getMessage());
+          sendEvent("error", params);
+        }
 
-                @Override
-                public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  params.putInt("responseCode", serverResponse.getHttpCode());
-                  params.putString("responseBody", serverResponse.getBodyAsString());
-                  sendEvent("completed", params);
-                }
+        @Override
+        public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
+          WritableMap params = Arguments.createMap();
+          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
+          params.putInt("responseCode", serverResponse.getHttpCode());
+          params.putString("responseBody", serverResponse.getBodyAsString());
+          sendEvent("completed", params);
+        }
 
-                @Override
-                public void onCancelled(Context context, UploadInfo uploadInfo) {
-                  WritableMap params = Arguments.createMap();
-                  params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-                  sendEvent("cancelled", params);
-                }
-              });
+        @Override
+        public void onCancelled(Context context, UploadInfo uploadInfo) {
+          WritableMap params = Arguments.createMap();
+          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
+          sendEvent("cancelled", params);
+        }
+      };
+
+      HttpUploadRequest<?> request;
+
+      if (requestType.equals("raw")) {
+        request = new BinaryUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                .setFileToUpload(filePath);
+      } else {
+        if (!options.hasKey("field")) {
+          promise.reject(new IllegalArgumentException("field is required field for multipart type."));
+          return;
+        }
+
+        if (options.getType("field") != ReadableType.String) {
+          promise.reject(new IllegalArgumentException("field must be string."));
+          return;
+        }
+
+        request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+                .addFileToUpload(filePath, options.getString("field"));
+      }
+
+      request.setMethod(method)
+        .setMaxRetries(2)
+        .setDelegate(statusDelegate);
+
       if (notification.getBoolean("enabled")) {
         request.setNotificationConfig(new UploadNotificationConfig());
       }
+
       if (options.hasKey("headers")) {
         ReadableMap headers = options.getMap("headers");
         ReadableMapKeySetIterator keys = headers.keySetIterator();
@@ -180,6 +214,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           request.addHeader(key, headers.getString(key));
         }
       }
+
       String uploadId = request.startUpload();
       promise.resolve(customUploadId != null ? customUploadId : uploadId);
     } catch (Exception exc) {

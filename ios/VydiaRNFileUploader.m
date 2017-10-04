@@ -94,7 +94,6 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     return (__bridge NSString *)(MIMEType);
 }
 
-
 /*
  * Starts a file upload.
  * Options are passed in as the first argument as a js hash:
@@ -113,15 +112,19 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     {
         thisUploadId = uploadId++;
     }
+
     NSString *uploadUrl = options[@"url"];
     NSString *fileURI = options[@"path"];
-    NSString *method = options[@"method"];
-    NSString *customUploadId = options[@"customUploadId"];    
+    NSString *method = options[@"method"] ?: @"POST";
+    NSString *uploadType = options[@"type"] ?: @"raw";
+    NSString *fieldName = options[@"field"];
+    NSString *customUploadId = options[@"customUploadId"];
     NSDictionary *headers = options[@"headers"];
-    
+
     @try {
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: uploadUrl]];
-        request.HTTPMethod = method ? method : @"POST";
+        [request setHTTPMethod: method];
+
         [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull val, BOOL * _Nonnull stop) {
             if ([val respondsToSelector:@selector(stringValue)]) {
                 val = [val stringValue];
@@ -130,14 +133,56 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
                 [request setValue:val forHTTPHeaderField:key];
             }
         }];
-        NSURLSessionDataTask *uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
+
+        NSURLSessionDataTask *uploadTask;
+
+        if ([uploadType isEqualToString:@"multipart"]) {
+            NSString *uuidStr = [[NSUUID UUID] UUIDString];
+            [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", uuidStr] forHTTPHeaderField:@"Content-Type"];
+
+            NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI fieldName:fieldName];
+            [request setHTTPBody: httpBody];
+
+            // I am sorry about warning, but Upload tasks from NSData are not supported in background sessions.
+            uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromData: nil];
+        } else {
+            uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
+        }
+
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
+
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
     @catch (NSException *exception) {
         reject(@"RN Uploader", exception.name, nil);
     }
+}
+
+- (NSData *)createBodyWithBoundary:(NSString *)boundary
+                         path:(NSString *)path
+                         fieldName:(NSString *)fieldName {
+
+    NSMutableData *httpBody = [NSMutableData data];
+
+    // resolve path
+    NSURL *fileUri = [NSURL URLWithString: path];
+    NSString *pathWithoutProtocol = [fileUri path];
+
+    NSData *data = [[NSFileManager defaultManager] contentsAtPath:pathWithoutProtocol];
+
+    NSString *filename  = [path lastPathComponent];
+    NSString *mimetype  = [self guessMIMETypeFromFileName:path];
+
+    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", fieldName, filename] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:data];
+    [httpBody appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+
+    [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+
+    return httpBody;
 }
 
 - (NSURLSession *)urlSession: (int) thisUploadId{
