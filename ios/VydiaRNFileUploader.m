@@ -154,7 +154,12 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     NSDictionary *parameters = options[@"parameters"];
 
     @try {
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString: uploadUrl]];
+        NSURL *requestUrl = [NSURL URLWithString: uploadUrl];
+        if (requestUrl == nil) {
+            @throw @"Request cannot be nil";
+        }
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
         [request setHTTPMethod: method];
 
         [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull val, BOOL * _Nonnull stop) {
