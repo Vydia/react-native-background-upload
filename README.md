@@ -1,14 +1,20 @@
 # react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
+NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
+`npm show react-native-background-upload versions`
 
-## Installation
+## Installation for React Native >= 0.47
 
-`npm install react-native-background-upload`
+`npm install --save react-native-background-upload`
 
 or
 
 `yarn add react-native-background-upload`
+
+## Installation for React Native < 0.47
+
+`npm install --save react-native-background-upload@3.0.0`
 
 ### Automatic Native Library Linking
 
@@ -68,6 +74,7 @@ const options = {
   url: 'https://myservice.com/path/to/post',
   path: 'file://path/to/file/on/device',
   method: 'POST',
+  type: 'raw',
   headers: {
     'my-custom-header': 's3headervalueorwhateveryouneed'
   },
@@ -96,6 +103,21 @@ Upload.startUpload(options).then((uploadId) => {
 })
 ```
 
+## Multipart Uploads
+
+Just set the `type` option to `multipart` and set the `field` option.  Example:
+
+```
+const options = {
+  url: 'https://myservice.com/path/to/post',
+  path: 'file://path/to/file/on/device',
+  method: 'POST',
+  field: 'uploaded_media',
+  type: 'multipart'
+}
+```
+
+Note the `field` property is required for multipart uploads.
 
 ## FAQs
 
@@ -124,6 +146,8 @@ See [CONTRIBUTING.md](https://github.com/Vydia/react-native-background-upload/CO
 
 
 ## BREAKING CHANGE IN 3.0
+This is for 3.0 only.  This does NOT apply to 4.0, as recent React Native versions have upgraded the `okhttp` dependencies.  Anyway...
+
 In 3.0, you need to add
 ```gradle
     configurations.all { resolutionStrategy.force 'com.squareup.okhttp3:okhttp:3.4.1' }
@@ -160,6 +184,6 @@ Done!
 ## Gratitude
 
 Thanks to:
-- [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.  
+- [android-upload-service](https://github.com/gotev/android-upload-service)  It made Android dead simple to support.
 
 - [MIME type from path on iOS](http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database)  Thanks for the answer!

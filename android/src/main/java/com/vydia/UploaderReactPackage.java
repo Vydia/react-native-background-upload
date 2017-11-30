@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class UploaderReactPackage implements ReactPackage {
 
-  @Override
+  // Deprecated in RN 0.47, @todo remove after < 0.47 support remove
   public List<Class<? extends JavaScriptModule>> createJSModules() {
     return Collections.emptyList();
   }
