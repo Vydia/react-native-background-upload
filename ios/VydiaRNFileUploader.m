@@ -43,7 +43,12 @@ NSURLSession *_urlSession = nil;
 }
 
 - (NSArray<NSString *> *)supportedEvents {
-    return @[@"RNFileUploader-progress", @"RNFileUploader-error", @"RNFileUploader-completed"];
+    return @[
+        @"RNFileUploader-progress",
+        @"RNFileUploader-error",
+        @"RNFileUploader-cancelled",
+        @"RNFileUploader-completed"
+    ];
 }
 
 /*
@@ -159,6 +164,22 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     }
 }
 
+/*
+ * Cancels file upload
+ * Accepts upload ID as a first argument, this upload will be cancelled
+ * Event "cancelled" will be fired when upload is cancelled.
+ */
+RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [_urlSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        for (NSURLSessionTask *uploadTask in uploadTasks) {
+            if (uploadTask.taskDescription == cancelUploadId) {
+                [uploadTask cancel];
+            }
+        }
+    }];
+    resolve([NSNumber numberWithBool:YES]);
+}
+
 - (NSData *)createBodyWithBoundary:(NSString *)boundary
                          path:(NSString *)path
                          fieldName:(NSString *)fieldName {
@@ -193,7 +214,6 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     return _urlSession;
 }
 
-
 #pragma NSURLSessionTaskDelegate
 
 - (void)URLSession:(NSURLSession *)session
@@ -223,7 +243,11 @@ didCompleteWithError:(NSError *)error {
     else
     {
         [data setObject:error.localizedDescription forKey:@"error"];
-        [self _sendEventWithName:@"RNFileUploader-error" body:data];
+        if (error.code == NSURLErrorCancelled) {
+            [self _sendEventWithName:@"RNFileUploader-cancelled" body:data];
+        } else {
+            [self _sendEventWithName:@"RNFileUploader-error" body:data];
+        }
     }
 }
 

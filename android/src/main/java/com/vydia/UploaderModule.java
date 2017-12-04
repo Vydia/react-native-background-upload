@@ -194,6 +194,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
                 .addFileToUpload(filePath, options.getString("field"));
       }
 
+
       request.setMethod(method)
         .setMaxRetries(2)
         .setDelegate(statusDelegate);
@@ -216,7 +217,27 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       }
 
       String uploadId = request.startUpload();
-      promise.resolve(customUploadId != null ? customUploadId : uploadId);
+      promise.resolve(uploadId);
+    } catch (Exception exc) {
+      Log.e(TAG, exc.getMessage(), exc);
+      promise.reject(exc);
+    }
+  }
+
+  /*
+   * Cancels file upload
+   * Accepts upload ID as a first argument, this upload will be cancelled
+   * Event "cancelled" will be fired when upload is cancelled.
+   */
+  @ReactMethod
+  public void cancelUpload(String cancelUploadId, final Promise promise) {
+    if (!(cancelUploadId instanceof String)) {
+      promise.reject(new IllegalArgumentException("Upload ID must be a string"));
+      return;
+    }
+    try {
+      UploadService.stopUpload(cancelUploadId);
+      promise.resolve(true);
     } catch (Exception exc) {
       Log.e(TAG, exc.getMessage(), exc);
       promise.reject(exc);
