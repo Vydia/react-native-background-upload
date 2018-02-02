@@ -2,6 +2,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
+#import <Photos/Photos.h>
 
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
 {
@@ -56,15 +57,15 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     @try {
         NSURL *fileUri = [NSURL URLWithString: path];
         NSString *pathWithoutProtocol = [fileUri path];
-        
+
         NSString *name = [fileUri lastPathComponent];
         NSString *extension = [name pathExtension];
         bool exists = [[NSFileManager defaultManager] fileExistsAtPath:pathWithoutProtocol];
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: name, @"name", nil];
-        
+
         [params setObject:extension forKey:@"extension"];
         [params setObject:[NSNumber numberWithBool:exists] forKey:@"exists"];
-        
+
         if (exists)
         {
             [params setObject:[self guessMIMETypeFromFileName:name] forKey:@"mimeType"];
@@ -76,7 +77,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
                 [params setObject:[NSNumber numberWithLong:fileSize] forKey:@"size"];
             }
         }
-        
+
         resolve(params);
     }
     @catch (NSException *exception) {
@@ -149,6 +150,16 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             // I am sorry about warning, but Upload tasks from NSData are not supported in background sessions.
             uploadTask = [[self urlSession] uploadTaskWithRequest:request fromData: nil];
         } else {
+            //https://stackoverflow.com/questions/33278540/phasset-afnetworking-upload-multiple-videos
+            if ([fileURI hasPrefix:@"assets-library"]) {
+                NSURL *url = [NSURL URLWithString:fileURI];
+                PHAsset *capturedAsset = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil].lastObject;
+                if (capturedAsset) {
+                    [self urlSession] uploadTaskWithRequest:request fromData:<#(nonnull NSData *)#>
+                }
+            }
+
+
             uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
 
@@ -208,7 +219,7 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
     if (_urlSession == nil) {
         NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
         _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    }    
+    }
     return _urlSession;
 }
 
@@ -223,7 +234,7 @@ didCompleteWithError:(NSError *)error {
     if (response != nil)
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
-    }        
+    }
     //Add data that was collected earlier by the didReceiveData method
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
     if (responseData) {
@@ -259,7 +270,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     {
         progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
     }
-    
+
     [self _sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
