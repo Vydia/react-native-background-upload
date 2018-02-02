@@ -1,11 +1,3 @@
-//
-//  VydiaRNFileUploader.m
-//  Vydia
-//
-//  Created by Kenneth Leland on 12/8/16.
-//  Copyright © 2016 Vydia. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <React/RCTEventEmitter.h>
@@ -24,8 +16,12 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
-static NSString *BACKGROUND_SESSION_ID = @"VydiaRNFileUploader";
+static NSString *BACKGROUND_SESSION_ID = @"ReactNativeBackgroundUpload";
 NSURLSession *_urlSession = nil;
+
++ (BOOL)requiresMainQueueSetup {
+    return NO;
+}
 
 -(id) init {
   self = [super init];
@@ -88,7 +84,9 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     }
 }
 
-// Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
+/*
+ Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
+*/
 - (NSString *)guessMIMETypeFromFileName: (NSString *)fileName {
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
@@ -149,9 +147,9 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             [request setHTTPBody: httpBody];
 
             // I am sorry about warning, but Upload tasks from NSData are not supported in background sessions.
-            uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromData: nil];
+            uploadTask = [[self urlSession] uploadTaskWithRequest:request fromData: nil];
         } else {
-            uploadTask = [[self urlSession:thisUploadId] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
+            uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
 
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
@@ -206,10 +204,10 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
     return httpBody;
 }
 
-- (NSURLSession *)urlSession: (int) thisUploadId{
-    if(_urlSession == nil) {
-        NSURLSessionConfiguration *sessionConfigurationt = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
-        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfigurationt delegate:self delegateQueue:nil];
+- (NSURLSession *)urlSession {
+    if (_urlSession == nil) {
+        NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
+        _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
     }    
     return _urlSession;
 }
