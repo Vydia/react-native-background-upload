@@ -138,8 +138,11 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             }
         }];
 
-        NSURLSessionDataTask *uploadTask;
+        __block NSURLSessionDataTask *uploadTask;
 
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_group_enter(group);
+        
         if ([uploadType isEqualToString:@"multipart"]) {
             NSString *uuidStr = [[NSUUID UUID] UUIDString];
             [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", uuidStr] forHTTPHeaderField:@"Content-Type"];
@@ -149,20 +152,50 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 
             // I am sorry about warning, but Upload tasks from NSData are not supported in background sessions.
             uploadTask = [[self urlSession] uploadTaskWithRequest:request fromData: nil];
+            dispatch_group_leave(group);
         } else {
-            //https://stackoverflow.com/questions/33278540/phasset-afnetworking-upload-multiple-videos
+//            //https://stackoverflow.com/questions/33278540/phasset-afnetworking-upload-multiple-videos
             if ([fileURI hasPrefix:@"assets-library"]) {
                 NSURL *url = [NSURL URLWithString:fileURI];
-                PHAsset *capturedAsset = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil].lastObject;
-                if (capturedAsset) {
-                    [self urlSession] uploadTaskWithRequest:request fromData:<#(nonnull NSData *)#>
+                PHAsset *asset = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil].lastObject;
+                if (!asset) {
+                    reject(@"RN Uploader", @"Asset could not be fetched.  Are you missing permissions?", nil);
+                    return;
                 }
+                PHAssetResource *assetResource = [[PHAssetResource assetResourcesForAsset:asset] firstObject];
+//                NSString *pathToWrite = [NSTemporaryDirectory() stringByAppendingString:assetResource.originalFilename];
+                NSString *pathToWrite = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+                NSURL *localpath = [NSURL fileURLWithPath:pathToWrite];
+
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+//
+//                // Delete file if it already exists
+                if ([fileManager fileExistsAtPath:pathToWrite]) {
+                    [fileManager removeItemAtURL:localpath error:nil];
+                }
+                PHAssetResourceRequestOptions *options = [PHAssetResourceRequestOptions new];
+                options.networkAccessAllowed = YES;
+                // to get this working, consider something like https://stackoverflow.com/questions/4326350/how-do-i-wait-for-an-asynchronously-dispatched-block-to-finish
+                //http://www.g8production.com/post/76942348764/wait-for-blocks-execution-using-a-dispatch
+                [[PHAssetResourceManager defaultManager] writeDataForAssetResource:assetResource toFile:localpath options:options completionHandler:^(NSError * _Nullable error) {
+                    if (error) {
+                        reject(@"RN Uploader", @"Asset could not be copied.", nil);
+                        return;
+                    }
+                    uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:localpath];
+                    dispatch_group_leave(group);
+                }];
+            } else {
+                uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
+                dispatch_group_leave(group);
             }
-
-
-            uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
 
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+//        dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{
+//            // Won't get here until everything has finished
+//        });
+        
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
 
         [uploadTask resume];
