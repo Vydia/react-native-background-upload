@@ -147,7 +147,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             NSString *pathToWrite = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
             NSURL *pathUrl = [NSURL fileURLWithPath:pathToWrite];
             fileURI = pathUrl.absoluteString;
-            
+
             PHAssetResourceRequestOptions *options = [PHAssetResourceRequestOptions new];
             options.networkAccessAllowed = YES;
 
@@ -165,7 +165,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
                 return;
             }
         }
-        
+
         NSURLSessionDataTask *uploadTask;
 
         if ([uploadType isEqualToString:@"multipart"]) {
@@ -180,7 +180,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
         } else {
             uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
-    
+
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
 
         [uploadTask resume];
@@ -218,7 +218,6 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
     NSString *pathWithoutProtocol = [fileUri path];
 
     NSData *data = [[NSFileManager defaultManager] contentsAtPath:pathWithoutProtocol];
-
     NSString *filename  = [path lastPathComponent];
     NSString *mimetype  = [self guessMIMETypeFromFileName:path];
 
