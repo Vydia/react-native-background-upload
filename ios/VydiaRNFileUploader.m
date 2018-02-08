@@ -57,12 +57,10 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     @try {
         NSURL *fileUri = [NSURL URLWithString: path];
         NSString *pathWithoutProtocol = [fileUri path];
-
         NSString *name = [fileUri lastPathComponent];
         NSString *extension = [name pathExtension];
         bool exists = [[NSFileManager defaultManager] fileExistsAtPath:pathWithoutProtocol];
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: name, @"name", nil];
-
         [params setObject:extension forKey:@"extension"];
         [params setObject:[NSNumber numberWithBool:exists] forKey:@"exists"];
 
@@ -77,7 +75,6 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
                 [params setObject:[NSNumber numberWithLong:fileSize] forKey:@"size"];
             }
         }
-
         resolve(params);
     }
     @catch (NSException *exception) {
