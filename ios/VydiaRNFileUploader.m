@@ -2,6 +2,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
+#import <Photos/Photos.h>
 
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
 {
@@ -56,15 +57,13 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     @try {
         NSURL *fileUri = [NSURL URLWithString: path];
         NSString *pathWithoutProtocol = [fileUri path];
-        
         NSString *name = [fileUri lastPathComponent];
         NSString *extension = [name pathExtension];
         bool exists = [[NSFileManager defaultManager] fileExistsAtPath:pathWithoutProtocol];
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: name, @"name", nil];
-        
         [params setObject:extension forKey:@"extension"];
         [params setObject:[NSNumber numberWithBool:exists] forKey:@"exists"];
-        
+
         if (exists)
         {
             [params setObject:[self guessMIMETypeFromFileName:name] forKey:@"mimeType"];
@@ -76,7 +75,6 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
                 [params setObject:[NSNumber numberWithLong:fileSize] forKey:@"size"];
             }
         }
-        
         resolve(params);
     }
     @catch (NSException *exception) {
@@ -95,6 +93,36 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
         return @"application/octet-stream";
     }
     return (__bridge NSString *)(MIMEType);
+}
+
+/*
+ Utility method to copy a PHAsset file into a local temp file, which can then be uploaded.
+ */
+- (void)copyAssetToFile: (NSString *)assetUrl completionHandler: (void(^)(NSString *__nullable tempFileUrl, NSError *__nullable error))completionHandler {
+    NSURL *url = [NSURL URLWithString:assetUrl];
+    PHAsset *asset = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil].lastObject;
+    if (!asset) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Asset could not be fetched.  Are you missing permissions?" forKey:NSLocalizedDescriptionKey];
+        completionHandler(nil,  [NSError errorWithDomain:@"RNUploader" code:5 userInfo:details]);
+        return;
+    }
+    PHAssetResource *assetResource = [[PHAssetResource assetResourcesForAsset:asset] firstObject];
+    NSString *pathToWrite = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+    NSURL *pathUrl = [NSURL fileURLWithPath:pathToWrite];
+    NSString *fileURI = pathUrl.absoluteString;
+
+    PHAssetResourceRequestOptions *options = [PHAssetResourceRequestOptions new];
+    options.networkAccessAllowed = YES;
+
+    [[PHAssetResourceManager defaultManager] writeDataForAssetResource:assetResource toFile:pathUrl options:options completionHandler:^(NSError * _Nullable e) {
+        if (e == nil) {
+            completionHandler(fileURI, nil);
+        }
+        else {
+            completionHandler(nil, e);
+        }
+    }];
 }
 
 /*
@@ -117,7 +145,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     }
 
     NSString *uploadUrl = options[@"url"];
-    NSString *fileURI = options[@"path"];
+    __block NSString *fileURI = options[@"path"];
     NSString *method = options[@"method"] ?: @"POST";
     NSString *uploadType = options[@"type"] ?: @"raw";
     NSString *fieldName = options[@"field"];
@@ -136,6 +164,23 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
                 [request setValue:val forHTTPHeaderField:key];
             }
         }];
+
+
+        // asset library files have to be copied over to a temp file.  they can't be uploaded directly
+        if ([fileURI hasPrefix:@"assets-library"]) {
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_enter(group);
+            [self copyAssetToFile:fileURI completionHandler:^(NSString * _Nullable tempFileUrl, NSError * _Nullable error) {
+                if (error) {
+                    dispatch_group_leave(group);
+                    reject(@"RN Uploader", @"Asset could not be copied to temp file.", nil);
+                    return;
+                }
+                fileURI = tempFileUrl;
+                dispatch_group_leave(group);
+            }];
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        }
 
         NSURLSessionDataTask *uploadTask;
 
@@ -189,7 +234,6 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
     NSString *pathWithoutProtocol = [fileUri path];
 
     NSData *data = [[NSFileManager defaultManager] contentsAtPath:pathWithoutProtocol];
-
     NSString *filename  = [path lastPathComponent];
     NSString *mimetype  = [self guessMIMETypeFromFileName:path];
 
@@ -208,7 +252,7 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
     if (_urlSession == nil) {
         NSURLSessionConfiguration *sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:BACKGROUND_SESSION_ID];
         _urlSession = [NSURLSession sessionWithConfiguration:sessionConfiguration delegate:self delegateQueue:nil];
-    }    
+    }
     return _urlSession;
 }
 
@@ -223,7 +267,7 @@ didCompleteWithError:(NSError *)error {
     if (response != nil)
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
-    }        
+    }
     //Add data that was collected earlier by the didReceiveData method
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
     if (responseData) {
@@ -259,7 +303,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     {
         progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
     }
-    
     [self _sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
