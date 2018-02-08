@@ -287,7 +287,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     {
         progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
     }
-
     [self _sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
