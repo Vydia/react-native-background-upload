@@ -96,6 +96,7 @@ Upload.startUpload(options).then((uploadId) => {
     console.log(`Cancelled!`)
   })
   Upload.addListener('completed', uploadId, (data) => {
+    // data includes responseCode: number and responseBody: Object
     console.log('Completed!')
   })
 }).catch((err) => {
