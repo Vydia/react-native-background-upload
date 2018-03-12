@@ -19,7 +19,7 @@ export type StartUploadArgs = {
   field?: string,
   customUploadId?: string,
   // parameters are supported only in multipart type
-  parameters?: { [x:string]: string },
+  parameters?: { [string]: string },
   headers?: Object,
   notification?: NotificationArgs
 }
