@@ -203,6 +203,27 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         request.setNotificationConfig(new UploadNotificationConfig());
       }
 
+      if (options.hasKey("parameters")) {
+        if (requestType.equals("raw")) {
+          promise.reject(new IllegalArgumentException("Parameters supported only in multipart type"));
+          return;
+        }
+
+        ReadableMap parameters = options.getMap("parameters");
+        ReadableMapKeySetIterator keys = parameters.keySetIterator();
+
+        while (keys.hasNextKey()) {
+          String key = keys.nextKey();
+
+          if (parameters.getType(key) != ReadableType.String) {
+            promise.reject(new IllegalArgumentException("Parameters must be string key/values. Value was invalid for '" + key + "'"));
+            return;
+          }
+
+          request.addParameter(key, parameters.getString(key));
+        }
+      }
+
       if (options.hasKey("headers")) {
         ReadableMap headers = options.getMap("headers");
         ReadableMapKeySetIterator keys = headers.keySetIterator();
