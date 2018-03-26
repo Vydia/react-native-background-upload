@@ -4,7 +4,10 @@ The only React Native http post file uploader with android and iOS background su
 NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
 `npm show react-native-background-upload versions`
 
-## Installation for React Native >= 0.47
+
+# Installation
+
+## 1. Install package
 
 `npm install --save react-native-background-upload`
 
@@ -12,15 +15,15 @@ or
 
 `yarn add react-native-background-upload`
 
-## Installation for React Native < 0.47
+Note: if you are installing on React Native < 0.47, use `react-native-background-upload@3.0.0` instead of `react-native-background-upload`
 
-`npm install --save react-native-background-upload@3.0.0`
+## 2. Link Native Code
 
 ### Automatic Native Library Linking
 
 `react-native link react-native-background-upload`
 
-### Manual Native Library Linking
+### Or, Manually Link It
 
 #### iOS
 
@@ -65,7 +68,7 @@ or
 4. Ensure Android SDK versions.  Open your app's `android/app/build.gradle` file.  Ensure `compileSdkVersion` and `targetSdkVersion` are 25.  Otherwise you'll get compilation errors.
 
 
-## Usage
+# Usage
 
 ```js
 import Upload from 'react-native-background-upload'
@@ -120,7 +123,7 @@ const options = {
 
 Note the `field` property is required for multipart uploads.
 
-## FAQs
+# FAQs
 
 Is there an example/sandbox app to test out this package?
 
@@ -141,10 +144,11 @@ Why should I use this file uploader instead of others that I've Googled like [re
 > This package has two killer features not found anywhere else (as of 12/16/2016).  First, it works on both iOS and Android.  Others are iOS only.  Second, it supports background uploading.  This means that users can background your app and the upload will continue.  This does not happen with other uploaders.
 
 
-## Contributing
+# Contributing
 
 See [CONTRIBUTING.md](https://github.com/Vydia/react-native-background-upload/CONTRIBUTING.md).
 
+# Common Issues
 
 ## BREAKING CHANGE IN 3.0
 This is for 3.0 only.  This does NOT apply to 4.0, as recent React Native versions have upgraded the `okhttp` dependencies.  Anyway...
