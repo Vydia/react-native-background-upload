@@ -79,6 +79,7 @@ const options = {
   method: 'POST',
   type: 'raw',
   headers: {
+    'content-type': 'application/octet-stream', // Customize content-type
     'my-custom-header': 's3headervalueorwhateveryouneed'
   },
   // Below are options only supported on Android
