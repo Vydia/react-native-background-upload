@@ -219,7 +219,7 @@ Event Data
 Event Data
 
 |Name|Type|Required|Description|
-|---|---|---|---|---|
+|---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 
 # FAQs
