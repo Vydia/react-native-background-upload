@@ -125,9 +125,12 @@ const options = {
 Note the `field` property is required for multipart uploads.
 
 # API
+
+## Top Level Functions
+
 All top-level methods are available as named exports or methods on the default export.
 
-## startUpload(options)
+### startUpload(options)
 
 The primary method you will use, this starts the upload process.  
 
@@ -147,7 +150,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|object with single `enabled` field|Optional||Android only.  |`{ enabled: false }`|
 
-## getFileInfo(path)
+### getFileInfo(path)
 
 Returns some useful information about the file in question.  Useful if you want to set a MIME type header.
 
@@ -163,7 +166,7 @@ Returns a Promise that resolves to an object containing:
 |`extension`|string|If `exists`|File extension|`mov`|
 |`mimeType`|string|If `exists`|The MIME type for the file.|`video/mp4`|
 
-## cancelUpload(uploadId)
+### cancelUpload(uploadId)
 
 Cancels an upload.
 
@@ -171,7 +174,7 @@ Cancels an upload.
 
 Returns a Promise that resolves to an boolean indicating whether the upload was cancelled.
 
-## addListener(eventType, uploadId, listener)
+### addListener(eventType, uploadId, listener)
 
 Adds an event listener, possibly confined to a single upload.
 
@@ -181,9 +184,43 @@ Adds an event listener, possibly confined to a single upload.
 
 `listener` Function to call when the event occurs.
 
-## Event properties
+## Events
 
-TODO
+### progress
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`progress`|0-100|Required|Percentage completed.|
+
+### error
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`error`|string|Required|Error message.|
+
+### completed
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`responseCode`|string|Required|HTTP status code received|
+|`responseBody`|string|Required|HTTP response body|
+
+### cancelled
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
 
 # FAQs
 
