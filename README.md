@@ -191,7 +191,7 @@ Adds an event listener, possibly confined to a single upload.
 Event Data
 
 |Name|Type|Required|Description|
-|---|---|---|---|---|
+|---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 |`progress`|0-100|Required|Percentage completed.|
 
@@ -200,7 +200,7 @@ Event Data
 Event Data
 
 |Name|Type|Required|Description|
-|---|---|---|---|---|
+|---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 |`error`|string|Required|Error message.|
 
@@ -209,7 +209,7 @@ Event Data
 Event Data
 
 |Name|Type|Required|Description|
-|---|---|---|---|---|
+|---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 |`responseCode`|string|Required|HTTP status code received|
 |`responseBody`|string|Required|HTTP response body|
