@@ -159,7 +159,7 @@ Returns some useful information about the file in question.  Useful if you want 
 Returns a Promise that resolves to an object containing:
 
 |Name|Type|Required|Description|Example|
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 |`name`|string|Required|The file name within its directory.|`image2.png`|
 |`exists`|boolean|Required|Is there a file matching this path?||
 |`size`|number|If `exists`|File size, in bytes||
