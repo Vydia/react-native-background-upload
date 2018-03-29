@@ -124,6 +124,104 @@ const options = {
 
 Note the `field` property is required for multipart uploads.
 
+# API
+
+## Top Level Functions
+
+All top-level methods are available as named exports or methods on the default export.
+
+### startUpload(options)
+
+The primary method you will use, this starts the upload process.  
+
+Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.
+
+`options` is an object with values:
+
+|Name|Type|Required|Default|Description|Example|
+|---|---|---|---|---|---|
+|`url`|string|Required||URL to upload to|`https://myservice.com/path/to/post`|
+|`path`|string|Required||File path on device|`file://something/coming/from/the/device.png`|
+|`type`|'raw' or 'multipart'|Optional|`raw`|Primary upload type.||
+|`method`|string|Optional|`POST`|HTTP method||
+|`customUploadId`|string|Optional||`startUpload` returns a Promise that includes the upload ID, which can be used for future status checks.  By default, the upload ID is automatically generated.  This parameter allows a custom ID to use instead of the default.||
+|`headers`|object|Optional||HTTP headers|`{ 'Accept': 'application/json' }`|
+|`field`|string|Required if `type: 'multipart'`||The form field name for the file.  Only used when `type: 'multipart`|`uploaded-file`|
+|`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
+|`notification`|object with single `enabled` field|Optional||Android only.  |`{ enabled: false }`|
+
+### getFileInfo(path)
+
+Returns some useful information about the file in question.  Useful if you want to set a MIME type header.
+
+`path` is a string, such as `file://path.to.the.file.png`
+
+Returns a Promise that resolves to an object containing:
+
+|Name|Type|Required|Description|Example|
+|---|---|---|---|---|
+|`name`|string|Required|The file name within its directory.|`image2.png`|
+|`exists`|boolean|Required|Is there a file matching this path?||
+|`size`|number|If `exists`|File size, in bytes||
+|`extension`|string|If `exists`|File extension|`mov`|
+|`mimeType`|string|If `exists`|The MIME type for the file.|`video/mp4`|
+
+### cancelUpload(uploadId)
+
+Cancels an upload.
+
+`uploadId` is the result of the Promise returned from `startUpload`
+
+Returns a Promise that resolves to an boolean indicating whether the upload was cancelled.
+
+### addListener(eventType, uploadId, listener)
+
+Adds an event listener, possibly confined to a single upload.
+
+`eventType` Event to listen for. Values: 'progress' | 'error' | 'completed' | 'cancelled'
+
+`uploadId` The upload ID from `startUpload` to filter events for.  If null, this will include all uploads.
+
+`listener` Function to call when the event occurs.
+
+## Events
+
+### progress
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`progress`|0-100|Required|Percentage completed.|
+
+### error
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`error`|string|Required|Error message.|
+
+### completed
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+|`responseCode`|string|Required|HTTP status code received|
+|`responseBody`|string|Required|HTTP response body|
+
+### cancelled
+
+Event Data
+
+|Name|Type|Required|Description|
+|---|---|---|---|
+|`id`|string|Required|The ID of the upload.|
+
 # FAQs
 
 Is there an example/sandbox app to test out this package?
@@ -134,7 +232,7 @@ Is there an example/sandbox app to test out this package?
 
 Does it support iOS camera roll assets?
 
-> Yes, as of version 4.3.0. 
+> Yes, as of version 4.3.0.
 
 Does it support multiple file uploads?
 
