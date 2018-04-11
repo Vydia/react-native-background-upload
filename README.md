@@ -115,7 +115,7 @@ Just set the `type` option to `multipart` and set the `field` option.  Example:
 ```
 const options = {
   url: 'https://myservice.com/path/to/post',
-  path: 'file://path/to/file/on/device',
+  path: 'file://path/to/file%20on%20device.png',
   method: 'POST',
   field: 'uploaded_media',
   type: 'multipart'
@@ -136,12 +136,14 @@ The primary method you will use, this starts the upload process.
 
 Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.
 
-`options` is an object with values:
+`options` is an object with following values:
+
+*Note: You must provide valid URIs. react-native-background-upload does not escape the values you provide.*
 
 |Name|Type|Required|Default|Description|Example|
 |---|---|---|---|---|---|
 |`url`|string|Required||URL to upload to|`https://myservice.com/path/to/post`|
-|`path`|string|Required||File path on device|`file://something/coming/from/the/device.png`|
+|`path`|string|Required||File path on device|`file://something/coming/from%20the%20device.png`|
 |`type`|'raw' or 'multipart'|Optional|`raw`|Primary upload type.||
 |`method`|string|Optional|`POST`|HTTP method||
 |`customUploadId`|string|Optional||`startUpload` returns a Promise that includes the upload ID, which can be used for future status checks.  By default, the upload ID is automatically generated.  This parameter allows a custom ID to use instead of the default.||
