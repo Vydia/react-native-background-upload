@@ -67,6 +67,9 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 4. Ensure Android SDK versions.  Open your app's `android/app/build.gradle` file.  Ensure `compileSdkVersion` and `targetSdkVersion` are 25.  Otherwise you'll get compilation errors.
 
+## 3. Expo
+
+To use this library with [Expo](https://expo.io) one must first detach (eject) the project and follow the normal `react-native link` instructions. Additionally on iOS there is a must to add a Header Search Path to other dependencies which are managed using Pods. To do so one has to add `$(SRCROOT)/../../../ios/Pods/Headers/Public/**` to Header Search Path in `VydiaRNFileUploader Group` module using XCode. 
 
 # Usage
 
