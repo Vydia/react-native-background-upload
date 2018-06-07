@@ -150,9 +150,13 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         }
 
         @Override
-        public void onError(Context context, UploadInfo uploadInfo, Exception exception) {
+        public void onError(Context context, UploadInfo uploadInfo, ServerResponse serverResponse, Exception exception) {
           WritableMap params = Arguments.createMap();
           params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
+          if (serverResponse != null) {
+            params.putInt("responseCode", serverResponse.getHttpCode());
+            params.putString("responseBody", serverResponse.getBodyAsString());
+          }
           params.putString("error", exception.getMessage());
           sendEvent("error", params);
         }
