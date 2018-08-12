@@ -207,10 +207,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
 
         UploadNotificationConfig notificationConfig = new UploadNotificationConfig();
 
-        if(notification.getString("notificationChannel")){
+        if(notification.hasKey("notificationChannel")){
           notificationConfig.setNotificationChannelId(notification.getString("notificationChannel"));
-        }else{
-          notificationConfig.setNotificationChannelId("Background-Upload-Service");
         }
 
         request.setNotificationConfig(notificationConfig);
