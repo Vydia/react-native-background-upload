@@ -157,7 +157,14 @@ public class UploaderModule extends ReactContextBaseJavaModule {
             params.putInt("responseCode", serverResponse.getHttpCode());
             params.putString("responseBody", serverResponse.getBodyAsString());
           }
-          params.putString("error", exception.getMessage());
+
+          // Make sure we do not try to call getMessage() on a null object
+          if(exception){
+            params.putString("error", exception.getMessage());
+          }else{
+            params.putString("error", "Unknown exception");
+          }
+
           sendEvent("error", params);
         }
 
@@ -246,7 +253,6 @@ public class UploaderModule extends ReactContextBaseJavaModule {
         if (notification.hasKey("onCancelledMessage")) {
           notificationConfig.getCancelled().message = notification.getString("onCancelledMessage");
         }
-        
 
         request.setNotificationConfig(notificationConfig);
 
