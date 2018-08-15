@@ -305,19 +305,6 @@ Ensure `compileSdkVersion` and `targetSdkVersion` are 25.
 
 Done!
 
-## Known issues
-
-Android APK 27 and above require notifications to provide their own `NotificationChannel`. `react-native-background-upload` does not yet meet this requirement and thus [will cause crashes in Android 8.1 and above](https://github.com/Vydia/react-native-background-upload/issues/59#issuecomment-362476703). This issue can be avoided by electing not to use native notifications.
-
-```js
-const options = {
-  // ...
-  notification: {
-    enabled: false,
-  },
-};
-```
-
 
 ## Gratitude
 
