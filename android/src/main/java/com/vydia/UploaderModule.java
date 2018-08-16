@@ -159,7 +159,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           }
 
           // Make sure we do not try to call getMessage() on a null object
-          if(exception){
+          if(exception != null){
             params.putString("error", exception.getMessage());
           }else{
             params.putString("error", "Unknown exception");
@@ -218,7 +218,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           notificationConfig.setNotificationChannelId(notification.getString("notificationChannel"));
         }
 
-        if(notification.getBoolean("autoClear")){
+        if(notification.hasKey("autoClear") && notification.getBoolean("autoClear")){
           notificationConfig.getCompleted().autoClear = true;
         }
 
