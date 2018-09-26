@@ -243,6 +243,35 @@ Event Data
 |---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 
+# Customizing Android Build Properties
+You may want to customize the `compileSdk, buildToolsVersion, and targetSdkVersion` versions used by this package.  For that, add this to `android/build.gradle`:
+
+```
+ext {
+    targetSdkVersion = 23
+    compileSdkVersion = 23
+    buildToolsVersion = '23.0.2'
+}
+```
+
+Add it above `allProjects` and you're good.  Your `android/build.gradle` might then resemble:
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+ext {
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '23.0.2'
+}
+
+allprojects {
+
+```
+
 # FAQs
 
 Is there an example/sandbox app to test out this package?
