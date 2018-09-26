@@ -155,7 +155,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|Notification object (see below)|Optional||Android only.  |`{ enabled: true, onProgressTitle: "Uploading...", autoClear: true }`|
 
-### Notification Object
+### Notification Object (Android Only)
 |Name|Type|Required|Description|Example|
 |---|---|---|---|---|
 |`enabled`|boolean|Optional|Enable or diasable notifications|`{ enabled: true }`|
