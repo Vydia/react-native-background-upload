@@ -205,6 +205,8 @@ Adds an event listener, possibly confined to a single upload.
 
 `listener` Function to call when the event occurs.
 
+Returns an [EventSubscription](https://github.com/facebook/react-native/blob/master/Libraries/vendor/emitter/EmitterSubscription.js). To remove the listener, call `remove()` on the `EventSubscription`.
+
 ## Events
 
 ### progress
