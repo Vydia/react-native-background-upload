@@ -13,7 +13,7 @@ export type NotificationArgs = {
 export type StartUploadArgs = {
   url: string,
   path: string,
-  method: 'PUT' | 'POST',
+  method?: 'PUT' | 'POST',
   // Optional, because raw is default
   type?: 'raw' | 'multipart',
   // This option is needed for multipart type
