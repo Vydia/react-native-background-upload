@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by stephen on 12/8/16.
- */
 public class UploaderReactPackage implements ReactPackage {
 
   // Deprecated in RN 0.47, @todo remove after < 0.47 support remove

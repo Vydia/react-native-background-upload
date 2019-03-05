@@ -29,9 +29,6 @@ import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.io.File;
 
-/**
- * Created by stephen on 12/8/16.
- */
 public class UploaderModule extends ReactContextBaseJavaModule {
   private static final String TAG = "UploaderBridge";
 
