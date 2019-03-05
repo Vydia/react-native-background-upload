@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
@@ -35,5 +36,5 @@ repositories {
 }
 dependencies {
     compileOnly "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
-    compile 'net.gotev:uploadservice-okhttp:3.5.0'
+    compile 'net.gotev:uploadservice-okhttp:3.5.1'
 }

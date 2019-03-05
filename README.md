@@ -1,11 +1,9 @@
 # react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
-NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
-`npm show react-native-background-upload versions`
-
-
 # Installation
+
+If you have React Native < 0.47, use version 3.0 of this library and good luck.
 
 ## 1. Install package
 
@@ -69,7 +67,7 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 ## 3. Expo
 
-To use this library with [Expo](https://expo.io) one must first detach (eject) the project and follow the normal `react-native link` instructions. Additionally on iOS there is a must to add a Header Search Path to other dependencies which are managed using Pods. To do so one has to add `$(SRCROOT)/../../../ios/Pods/Headers/Public` to Header Search Path in `VydiaRNFileUploader` module using XCode. 
+To use this library with [Expo](https://expo.io) one must first detach (eject) the project and follow the normal `react-native link` instructions. Additionally on iOS there is a must to add a Header Search Path to other dependencies which are managed using Pods. To do so one has to add `$(SRCROOT)/../../../ios/Pods/Headers/Public` to Header Search Path in `VydiaRNFileUploader` module using XCode.
 
 # Usage
 
@@ -135,7 +133,7 @@ All top-level methods are available as named exports or methods on the default e
 
 ### startUpload(options)
 
-The primary method you will use, this starts the upload process.  
+The primary method you will use, this starts the upload process.
 
 Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.
 
