@@ -197,8 +197,8 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI parameters: parameters fieldName:fieldName];
             [request setHTTPBody: httpBody];
 
-            // I am sorry about warning, but Upload tasks from NSData are not supported in background sessions.
-            uploadTask = [[self urlSession] uploadTaskWithRequest:request fromData: nil];
+            //using uploadTaskWithStreamedRequest instead of uploadTaskWithRequest to ensure more than 2 video uploads at the same time
+            uploadTask = [[self urlSession] uploadTaskWithStreamedRequest:request];
         } else {
             if (parameters.count > 0) {
                 reject(@"RN Uploader", @"Parameters supported only in multipart type", nil);
