@@ -158,7 +158,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
         if (requestUrl == nil) {
             @throw @"Request cannot be nil";
         }
-        
+
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
         [request setHTTPMethod: method];
 
@@ -197,14 +197,13 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI parameters: parameters fieldName:fieldName];
             [request setHTTPBody: httpBody];
 
-            //using uploadTaskWithStreamedRequest instead of uploadTaskWithRequest to ensure more than 2 video uploads at the same time
             uploadTask = [[self urlSession] uploadTaskWithStreamedRequest:request];
         } else {
             if (parameters.count > 0) {
                 reject(@"RN Uploader", @"Parameters supported only in multipart type", nil);
                 return;
             }
-            
+
             uploadTask = [[self urlSession] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
 
