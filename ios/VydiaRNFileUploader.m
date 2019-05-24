@@ -335,14 +335,14 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    NSLog(@"RNBU did finish events for background URL session");
     if (backgroundSessionCompletionHandler) {
         double delayInSeconds = 1.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            backgroundSessionCompletionHandler();
-            backgroundSessionCompletionHandler = nil;
-            NSLog(@"RNBU did invoque backgroundSessionCompletionHandler");
+            if (backgroundSessionCompletionHandler) {
+                backgroundSessionCompletionHandler();
+                backgroundSessionCompletionHandler = nil;
+            }
         });
     }
 }
