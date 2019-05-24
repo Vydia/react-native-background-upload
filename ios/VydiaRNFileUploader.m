@@ -4,11 +4,7 @@
 #import <React/RCTBridgeModule.h>
 #import <Photos/Photos.h>
 
-@interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
-{
-  NSMutableDictionary *_responsesData;
-}
-@end
+#import "VydiaRNFileUploader.h"
 
 @implementation VydiaRNFileUploader
 
@@ -18,25 +14,26 @@ RCT_EXPORT_MODULE();
 static int uploadId = 0;
 static RCTEventEmitter* staticEventEmitter = nil;
 static NSString *BACKGROUND_SESSION_ID = @"ReactNativeBackgroundUpload";
+NSMutableDictionary *_responsesData;
 NSURLSession *_urlSession = nil;
+void (^backgroundSessionCompletionHandler)(void) = nil;
 
 + (BOOL)requiresMainQueueSetup {
     return NO;
 }
 
 -(id) init {
-  self = [super init];
-  if (self) {
-    staticEventEmitter = self;
-    _responsesData = [NSMutableDictionary dictionary];
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        staticEventEmitter = self;
+        _responsesData = [NSMutableDictionary dictionary];
+    }
+    return self;
 }
 
 - (void)_sendEventWithName:(NSString *)eventName body:(id)body {
-  if (staticEventEmitter == nil)
-    return;
-  [staticEventEmitter sendEventWithName:eventName body:body];
+    if (staticEventEmitter == nil) return;
+    [staticEventEmitter sendEventWithName:eventName body:body];
 }
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -46,6 +43,10 @@ NSURLSession *_urlSession = nil;
         @"RNFileUploader-cancelled",
         @"RNFileUploader-completed"
     ];
+}
+
++ (void)setBackgroundSessionCompletionHandler:(void (^)(void))handler {
+    backgroundSessionCompletionHandler = handler;
 }
 
 /*
@@ -84,7 +85,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
 
 /*
  Borrowed from http://stackoverflow.com/questions/2439020/wheres-the-iphone-mime-type-database
-*/
+ */
 - (NSString *)guessMIMETypeFromFileName: (NSString *)fileName {
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
@@ -235,9 +236,9 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
 }
 
 - (NSData *)createBodyWithBoundary:(NSString *)boundary
-                         path:(NSString *)path
-                         parameters:(NSDictionary *)parameters
-                         fieldName:(NSString *)fieldName {
+            path:(NSString *)path
+            parameters:(NSDictionary *)parameters
+            fieldName:(NSString *)fieldName {
 
     NSMutableData *httpBody = [NSMutableData data];
 
@@ -287,7 +288,7 @@ didCompleteWithError:(NSError *)error {
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
     }
-    //Add data that was collected earlier by the didReceiveData method
+    // Add data that was collected earlier by the didReceiveData method
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
     if (responseData) {
         [_responsesData removeObjectForKey:@(task.taskIdentifier)];
@@ -297,12 +298,9 @@ didCompleteWithError:(NSError *)error {
         [data setObject:[NSNull null] forKey:@"responseBody"];
     }
 
-    if (error == nil)
-    {
+    if (error == nil) {
         [self _sendEventWithName:@"RNFileUploader-completed" body:data];
-    }
-    else
-    {
+    } else {
         [data setObject:error.localizedDescription forKey:@"error"];
         if (error.code == NSURLErrorCancelled) {
             [self _sendEventWithName:@"RNFileUploader-cancelled" body:data];
@@ -318,24 +316,34 @@ didCompleteWithError:(NSError *)error {
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     float progress = -1;
-    if (totalBytesExpectedToSend > 0) //see documentation.  For unknown size it's -1 (NSURLSessionTransferSizeUnknown)
-    {
+    if (totalBytesExpectedToSend > 0) { // see documentation.  For unknown size it's -1 (NSURLSessionTransferSizeUnknown)
         progress = 100.0 * (float)totalBytesSent / (float)totalBytesExpectedToSend;
     }
     [self _sendEventWithName:@"RNFileUploader-progress" body:@{ @"id": task.taskDescription, @"progress": [NSNumber numberWithFloat:progress] }];
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
-    if (!data.length) {
-        return;
-    }
-    //Hold returned data so it can be picked up by the didCompleteWithError method later
+    if (!data.length) return;
+    // Hold returned data so it can be picked up by the didCompleteWithError method later
     NSMutableData *responseData = _responsesData[@(dataTask.taskIdentifier)];
     if (!responseData) {
         responseData = [NSMutableData dataWithData:data];
         _responsesData[@(dataTask.taskIdentifier)] = responseData;
     } else {
         [responseData appendData:data];
+    }
+}
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+    NSLog(@"RNBU did finish events for background URL session");
+    if (backgroundSessionCompletionHandler) {
+        double delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            backgroundSessionCompletionHandler();
+            backgroundSessionCompletionHandler = nil;
+            NSLog(@"RNBU did invoque backgroundSessionCompletionHandler");
+        });
     }
 }
 
