@@ -12,7 +12,7 @@ RCT_EXPORT_MODULE();
 
 @synthesize bridge = _bridge;
 static int uploadId = 0;
-static RCTEventEmitter* staticEventEmitter = nil;
+static VydiaRNFileUploader* staticInstance = nil;
 static NSString *BACKGROUND_SESSION_ID = @"ReactNativeBackgroundUpload";
 NSMutableDictionary *_responsesData;
 NSURLSession *_urlSession = nil;
@@ -25,15 +25,15 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
 -(id) init {
     self = [super init];
     if (self) {
-        staticEventEmitter = self;
+        staticInstance = self;
         _responsesData = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
 - (void)_sendEventWithName:(NSString *)eventName body:(id)body {
-    if (staticEventEmitter == nil) return;
-    [staticEventEmitter sendEventWithName:eventName body:body];
+    if (staticInstance == nil) return;
+    [staticInstance sendEventWithName:eventName body:body];
 }
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -47,6 +47,10 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
 
 + (void)setBackgroundSessionCompletionHandler:(void (^)(void))handler {
     backgroundSessionCompletionHandler = handler;
+    // Create the background url session if the app was open from the background
+    // iOS will then deliver the completed tasks in the NSURLSessionTaskDelegate
+    [staticInstance urlSession];
+    NSLog(@"RNBU did setBackgroundSessionCompletionHandler");
 }
 
 /*
@@ -189,7 +193,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         }
 
-        NSURLSessionDataTask *uploadTask;
+        NSURLSessionUploadTask *uploadTask;
 
         if ([uploadType isEqualToString:@"multipart"]) {
             NSString *uuidStr = [[NSUUID UUID] UUIDString];
@@ -209,7 +213,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
         }
 
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
-
+        NSLog(@"RNBU will start upload %i", thisUploadId);
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
@@ -233,6 +237,17 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
         }
     }];
     resolve([NSNumber numberWithBool:YES]);
+}
+
+RCT_EXPORT_METHOD(canSuspendIfBackground) {
+    NSLog(@"RNBU canSuspendIfBackground");
+    dispatch_sync(dispatch_get_main_queue(), ^(void){
+        if (backgroundSessionCompletionHandler) {
+            backgroundSessionCompletionHandler();
+            NSLog(@"RNBU did call backgroundSessionCompletionHandler (canSuspendIfBackground)");
+            backgroundSessionCompletionHandler = nil;
+        }
+    });
 }
 
 - (NSData *)createBodyWithBoundary:(NSString *)boundary
@@ -300,12 +315,15 @@ didCompleteWithError:(NSError *)error {
 
     if (error == nil) {
         [self _sendEventWithName:@"RNFileUploader-completed" body:data];
+        NSLog(@"RNBU did complete upload %@", task.taskDescription);
     } else {
         [data setObject:error.localizedDescription forKey:@"error"];
         if (error.code == NSURLErrorCancelled) {
             [self _sendEventWithName:@"RNFileUploader-cancelled" body:data];
+            NSLog(@"RNBU did cancel upload %@", task.taskDescription);
         } else {
             [self _sendEventWithName:@"RNFileUploader-error" body:data];
+            NSLog(@"RNBU did error upload %@", task.taskDescription);
         }
     }
 }
@@ -336,14 +354,19 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
     if (backgroundSessionCompletionHandler) {
-        double delayInSeconds = 1.0;
+        NSLog(@"RNBU Did Finish Events For Background URLSession (has backgroundSessionCompletionHandler)");
+        // This long delay is set as a security if the JS side does not call :canSuspendIfBackground: promptly
+        double delayInSeconds = 45.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             if (backgroundSessionCompletionHandler) {
                 backgroundSessionCompletionHandler();
+                NSLog(@"RNBU did call backgroundSessionCompletionHandler (timeout)");
                 backgroundSessionCompletionHandler = nil;
             }
         });
+    } else {
+        NSLog(@"RNBU Did Finish Events For Background URLSession (no backgroundSessionCompletionHandler)");
     }
 }
 
