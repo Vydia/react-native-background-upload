@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		014A3B5C1C6CF33500B6D375 /* libVydiaRNFileUploader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVydiaRNFileUploader.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC748841E044F8700EA453E /* VydiaRNFileUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VydiaRNFileUploader.m; sourceTree = "<group>"; };
+		E7549807229D344D00BA2049 /* VydiaRNFileUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VydiaRNFileUploader.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +42,7 @@
 		014A3B531C6CF33500B6D375 = {
 			isa = PBXGroup;
 			children = (
+				E7549807229D344D00BA2049 /* VydiaRNFileUploader.h */,
 				DCC748841E044F8700EA453E /* VydiaRNFileUploader.m */,
 				014A3B5D1C6CF33500B6D375 /* Products */,
 			);
@@ -93,6 +95,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 014A3B531C6CF33500B6D375;
