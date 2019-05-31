@@ -39,7 +39,7 @@ if (NativeModules.VydiaRNFileUploader) {
 /*
 Gets file information for the path specified.
 Example valid path is:
-  Android: '/storage/extSdCard/DCIM/Camera/20161116_074726.mp4'
+  Android: '/storage/extSdCard/DCIM/Camera/20161116_074726.mp4' or 'file:///storage/extSdCard/DCIM/Camera/20161116_074726.mp4'
   iOS: 'file:///var/mobile/Containers/Data/Application/3C8A0EFB-A316-45C0-A30A-761BF8CCF2F8/tmp/trim.A5F76017-14E9-4890-907E-36A045AF9436.MOV;
 
 Returns an object:
@@ -63,7 +63,7 @@ Starts uploading a file to an HTTP endpoint.
 Options object:
 {
   url: string.  url to post to.
-  path: string.  path to the file on the device
+  path: string.  path to the file on the device ("file://" prefixed path)
   headers: hash of name/value header pairs
   method: HTTP method to use.  Default is "POST"
   notification: hash for customizing tray notifiaction

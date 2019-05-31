@@ -50,7 +50,13 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   Sends an event to the JS module.
    */
   private void sendEvent(String eventName, @Nullable WritableMap params) {
-    this.getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("RNFileUploader-" + eventName, params);
+    this.getReactApplicationContext()
+        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit("RNFileUploader-" + eventName, params);
+  }
+
+  private String convertURI(String pathOrURI) {
+    return pathOrURI.startsWith("file://") ? pathOrURI.substring(7) : pathOrURI;
   }
 
   /*
@@ -61,22 +67,18 @@ public class UploaderModule extends ReactContextBaseJavaModule {
   public void getFileInfo(String path, final Promise promise) {
     try {
       WritableMap params = Arguments.createMap();
-      File fileInfo = new File(path);
+      File fileInfo = new File(convertURI(path));
       params.putString("name", fileInfo.getName());
-      if (!fileInfo.exists() || !fileInfo.isFile())
-      {
+      if (!fileInfo.exists() || !fileInfo.isFile()) {
         params.putBoolean("exists", false);
-      }
-      else
-      {
+      } else {
         params.putBoolean("exists", true);
-        params.putString("size",Long.toString(fileInfo.length())); //use string form of long because there is no putLong and converting to int results in a max size of 17.2 gb, which could happen.  Javascript will need to convert it to a number
+        params.putDouble("size", fileInfo.length());
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
-        params.putString("extension",extension);
+        params.putString("extension", extension);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
         params.putString("mimeType", mimeType);
       }
-
       promise.resolve(params);
     } catch (Exception exc) {
       Log.e(TAG, exc.getMessage(), exc);
@@ -134,7 +136,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     }
 
     String url = options.getString("url");
-    String filePath = options.getString("path");
+    String filePath = convertURI(options.getString("path"));
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
 
     final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;
