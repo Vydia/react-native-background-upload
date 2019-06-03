@@ -158,7 +158,7 @@ async function uploadFile(url, fileURI) {
       if (200 <= responseCode && responseCode <= 299) {
           resolve(uploadId);
       } else {
-          reject(new Error(`Could not upload file (${responseCode}): ${responseBody}`));
+          reject(new Error(`Could not upload file (${responseCode}):\n${responseBody}`));
       }
     });
   });
@@ -281,13 +281,34 @@ Here are a few common situations and how to handle them:
  
  - Uploads are finished (completed, error or cancelled) and your app needs to run some computation or make a network request. You should call `canSuspendIfBackground` after the computation or network call is done.
  
- - Uploads are finished (completed, error or cancelled) and your app needs to upload some more. You call `startUpload` a number of times and add your listeners. You should call `canSuspendIfBackground` after the uploads start but not wait for them to finish. You also need to call `canSuspendIfBackground` after you have received the events, even if some uploads are cancelled or fail.
+ - Uploads are finished (completed, error or cancelled) and your app needs to upload some more. You call `startUpload` a number of times and add your listeners. You should call `canSuspendIfBackground` after the uploads start but not wait for them to finish. You also need to call `canSuspendIfBackground` after you have received the events, even if some uploads are cancelled or fail:
  
 ```javascript
-async function uploadFilesWhileInBackground() {
-  const uploadIds = await Promise.all(files.map(fileUri => startUpload(...)));
+function listenForUploadCompletion(uploadId) {
+  return new Promise((resolve, reject) => {
+    RNBackgroundUpload.addListener('error', uploadId, reject);
+    RNBackgroundUpload.addListener('cancelled', uploadId, () => reject(new Error('upload cancelled')));
+    RNBackgroundUpload.addListener('completed', uploadId, ({ responseCode, responseBody }) => {
+      if (200 <= responseCode && responseCode <= 299) {
+          resolve(uploadId);
+      } else {
+          reject(new Error(`Could not upload file (${responseCode}):\n${responseBody}`));
+      }
+    });
+  });
+}
+
+async function uploadFilesWhileInBackground(url, files) {
+  const uploadIds = await Promise.all(files.map(path => startUpload({ path, url })));
+  const didUploadPromise = Promise.all(uploadIds.map(id => listenForUploadCompletion(id)));
+  // suspend after event listeners are added
   canSuspendIfBackground();
-  await Promise.all(uploadIds.map(id => listenForUploadCompletion(id)));
+  try {
+    await didUploadPromise;
+    // update the app UI
+  } catch (e) {
+    // handle error (show alert, present local notification, etc)
+  }
   canSuspendIfBackground();
 }
 ```
