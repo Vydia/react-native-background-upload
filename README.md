@@ -128,66 +128,6 @@ const options = {
 
 Note the `field` property is required for multipart uploads.
 
-## iOS Background Events
-
-By default, iOS does not wake up your app when uploads are done while your app is not in the foreground. To receive the upload events (`error`, `completed`...) while your app is in the background, add the following to your `AppDelegate.m`:
-
-```objective-c
-#import "VydiaRNFileUploader.h"
-
-- (void)application:(UIApplication *)application
-        handleEventsForBackgroundURLSession:(NSString *)identifier
-        completionHandler:(void (^)(void))completionHandler {
-  [VydiaRNFileUploader setBackgroundSessionCompletionHandler:completionHandler];
-}
-```
-
-This means you can do extra work in the background, like make network calls or uploads more files! You _must_ call `canSuspendIfBackground` when you are done processing the events to sleep again. You can safely call this method when you are not in the background.
-
-Here is a JS example:
-
-```javascript
-import RNBackgroundUpload from 'react-native-background-upload';
-
-async function uploadFile(url, fileURI) {
-  const uploadId = await RNBackgroundUpload.startUpload({ url, path: fileURI, method: 'POST' });
-  return new Promise((resolve, reject) => {
-    RNBackgroundUpload.addListener('error', uploadId, reject);
-    RNBackgroundUpload.addListener('cancelled', uploadId, () => reject(new Error('upload cancelled')));
-    RNBackgroundUpload.addListener('completed', uploadId, ({ responseCode, responseBody }) => {
-      if (200 <= responseCode && responseCode <= 299) {
-          resolve(uploadId);
-      } else {
-          reject(new Error(`Could not upload file (${responseCode}):\n${responseBody}`));
-      }
-    });
-  });
-}
-
-async function uploadManyFilesThenPOST(files) {
-  try {
-    await Promise.all(files.map(fileURI => uploadFile('https://example.com/upload', fileURI)));
-    const response = await fetch('https://example.com/confirmUploads', { method: 'POST' });
-    if (!response.ok) throw new Error('Could not confirm uploads');
-  } catch (error) {
-    const response = await fetch('https://example.com/failedUploads', { method: 'POST' });
-    if (!response.ok) throw new Error('Could not report failed uploads');
-  }
-  RNBackgroundUpload.canSuspendIfBackground();
-}
-```
-
-The function `uploadManyFilesThenPOST` schedules all the file uploads at once. This is recommended because the OS can then make progress on all uploads even while your app sleeps. This may take some time as iOS decides to upload when it deems appropriate, e.g. when the device is charging and connected to WiFi. Inversely, when the device is low on battery or in energy saver mode, background uploads won't make progress.
-
-When all uploads are finished, your app _may_ be resumed in the background to receive the events. You should call `canSuspendIfBackground` as soon as possible when you are done with other actions to conserve your app "background credit". If you don't call `canSuspendIfBackground`, the library will call it for your after ~45 seconds. This makes sure that your app won't be killed by the OS right away but pretty much consumes all your background credit.
-
-When your app is brought to the foreground, uploads will continue regardless of background credit.
-
-Uploads initiated while the app is in the background are always [discretionary](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/1411552-discretionary?language=objc), so iOS will be more aggressive to conserve energy. Uploads started in the foreground are not [discretionary](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/1411552-discretionary?language=objc) so they start right away.
-
-If your app is dead (forced closed by the user via the app switcher or by the OS to reclaim memory) when uploads complete, iOS will launch it in the background. The given example does not handle this case, i.e. there will be no `POST` to `https://example.com/confirmUploads`. To support this, you can save the `uploadId`(s) to a file (e.g. via `AsyncStorage`), read it when your app starts and add the 3 listeners back.
-
-
 # API
 
 ## Top Level Functions
@@ -284,11 +224,13 @@ Here are a few common situations and how to handle them:
  - Uploads are finished (completed, error or cancelled) and your app needs to upload some more. You call `startUpload` a number of times and add your listeners. You should call `canSuspendIfBackground` after the uploads start but not wait for them to finish. You also need to call `canSuspendIfBackground` after you have received the events, even if some uploads are cancelled or fail:
  
 ```javascript
+import { addListener, startUpload, canSuspendIfBackground } from 'react-native-background-upload';
+
 function listenForUploadCompletion(uploadId) {
   return new Promise((resolve, reject) => {
-    RNBackgroundUpload.addListener('error', uploadId, reject);
-    RNBackgroundUpload.addListener('cancelled', uploadId, () => reject(new Error('upload cancelled')));
-    RNBackgroundUpload.addListener('completed', uploadId, ({ responseCode, responseBody }) => {
+    addListener('error', uploadId, reject);
+    addListener('cancelled', uploadId, () => reject(new Error('upload cancelled')));
+    addListener('completed', uploadId, ({ responseCode, responseBody }) => {
       if (200 <= responseCode && responseCode <= 299) {
           resolve(uploadId);
       } else {
@@ -351,6 +293,63 @@ Event Data
 |Name|Type|Required|Description|
 |---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
+
+# iOS Background Events
+
+By default, iOS does not wake up your app when uploads are done while your app is not in the foreground. To receive the upload events (`error`, `completed`...) while your app is in the background, add the following to your `AppDelegate.m`:
+
+```objective-c
+#import "VydiaRNFileUploader.h"
+
+- (void)application:(UIApplication *)application
+        handleEventsForBackgroundURLSession:(NSString *)identifier
+        completionHandler:(void (^)(void))completionHandler {
+  [VydiaRNFileUploader setBackgroundSessionCompletionHandler:completionHandler];
+}
+```
+
+This means you can do extra work in the background, like make network calls or uploads more files! You _must_ call `canSuspendIfBackground` when you are done processing the events to sleep again. You can safely call this method when you are not in the background.
+
+Here is a JS example:
+
+```javascript
+import RNBackgroundUpload from 'react-native-background-upload';
+
+async function uploadFile(url, fileURI) {
+  const uploadId = await RNBackgroundUpload.startUpload({ url, path: fileURI, method: 'POST' });
+  return new Promise((resolve, reject) => {
+    RNBackgroundUpload.addListener('error', uploadId, reject);
+    RNBackgroundUpload.addListener('cancelled', uploadId, () => reject(new Error('upload cancelled')));
+    RNBackgroundUpload.addListener('completed', uploadId, ({ responseCode, responseBody }) => {
+      if (200 <= responseCode && responseCode <= 299) {
+          resolve(uploadId);
+      } else {
+          reject(new Error(`Could not upload file (${responseCode}):\n${responseBody}`));
+      }
+    });
+  });
+}
+
+async function uploadManyFilesThenPOST(files) {
+  try {
+    await Promise.all(files.map(fileURI => uploadFile('https://example.com/upload', fileURI)));
+    const response = await fetch('https://example.com/confirmUploads', { method: 'POST' });
+    if (!response.ok) throw new Error('Could not confirm uploads');
+  } catch (error) {
+    const response = await fetch('https://example.com/failedUploads', { method: 'POST' });
+    if (!response.ok) throw new Error('Could not report failed uploads');
+  }
+  RNBackgroundUpload.canSuspendIfBackground();
+}
+```
+
+The function `uploadManyFilesThenPOST` schedules all the file uploads at once. This is recommended because the OS can then make progress on all uploads even while your app sleeps. This may take some time as iOS decides to upload when it deems appropriate, e.g. when the device is charging and connected to WiFi. Inversely, when the device is low on battery or in energy saver mode, background uploads won't make progress.
+
+When all uploads are finished, your app _may_ be resumed in the background to receive the events. You should call `canSuspendIfBackground` as soon as possible when you are done with other actions to conserve your app "background credit". If you don't call `canSuspendIfBackground`, the library will call it for your after ~45 seconds. This makes sure that your app won't be killed by the OS right away but pretty much consumes all your background credit.
+
+Uploads tasks started when the app is in the background are [discretionary](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/1411552-discretionary?language=objc); iOS will typically upload the files later when the device is charging. Upload tasks started in the foreground are not [discretionary](https://developer.apple.com/documentation/foundation/nsurlsessionconfiguration/1411552-discretionary?language=objc) and start right away. When your app is brought to the foreground, uploads that have been postponed by the OS will continue regardless of background credit.
+
+If your app is dead when uploads complete (force-closed by the user via the app switcher or by the OS to reclaim memory), iOS will launch it in the background. The above example does not handle this case, i.e. there will be no `POST` to `https://example.com/confirmUploads`. To support this you should save the `uploadId`(s) to a file (e.g. via `AsyncStorage`), read it when your app starts, and add the 3 listeners back.
 
 # Customizing Android Build Properties
 You may want to customize the `compileSdk, buildToolsVersion, and targetSdkVersion` versions used by this package.  For that, add this to `android/build.gradle`:
