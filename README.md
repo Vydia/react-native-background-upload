@@ -211,7 +211,7 @@ Returns an [EventSubscription](https://github.com/facebook/react-native/blob/mas
 
 ### canSuspendIfBackground()
 
-If you are not using iOS background events, you can ignore this method.
+If you are not using [iOS background events](#ios-background-events), you can ignore this method.
 
 Notify the OS that your app can sleep again. Call this method when your app has done all its work or is waiting for background uploads to complete. Upon calling the method, you app is suspended if it's running in the background. Native code and JS will pause execution. Apple recommends you keep background execution time at less than 5 to 10 sec.
 
