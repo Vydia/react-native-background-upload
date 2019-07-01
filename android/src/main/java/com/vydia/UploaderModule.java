@@ -301,11 +301,6 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostPause() {
-    try {
-      uploadReceiver.unregister(reactContext);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   @Override

@@ -81,6 +81,7 @@ const options = {
   path: 'file://path/to/file/on/device',
   method: 'POST',
   type: 'raw',
+  maxRetries: 2, // set retry count (Android only). Default 2
   headers: {
     'content-type': 'application/octet-stream', // Customize content-type
     'my-custom-header': 's3headervalueorwhateveryouneed'
