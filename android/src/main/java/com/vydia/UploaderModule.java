@@ -1,6 +1,7 @@
 package com.vydia.RNUploader;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -143,6 +144,11 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
     if (options.hasKey("notification")) {
       notification.merge(options.getMap("notification"));
+    }
+
+    // On Android versions >= 8.0 Oreo is required by Google's policy to display a notification when a background service (such as uploading a file in the background) run.
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      notification.putBoolean("enabled", true);
     }
 
     String url = options.getString("url");
