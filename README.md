@@ -19,7 +19,17 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 ## 2. Link Native Code
 
-### Automatic Native Library Linking
+### Autolinking (React Native >= 0.60)
+
+##### iOS
+
+`cd ./ios && pod install && cd ../`
+
+##### Android
+
+No further actions required.
+
+### Automatic Native Library Linking (React Native < 0.60)
 
 `react-native link react-native-background-upload`
 
