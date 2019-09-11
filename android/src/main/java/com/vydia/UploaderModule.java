@@ -201,8 +201,14 @@ public class UploaderModule extends ReactContextBaseJavaModule {
           return;
         }
 
-        request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
-                .addFileToUpload(filePath, options.getString("field"));
+        if(options.hasKey("useUtf8Charset") && options.getBoolean("useUtf8Charset")) {
+          request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+            .setUtf8Charset()
+            .addFileToUpload(filePath, options.getString("field"));
+        } else {
+          request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
+            .addFileToUpload(filePath, options.getString("field"));
+        }
       }
 
 
