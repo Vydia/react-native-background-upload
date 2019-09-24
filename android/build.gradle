@@ -18,7 +18,7 @@ android {
     buildToolsVersion project.hasProperty('buildToolsVersion') ? project.buildToolsVersion : DEFAULT_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion project.hasProperty('targetSdkVersion') ? project.targetSdkVersion : DEFAULT_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
@@ -36,5 +36,5 @@ repositories {
 }
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'net.gotev:uploadservice-okhttp:3.4.2'
+    compile 'net.gotev:uploadservice-okhttp:3.5.0'
 }
