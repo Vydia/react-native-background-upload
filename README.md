@@ -19,7 +19,17 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 ## 2. Link Native Code
 
-### Automatic Native Library Linking
+### Autolinking (React Native >= 0.60)
+
+##### iOS
+
+`cd ./ios && pod install && cd ../`
+
+##### Android
+
+No further actions required.
+
+### Automatic Native Library Linking (React Native < 0.60)
 
 `react-native link react-native-background-upload`
 
@@ -81,6 +91,7 @@ const options = {
   path: 'file://path/to/file/on/device',
   method: 'POST',
   type: 'raw',
+  maxRetries: 2, // set retry count (Android only). Default 2
   headers: {
     'content-type': 'application/octet-stream', // Customize content-type
     'my-custom-header': 's3headervalueorwhateveryouneed'
@@ -158,7 +169,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 ### Notification Object (Android Only)
 |Name|Type|Required|Description|Example|
 |---|---|---|---|---|
-|`enabled`|boolean|Optional|Enable or diasable notifications|`{ enabled: true }`|
+|`enabled`|boolean|Optional|Enable or diasable notifications. Works only on Android version < 8.0 Oreo. On Android versions >= 8.0 Oreo is required by Google's policy to display a notification when a background service run|`{ enabled: true }`|
 |`autoClear`|boolean|Optional|Autoclear notification on complete|`{ autoclear: true }`|
 |`notificationChannel`|string|Optional|Sets android notificaion channel|`{ notificationChannel: "My-Upload-Service" }`|
 |`enableRingTone`|boolean|Optional|Sets whether or not to enable the notification sound when the upload gets completed with success or error|`{ enableRingTone: true }`|

@@ -1,9 +1,12 @@
 package com.vydia.RNUploader;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
+import com.facebook.react.bridge.LifecycleEventListener;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -16,6 +19,9 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import com.vydia.RNUploader.UploadReceiver;
+import com.vydia.RNUploader.NotificationActionsReceiver;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
 import net.gotev.uploadservice.HttpUploadRequest;
@@ -32,11 +38,23 @@ import java.io.File;
 /**
  * Created by stephen on 12/8/16.
  */
-public class UploaderModule extends ReactContextBaseJavaModule {
+public class UploaderModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
   private static final String TAG = "UploaderBridge";
+
+  private UploadReceiver uploadReceiver;
+  private ReactApplicationContext reactContext;
 
   public UploaderModule(ReactApplicationContext reactContext) {
     super(reactContext);
+
+    this.reactContext = reactContext;
+    reactContext.addLifecycleEventListener(this);
+
+    if (uploadReceiver == null) {
+      uploadReceiver = new UploadReceiver();
+      uploadReceiver.register(reactContext);
+    }
+
     UploadService.NAMESPACE = reactContext.getApplicationInfo().packageName;
     UploadService.HTTP_STACK = new OkHttpStack();
   }
@@ -46,12 +64,7 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     return "RNFileUploader";
   }
 
-  /*
-  Sends an event to the JS module.
-   */
-  private void sendEvent(String eventName, @Nullable WritableMap params) {
-    this.getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("RNFileUploader-" + eventName, params);
-  }
+
 
   /*
   Gets file information for the path specified.  Example valid path is: /storage/extSdCard/DCIM/Camera/20161116_074726.mp4
@@ -133,58 +146,19 @@ public class UploaderModule extends ReactContextBaseJavaModule {
       notification.merge(options.getMap("notification"));
     }
 
+    // On Android versions >= 8.0 Oreo is required by Google's policy to display a notification when a background service (such as uploading a file in the background) run.
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      notification.putBoolean("enabled", true);
+    }
+
     String url = options.getString("url");
     String filePath = options.getString("path");
     String method = options.hasKey("method") && options.getType("method") == ReadableType.String ? options.getString("method") : "POST";
+    int maxRetries = options.hasKey("maxRetries") && options.getType("maxRetries") == ReadableType.Number ? options.getInt("maxRetries") : 2;
 
     final String customUploadId = options.hasKey("customUploadId") && options.getType("method") == ReadableType.String ? options.getString("customUploadId") : null;
 
     try {
-      UploadStatusDelegate statusDelegate = new UploadStatusDelegate() {
-        @Override
-        public void onProgress(Context context, UploadInfo uploadInfo) {
-          WritableMap params = Arguments.createMap();
-          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-          params.putInt("progress", uploadInfo.getProgressPercent()); //0-100
-          sendEvent("progress", params);
-        }
-
-        @Override
-        public void onError(Context context, UploadInfo uploadInfo, ServerResponse serverResponse, Exception exception) {
-          WritableMap params = Arguments.createMap();
-          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-          if (serverResponse != null) {
-            params.putInt("responseCode", serverResponse.getHttpCode());
-            params.putString("responseBody", serverResponse.getBodyAsString());
-          }
-
-          // Make sure we do not try to call getMessage() on a null object
-          if (exception != null){
-            params.putString("error", exception.getMessage());
-          } else {
-            params.putString("error", "Unknown exception");
-          }
-
-          sendEvent("error", params);
-        }
-
-        @Override
-        public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
-          WritableMap params = Arguments.createMap();
-          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-          params.putInt("responseCode", serverResponse.getHttpCode());
-          params.putString("responseBody", serverResponse.getBodyAsString());
-          sendEvent("completed", params);
-        }
-
-        @Override
-        public void onCancelled(Context context, UploadInfo uploadInfo) {
-          WritableMap params = Arguments.createMap();
-          params.putString("id", customUploadId != null ? customUploadId : uploadInfo.getUploadId());
-          sendEvent("cancelled", params);
-        }
-      };
-
       HttpUploadRequest<?> request;
 
       if (requestType.equals("raw")) {
@@ -207,8 +181,8 @@ public class UploaderModule extends ReactContextBaseJavaModule {
 
 
       request.setMethod(method)
-        .setMaxRetries(2)
-        .setDelegate(statusDelegate);
+        .setMaxRetries(maxRetries)
+        .setDelegate(null);
 
       if (notification.getBoolean("enabled")) {
 
@@ -324,4 +298,23 @@ public class UploaderModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @Override
+  public void onHostResume() {
+    if (uploadReceiver != null) {
+      uploadReceiver.register(reactContext);
+    }
+  }
+
+  @Override
+  public void onHostPause() {
+  }
+
+  @Override
+  public void onHostDestroy() {
+    try {
+      uploadReceiver.unregister(reactContext);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
