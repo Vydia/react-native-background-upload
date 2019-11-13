@@ -1,14 +1,12 @@
 package com.vydia.RNUploader;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.facebook.react.bridge.LifecycleEventListener;
-
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -18,19 +16,12 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-
-import com.vydia.RNUploader.UploadReceiver;
-import com.vydia.RNUploader.NotificationActionsReceiver;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
 import net.gotev.uploadservice.HttpUploadRequest;
 import net.gotev.uploadservice.MultipartUploadRequest;
-import net.gotev.uploadservice.ServerResponse;
-import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadService;
-import net.gotev.uploadservice.UploadStatusDelegate;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.io.File;
@@ -41,18 +32,17 @@ import java.io.File;
 public class UploaderModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
   private static final String TAG = "UploaderBridge";
 
-  private UploadReceiver uploadReceiver;
-  private ReactApplicationContext reactContext;
 
   public UploaderModule(ReactApplicationContext reactContext) {
     super(reactContext);
 
-    this.reactContext = reactContext;
     reactContext.addLifecycleEventListener(this);
 
-    if (uploadReceiver == null) {
-      uploadReceiver = new UploadReceiver();
-      uploadReceiver.register(reactContext);
+    Intent myService = new Intent(reactContext, UploadEventsService.class);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      reactContext.startForegroundService(myService);
+    } else {
+      reactContext.startService(myService);
     }
 
     UploadService.NAMESPACE = reactContext.getApplicationInfo().packageName;
@@ -300,9 +290,6 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostResume() {
-    if (uploadReceiver != null) {
-      uploadReceiver.register(reactContext);
-    }
   }
 
   @Override
@@ -311,10 +298,5 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostDestroy() {
-    try {
-      uploadReceiver.unregister(reactContext);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 }
