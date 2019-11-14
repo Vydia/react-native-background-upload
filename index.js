@@ -77,6 +77,30 @@ It is recommended to add listeners in the .then of this promise.
 */
 export const startUpload = (options: StartUploadArgs): Promise<string> => NativeModule.startUpload(options)
 
+
+/*
+Starts listening events from a foreground service
+
+notification: hash for customizing tray notifiaction
+
+Returns a promise with. Will reject if there is an exception.
+
+It is recommended call this once, before any upload request.
+
+*/
+export const startEventListener = (options): Promise<void> => NativeModule.startEventListener(options)
+
+/*
+Stops listening events.
+
+Returns a promise with. Will reject if there is an exception.
+
+It is recommended to call this after all of the upload requests finishes or fails. 
+If it's not called, foreground service is never stopped.
+
+*/
+export const stopEventListener = (): Promise<void> => NativeModule.stopEventListener()
+
 /*
 Cancels active upload by string ID of the upload.
 
@@ -113,4 +137,4 @@ export const addListener = (eventType: UploadEvent, uploadId: string, listener: 
   })
 }
 
-export default { startUpload, cancelUpload, addListener, getFileInfo }
+export default { startUpload, cancelUpload, addListener, getFileInfo, startEventListener, stopEventListener }

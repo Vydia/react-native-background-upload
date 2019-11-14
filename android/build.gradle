@@ -36,6 +36,10 @@ repositories {
     mavenCentral()
     google()
     jcenter()
+    maven {
+        // All of React Native (JS, Android binaries) is installed from npm
+        url "/Users/osrl/Documents/brandcamp-mobile/node_modules/react-native/android/"
+    }
 }
 
 dependencies {

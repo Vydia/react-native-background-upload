@@ -1,7 +1,9 @@
 package com.vydia.RNUploader;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -16,12 +18,16 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
 import net.gotev.uploadservice.HttpUploadRequest;
 import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.ServerResponse;
+import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadService;
+import net.gotev.uploadservice.UploadServiceBroadcastReceiver;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.io.File;
@@ -32,18 +38,14 @@ import java.io.File;
 public class UploaderModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
   private static final String TAG = "UploaderBridge";
 
+  private ReactApplicationContext mReactContext;
 
   public UploaderModule(ReactApplicationContext reactContext) {
     super(reactContext);
 
-    reactContext.addLifecycleEventListener(this);
+    this.mReactContext = reactContext;
 
-    Intent myService = new Intent(reactContext, UploadEventsService.class);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      reactContext.startForegroundService(myService);
-    } else {
-      reactContext.startService(myService);
-    }
+    reactContext.addLifecycleEventListener(this);
 
     UploadService.NAMESPACE = reactContext.getApplicationInfo().packageName;
     UploadService.HTTP_STACK = new OkHttpStack();
@@ -171,8 +173,8 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
 
       request.setMethod(method)
-        .setMaxRetries(maxRetries)
-        .setDelegate(null);
+              .setMaxRetries(maxRetries)
+              .setDelegate(null);
 
       if (notification.getBoolean("enabled")) {
 
@@ -281,6 +283,37 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
     }
     try {
       UploadService.stopUpload(cancelUploadId);
+      promise.resolve(true);
+    } catch (Exception exc) {
+      Log.e(TAG, exc.getMessage(), exc);
+      promise.reject(exc);
+    }
+  }
+
+  /*
+   * Starts listening events from a foreground service.
+   * Accepts options for listening events notification
+   */
+  @ReactMethod
+  void startEventListener(ReadableMap notificationOptions, final Promise promise) {
+    try {
+      UploadEventsService.start(Arguments.toBundle(notificationOptions), mReactContext);
+      promise.resolve(true);
+    } catch (Exception exc) {
+      Log.e(TAG, exc.getMessage(), exc);
+      promise.reject(exc);
+    }
+  }
+
+  /*
+   * Starts file upload
+   * Accepts upload ID as a first argument, this upload will be cancelled
+   * Event "cancelled" will be fired when upload is cancelled.
+   */
+  @ReactMethod
+  void stopEventListener(final Promise promise) {
+    try {
+      UploadEventsService.stop(mReactContext);
       promise.resolve(true);
     } catch (Exception exc) {
       Log.e(TAG, exc.getMessage(), exc);
