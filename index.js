@@ -2,7 +2,7 @@
 /**
  * Handles HTTP background file uploads from an iOS or Android device.
  */
-import { NativeModules, DeviceEventEmitter } from 'react-native'
+import { NativeModules, DeviceEventEmitter, Platform } from 'react-native'
 
 export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled'
 
@@ -88,7 +88,13 @@ Returns a promise with. Will reject if there is an exception.
 It is recommended call this once, before any upload request.
 
 */
-export const startEventListener = (options): Promise<void> => NativeModule.startEventListener(options)
+export const startEventListener = (options): Promise<void> => {
+  if (Platform.OS === "android") {
+    return NativeModule.startEventListener(options)
+  } else {
+    return Promise.resolve(false);
+  }
+}
 
 /*
 Stops listening events.
@@ -99,7 +105,13 @@ It is recommended to call this after all of the upload requests finishes or fail
 If it's not called, foreground service is never stopped.
 
 */
-export const stopEventListener = (): Promise<void> => NativeModule.stopEventListener()
+export const stopEventListener = (): Promise<void> => {
+  if (Platform.OS === "android") {
+    return NativeModule.stopEventListener()
+  } else {
+    return Promise.resolve(false);
+  }
+}
 
 /*
 Cancels active upload by string ID of the upload.
