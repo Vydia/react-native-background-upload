@@ -1,0 +1,58 @@
+{
+  "name": "RNBackgroundExample",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "test/ci": "jest",
+    "lint": "jest",
+    "lint/ci": "jest",
+    "postinstall": "sh scripts/postinstall.sh",
+    "deploy/release/ios": "bash scripts/deploy-ios.sh Release",
+    "deploy/debug/ios": "bash scripts/deploy-ios.sh Debug",
+    "deploy/release/android": "sh scripts/deploy-android.sh Release",
+    "deploy/debug/android": "sh scripts/deploy-android.sh Debug",
+    "e2e/test/ios": "detox test -c ios",
+    "e2e/test/android": "echo 'Not yet implemented.'"
+  },
+  "dependencies": {
+    "react": "16.9.0",
+    "react-native": "0.61.4",
+    "react-native-background-upload": "../../",
+    "react-native-fs": "^2.16.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/runtime": "^7.7.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "detox": "^14.7.0",
+    "eslint": "^6.6.0",
+    "express": "^4.17.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.57.0",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "detox": {
+    "test-runner": "jest",
+    "runner-config": "e2e/config.json",
+    "configurations": {
+      "ios": {
+        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/RNBackgroundExample.app",
+        "type": "ios.simulator",
+        "name": "iPhone 11"
+      },
+      "android": {
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "type": "android.emulator",
+        "name": "Pixel_2_API_29"
+      }
+    }
+  }
+}

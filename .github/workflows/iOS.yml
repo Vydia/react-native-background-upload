@@ -1,0 +1,37 @@
+name: iOS
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v1
+
+    - name: setup node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+
+    - name: install node_modules
+      run: |
+        cd example/RNBackgroundExample/
+        yarn install --frozen-lockfile
+
+    - name: detox
+      run: |
+        brew tap wix/brew
+        brew install applesimutils
+
+    - name: iOS build
+      run: |
+        cd example/RNBackgroundExample/
+        yarn deploy/release/ios
+
+    - name: iOS test
+      run: |
+        cd example/RNBackgroundExample/
+        npx detox clean-framework-cache && npx detox build-framework-cache
+        yarn e2e/test/ios
