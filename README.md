@@ -88,7 +88,11 @@ const options = {
   // Below are options only supported on Android
   notification: {
     enabled: true
-  }
+  },
+  // Below are options only supported on iOS
+  requestTimeoutInterval: 60, // The request's timeout interval, in seconds
+  timeoutIntervalForResource: 604800, // controls how long (in seconds) to wait for an entire resource to transfer before giving up
+  timeoutIntervalForRequest: 60 // controls how long (in seconds) a task should wait for additional data to arrive before giving up
 }
 
 Upload.startUpload(options).then((uploadId) => {
