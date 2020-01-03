@@ -1,37 +1,45 @@
-name: iOS
+name: React Native iOS
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
+  react-native-ios:
     runs-on: macos-latest
 
     steps:
-    - name: checkout
+    - name: Checkout project
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/checkout@v1
 
-    - name: setup node
+    - name: Specify node version
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: 12
 
-    - name: install node_modules
-      run: |
-        cd example/RNBackgroundExample/
-        yarn install --frozen-lockfile
-
-    - name: detox
+    - name: Setup Detox
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       run: |
         brew tap wix/brew
         brew install applesimutils
 
-    - name: iOS build
+    - name: Install node_modules & deploy
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      working-directory: example/RNBackgroundExample/
       run: |
-        cd example/RNBackgroundExample/
+        yarn install --frozen-lockfile
         yarn deploy/release/ios
 
     - name: iOS test
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 5
       run: |
-        cd example/RNBackgroundExample/
         npx detox clean-framework-cache && npx detox build-framework-cache
         yarn e2e/test/ios

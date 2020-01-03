@@ -4,7 +4,7 @@ const port = 8080
 
 const delay = t => new Promise(res => setTimeout(() => res(), t));
 
-export const startTestServer = () => {
+const startTestServer = () => {
   app.put('/10secDelay', async (_, response) => {
     await delay(10000);
     response.status(200).end();
@@ -17,3 +17,5 @@ export const startTestServer = () => {
 
   return app.listen(port, () => console.log(`Server listening on port ${port}!`))
 };
+
+module.exports = { startTestServer };

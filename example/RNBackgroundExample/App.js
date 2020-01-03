@@ -29,10 +29,11 @@ const url10SecDelayPut = `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2
 const url5secDelayFail = `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:8080/5secDelayFail`;
 
 const path = RNFS.TemporaryDirectoryPath + "/test.json";
+const prefix = Platform.OS === 'ios' ? 'file://' : '';
 
 const commonOptions = {
   url: "",
-  path: "",
+  path: prefix + path,
   method: "PUT",
   type: "raw",
   // only supported on Android
@@ -41,7 +42,6 @@ const commonOptions = {
   }
 };
 
-const prefix = Platform.OS === 'ios' ? 'file://' : '';
 
 RNFS.writeFile(path, "");
 
@@ -71,13 +71,6 @@ const App: () => React$Node = () => {
                   const options = {
                     ...commonOptions,
                     url: url10SecDelayPut,
-                    path: prefix + path,
-                    method: "PUT",
-                    type: "raw",
-                    // Below are options only supported on Android
-                    notification: {
-                      enabled: true
-                    }
                   };
 
                   Upload.startUpload(options)
@@ -86,6 +79,8 @@ const App: () => React$Node = () => {
                         "completed",
                         uploadId,
                         ({ responseCode }) => {
+                          console.warn({ responseCode });
+
                           if (responseCode <= 299) {
                             set10SecDelayCompleted(true);
                           }
@@ -101,7 +96,9 @@ const App: () => React$Node = () => {
               </TouchableOpacity>
 
               {delay10Completed && (
-                <ActivityIndicator testID="10_sec_delay_completed" />
+                <View testID="10_sec_delay_completed">
+                  <Text>Finished!!!</Text>
+                </View>
               )}
             </View>
             <View style={styles.sectionContainer}>
@@ -111,14 +108,6 @@ const App: () => React$Node = () => {
                   const options = {
                     ...commonOptions,
                     url: url5secDelayFail,
-                    path: prefix + path,
-
-                    method: "PUT",
-                    type: "raw",
-                    // Below are options only supported on Android
-                    notification: {
-                      enabled: true
-                    }
                   };
 
                   Upload.startUpload(options)
@@ -148,7 +137,9 @@ const App: () => React$Node = () => {
               </TouchableOpacity>
 
               {delay5Completed && (
-                <ActivityIndicator testID="5_sec_delay_completed" />
+                <View testID="5_sec_delay_completed">
+                  <Text>Finished!!!</Text>
+                </View>
               )}
             </View>
           </View>

@@ -16,7 +16,7 @@
     "deploy/release/android": "sh scripts/deploy-android.sh Release",
     "deploy/debug/android": "sh scripts/deploy-android.sh Debug",
     "e2e/test/ios": "detox test -c ios",
-    "e2e/test/android": "echo 'Not yet implemented.'"
+    "e2e/test/android": "detox test -c android --record-videos failing"
   },
   "dependencies": {
     "react": "16.9.0",
@@ -51,7 +51,7 @@
       "android": {
         "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
         "type": "android.emulator",
-        "name": "Pixel_2_API_29"
+        "name": "emu"
       }
     }
   }

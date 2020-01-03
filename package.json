@@ -26,5 +26,46 @@
   "bugs": {
     "url": "https://github.com/Vydia/react-native-background-upload/issues"
   },
-  "homepage": "https://github.com/Vydia/react-native-background-upload#readme"
+  "homepage": "https://github.com/Vydia/react-native-background-upload#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@commitlint/prompt": "^8.2.0",
+    "@semantic-release/commit-analyzer": "^6.3.3",
+    "@semantic-release/git": "^7.0.18",
+    "@semantic-release/github": "^5.5.5",
+    "@semantic-release/npm": "^5.3.5",
+    "@semantic-release/release-notes-generator": "^7.3.5",
+    "commitizen": "^4.0.3"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
+      "@semantic-release/release-notes-generator"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/prompt"
+    }
+  }
 }

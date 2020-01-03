@@ -4,13 +4,16 @@ describe('TestApp', () => {
   let mainScreen;
 
   beforeAll(async () => {
-    //await device.reloadReactNative();
     mainScreen = await element(by.id('main_screen'));
+  });
+
+  beforeEach(async () => {
+    await device.reloadReactNative();
   });
 
   it('should load default screen', async () => {
     await expect(mainScreen).toExist();
-  });
+  }, 10000);
 
   it('should handle a 502 request', async () => {
     const button = await element(by.id('5_sec_delay_button'));
@@ -22,7 +25,7 @@ describe('TestApp', () => {
     const completed = await element(by.id('5_sec_delay_completed'));
 
     await expect(completed).toBeVisible();
-  });
+  }, 20000);
 
   it('should handle a 200 request', async () => {
     const button = await element(by.id('10_sec_delay_button'));
@@ -34,5 +37,5 @@ describe('TestApp', () => {
     const completed = await element(by.id('10_sec_delay_completed'));
 
     await expect(completed).toBeVisible();
-  });
+  }, 30000);
 });

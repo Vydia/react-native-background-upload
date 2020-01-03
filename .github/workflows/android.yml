@@ -1,32 +1,63 @@
-name: Android
+name: React Native Android
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
+  react-native-android:
     runs-on: macos-latest
 
     steps:
-    - name: checkout
+    - name: Checkout project
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/checkout@v1
 
-    - name: setup node
+    - name: Specify node version
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: 12
 
-    - name: install node_modules
+    - name: Use specific Java version for sdkmanager to work
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      uses: joschi/setup-jdk@v1
+      with:
+        java-version: 'openjdk8'
+        architecture: 'x64'
+
+    - name: Setup Android emulator
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       run: |
-        cd example/RNBackgroundExample/
+        echo "y" | sudo $ANDROID_HOME/tools/bin/sdkmanager --verbose "system-images;android-27;google_apis;x86"
+        $ANDROID_HOME/tools/bin/avdmanager create avd -n emu -k "system-images;android-27;google_apis;x86" -b "x86" -c 1G -d 7 -f
+
+    - name: Install node_modules & deploy
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      working-directory: example/RNBackgroundExample/
+      run: |
         yarn install --frozen-lockfile
-
-    - name: detox setup
-      run: |
-        brew tap wix/brew
-        brew install applesimutils
-
-    - name: Android build
-      run: |
-        cd example/RNBackgroundExample/
         yarn deploy/debug/android
 
+    - name: Android test
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 10
+      continue-on-error: true
+      run: |
+        mkdir -p artifacts
+        export PATH=$PATH:$ANDROID_HOME/platform-tools
+        $ANDROID_HOME/emulator/emulator @emu &
+        adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
+        yarn e2e/test/android
+
+    - name: Provide videos of failed E2E tests
+      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      uses: actions/upload-artifact@master
+      with:
+        name: android-failing-e2e-videos
+        path: example/RNBackgroundExample/artifacts

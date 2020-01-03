@@ -6,6 +6,8 @@ npx jetify
 
 cd ios/
 
-pod install
+if [ $(uname -s) = 'Darwin' ]; then
+  pod install
+else echo 'Skipping pod installation since we are not Mac OS'; fi
 
 cd -
