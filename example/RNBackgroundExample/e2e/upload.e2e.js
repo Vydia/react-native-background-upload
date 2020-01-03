@@ -32,10 +32,30 @@ describe('TestApp', () => {
 
     await button.tap();
 
+    // arbitrary high number
     await delay(15000);
 
     const completed = await element(by.id('10_sec_delay_completed'));
 
     await expect(completed).toBeVisible();
+  }, 30000);
+
+  it('should cancel a 10sec upload', async () => {
+    const button = await element(by.id('10_sec_delay_button'));
+
+    await button.tap();
+
+    await delay(1000);
+
+    const cancelButton = await element(by.id('cancel_button'));
+
+    await cancelButton.tap();
+
+    // arbitrary high number
+    await delay(12000);
+
+    const completed = await element(by.id('10_sec_delay_completed'));
+
+    await expect(completed).toBeNotVisible();
   }, 30000);
 });

@@ -24,6 +24,14 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+  <string></string>
+  <key>NSCameraUsageDescription</key>
+  <string>This will allow you to upload videos from your camera to the ReactNativeBackgroundUploadExample app.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>This will allow you to upload videos from your library to the ReactNativeBackgroundUploadExample app.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This will allow you to upload videos with audio from your camera to the ReactNativeBackgroundUploadExample app.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

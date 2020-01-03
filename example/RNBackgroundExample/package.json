@@ -22,19 +22,24 @@
     "react": "16.9.0",
     "react-native": "0.61.4",
     "react-native-background-upload": "../../",
-    "react-native-fs": "^2.16.1"
+    "react-native-fs": "^2.16.1",
+    "react-native-image-picker": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/runtime": "^7.7.2",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
+    "content-type": "^1.0.4",
     "detox": "^14.7.0",
     "eslint": "^6.6.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.57.0",
-    "react-test-renderer": "16.9.0"
+    "multer": "^1.4.2",
+    "react-test-renderer": "16.9.0",
+    "uuid": "^3.3.3"
   },
   "jest": {
     "preset": "react-native"
@@ -49,7 +54,7 @@
         "name": "iPhone 11"
       },
       "android": {
-        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
         "type": "android.emulator",
         "name": "emu"
       }

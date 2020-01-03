@@ -8,13 +8,14 @@
 
 import React, { useState } from "react";
 import {
+  Alert,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
   StatusBar,
-  ActivityIndicator,
+  Button,
   Platform,
   TouchableOpacity
 } from "react-native";
@@ -22,6 +23,8 @@ import {
 import { Header, Colors } from "react-native/Libraries/NewAppScreen";
 
 import Upload from "react-native-background-upload";
+
+import ImagePicker from 'react-native-image-picker'
 
 import RNFS from "react-native-fs";
 
@@ -49,6 +52,85 @@ const App: () => React$Node = () => {
   const [delay10Completed, set10SecDelayCompleted] = useState(false);
   const [delay5Completed, set5SecDelayCompleted] = useState(false);
 
+  const [isImagePickerShowing, setIsImagePickerShowing] = useState(false);
+  const [uploadId, setUploadId] = useState(null);
+  const [progress, setProgress] = useState(null);
+
+  const onPressUpload = options => {
+    if (isImagePickerShowing) {
+      return
+    }
+
+    setIsImagePickerShowing(true);
+
+    const imagePickerOptions = {
+      takePhotoButtonTitle: null,
+      title: 'Upload Media',
+      chooseFromLibraryButtonTitle: 'Choose From Library'
+    }
+
+    ImagePicker.showImagePicker(imagePickerOptions, (response) => {
+      let didChooseVideo = true
+
+      console.log('ImagePicker response: ', response)
+      const { customButton, didCancel, error, path, uri } = response
+
+      if (didCancel) {
+        didChooseVideo = false
+      }
+
+      if (error) {
+        console.warn('ImagePicker error:', response)
+        didChooseVideo = false
+      }
+
+      // TODO: Should this happen higher?
+      setIsImagePickerShowing(false)
+
+      if (!didChooseVideo) {
+        return
+      }
+
+      let finalPath = Platform.OS === 'android' ? path : uri;
+
+      if (finalPath) { // Video is stored locally on the device
+        Upload.getFileInfo(finalPath).then((metadata) => {
+          const uploadOpts = Object.assign({
+            path: finalPath,
+            method: 'POST',
+            headers: {
+              'content-type': metadata.mimeType // server requires a content-type header
+            }
+          }, options)
+
+          Upload.startUpload(uploadOpts).then((uploadId) => {
+            console.log(`Upload started with options: ${JSON.stringify(uploadOpts)}`)
+            setUploadId(uploadId);
+            setProgress(0);
+            Upload.addListener('progress', uploadId, (data) => {
+              if (data.progress % 5 === 0) {
+                setProgress(+data.progress);
+              }
+              console.log(`Progress: ${data.progress}%`)
+            })
+            Upload.addListener('error', uploadId, (data) => {
+              console.log(`Error: ${data.error}%`)
+            })
+            Upload.addListener('completed', uploadId, (data) => {
+              console.log('Completed!')
+            })
+          }).catch(function(err) {
+            setUploadId(null);
+            setProgress(null);
+            console.log('Upload error!', err)
+          })
+        })
+      } else { // Video is stored in google cloud
+        Alert.alert("Video not found");
+      }
+    })
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -67,7 +149,7 @@ const App: () => React$Node = () => {
             <View style={styles.sectionContainer}>
               <TouchableOpacity
                 testID="10_sec_delay_button"
-                onPress={async () => {
+                onPress={() => {
                   const options = {
                     ...commonOptions,
                     url: url10SecDelayPut,
@@ -75,6 +157,8 @@ const App: () => React$Node = () => {
 
                   Upload.startUpload(options)
                     .then(uploadId => {
+                      setUploadId(uploadId);
+
                       Upload.addListener(
                         "completed",
                         uploadId,
@@ -104,7 +188,7 @@ const App: () => React$Node = () => {
             <View style={styles.sectionContainer}>
               <TouchableOpacity
                 testID="5_sec_delay_button"
-                onPress={async () => {
+                onPress={() => {
                   const options = {
                     ...commonOptions,
                     url: url5secDelayFail,
@@ -112,6 +196,8 @@ const App: () => React$Node = () => {
 
                   Upload.startUpload(options)
                     .then(uploadId => {
+                      setUploadId(uploadId);
+
                       Upload.addListener(
                         "completed",
                         uploadId,
@@ -141,6 +227,41 @@ const App: () => React$Node = () => {
                   <Text>Finished!!!</Text>
                 </View>
               )}
+
+              <Button
+                title="Tap To Upload Multipart"
+                onPress={() => onPressUpload({
+                  url: `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:3000/upload_multipart`,
+                  field: 'uploaded_media',
+                  type: 'multipart'
+                })}
+              />
+
+              <View style={{ height: 32 }}/>
+              <Text style={{ textAlign: 'center' }}>
+                { `Current Upload ID: ${uploadId === null ? 'none' : uploadId}` }
+              </Text>
+              <Text style={{ textAlign: 'center' }}>
+                { `Progress: ${progress === null ? 'none' : `${progress}%`}` }
+              </Text>
+              <View/>
+              <Button
+                testID="cancel_button"
+                title="Tap to Cancel Upload"
+                onPress={() => {
+                  if (!uploadId) {
+                    console.log('Nothing to cancel!')
+                    return
+                  }
+
+                  Upload.cancelUpload(uploadId).then(() => {
+                    console.log(`Upload ${uploadId} canceled`)
+                    setUploadId(null);
+                    setProgress(null);
+                  })
+
+                }}
+              />
             </View>
           </View>
         </ScrollView>
