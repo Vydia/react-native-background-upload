@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "server": "node e2e/start-server.js",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",

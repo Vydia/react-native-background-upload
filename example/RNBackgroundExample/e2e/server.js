@@ -22,7 +22,7 @@ const startTestServer = () => {
   const multer  = require('multer')
   const upload = multer({ dest: 'tmp/multipart/' })
 
-  const helloMessage = 'Hi! The server is listening on port 3000. Use the React Native app to start an upload.'
+  const helloMessage = 'Hi! The server is listening on port 8080. Use the React Native app to start an upload.'
 
   app.get('/', function (req, res) {
     res.send(helloMessage)

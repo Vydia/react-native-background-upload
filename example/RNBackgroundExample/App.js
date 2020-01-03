@@ -231,7 +231,7 @@ const App: () => React$Node = () => {
               <Button
                 title="Tap To Upload Multipart"
                 onPress={() => onPressUpload({
-                  url: `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:3000/upload_multipart`,
+                  url: `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:8080/upload_multipart`,
                   field: 'uploaded_media',
                   type: 'multipart'
                 })}

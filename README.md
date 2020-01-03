@@ -298,7 +298,7 @@ Is there an example/sandbox app to test out this package?
 
 > Yes, there is a simple react native app that comes with an [express](https://github.com/expressjs/express) server where you can see react-native-background-upload in action and try things out in an isolated local environment.
 
-[ReactNativeBackgroundUploadExample](https://github.com/Vydia/ReactNativeBackgroundUploadExample)
+[RNBackgroundExample](https://github.com/Vydia/react-native-background-upload/blob/master/example/RNBackgroundExample)
 
 Does it support iOS camera roll assets?
 
