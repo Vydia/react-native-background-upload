@@ -156,9 +156,9 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     @try {
         NSURL *requestUrl = [NSURL URLWithString: uploadUrl];
         if (requestUrl == nil) {
-            @throw @"Request cannot be nil";
+            return reject(@"RN Uploader", @"URL not compliant with RFC 2396", nil);
         }
-
+      
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestUrl];
         [request setHTTPMethod: method];
 
