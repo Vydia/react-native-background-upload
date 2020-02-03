@@ -12,7 +12,7 @@ require "json"
    s.summary = package[:description]
    s.source = { git: package[:repository][:url] }
    s.source_files = "ios/*.{h,m}"
-   s.platform = :ios, "8.0"
+   s.platform = :ios, "9.0"
 
    s.dependency "React"
  end
