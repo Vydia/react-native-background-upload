@@ -173,7 +173,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             }];
             dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         }
-        else  if([fileUrl containsString:@"-"]){
+        else  if([fileURI containsString:@"-"]){
                    dispatch_group_t group = dispatch_group_create();
                    dispatch_group_enter(group);
                    [self copyAssetToFile:fileURI completionHandler:^(NSString * _Nullable tempFileUrl, NSError * _Nullable error) {
