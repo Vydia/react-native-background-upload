@@ -16,8 +16,9 @@
     "deploy/debug/ios": "bash scripts/deploy-ios.sh Debug",
     "deploy/release/android": "sh scripts/deploy-android.sh Release",
     "deploy/debug/android": "sh scripts/deploy-android.sh Debug",
+    "e2e/deploy/android": "detox build -c android",
     "e2e/test/ios": "detox test -c ios",
-    "e2e/test/android": "detox test -c android --record-videos failing"
+    "e2e/test/android": "detox test -c android"
   },
   "dependencies": {
     "react": "16.9.0",
@@ -56,6 +57,7 @@
       },
       "android": {
         "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+        "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd ..",
         "type": "android.emulator",
         "name": "emu"
       }

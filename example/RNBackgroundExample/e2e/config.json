@@ -1,7 +1,6 @@
 {
-  "setupFilesAfterEnv": ["./init.js"],
-  "testEnvironment": "node",
-  "testMatch": [ "**/?(*.)+(e2e).[jt]s?(x)" ],
-  "reporters": ["detox/runners/jest/streamlineReporter"],
-  "verbose": true
+  "setupFilesAfterEnv": [
+      "./init.js"
+  ],
+  "testEnvironment": "node"
 }

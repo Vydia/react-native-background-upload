@@ -37,7 +37,7 @@ jobs:
       working-directory: example/RNBackgroundExample/
       run: |
         yarn install --frozen-lockfile
-        yarn deploy/release/android
+        yarn e2e/deploy/android
 
     - name: Android test
       working-directory: example/RNBackgroundExample/
@@ -47,7 +47,7 @@ jobs:
         export PATH=$PATH:$ANDROID_HOME/platform-tools
         $ANDROID_HOME/emulator/emulator @emu &
         adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
-        yarn e2e/test/android --record-videos failing
+        yarn e2e/test/android --record-videos all
 
     - uses: actions/upload-artifact@master
       name: Provide videos of failed E2E tests
