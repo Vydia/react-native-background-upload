@@ -11,35 +11,31 @@ on:
 jobs:
   react-native-ios:
     runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
     - name: Checkout project
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/checkout@v1
 
     - name: Specify node version
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/setup-node@v1
       with:
         node-version: 12
 
     - name: Setup Detox
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       run: |
         brew tap wix/brew
         brew install applesimutils
 
     - name: Install node_modules & deploy
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       working-directory: example/RNBackgroundExample/
       run: |
         yarn install --frozen-lockfile
         yarn deploy/release/ios
 
     - name: iOS test
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       working-directory: example/RNBackgroundExample/
-      timeout-minutes: 5
+      timeout-minutes: 10
       run: |
         npx detox clean-framework-cache && npx detox build-framework-cache
         yarn e2e/test/ios

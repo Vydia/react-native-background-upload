@@ -11,53 +11,47 @@ on:
 jobs:
   react-native-android:
     runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
     - name: Checkout project
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/checkout@v1
 
     - name: Specify node version
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/setup-node@v1
       with:
         node-version: 12
 
     - name: Use specific Java version for sdkmanager to work
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: joschi/setup-jdk@v1
       with:
         java-version: 'openjdk8'
         architecture: 'x64'
 
     - name: Setup Android emulator
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       run: |
-        echo "y" | sudo $ANDROID_HOME/tools/bin/sdkmanager --verbose "system-images;android-27;google_apis;x86"
-        $ANDROID_HOME/tools/bin/avdmanager create avd -n emu -k "system-images;android-27;google_apis;x86" -b "x86" -c 1G -d 7 -f
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86_64"
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86_64" -b "x86_64" -c 1G -d 7 -f
 
     - name: Install node_modules & deploy
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       working-directory: example/RNBackgroundExample/
       run: |
         yarn install --frozen-lockfile
-        yarn deploy/debug/android
+        yarn deploy/release/android
 
     - name: Android test
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       working-directory: example/RNBackgroundExample/
       timeout-minutes: 10
-      continue-on-error: true
       run: |
-        mkdir -p artifacts
+        mkdir -p ./artifacts
         export PATH=$PATH:$ANDROID_HOME/platform-tools
         $ANDROID_HOME/emulator/emulator @emu &
         adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
-        yarn e2e/test/android
+        yarn e2e/test/android --record-videos failing
 
-    - name: Provide videos of failed E2E tests
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
-      uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@master
+      name: Provide videos of failed E2E tests
+      if: always()
       with:
         name: android-failing-e2e-videos
         path: example/RNBackgroundExample/artifacts

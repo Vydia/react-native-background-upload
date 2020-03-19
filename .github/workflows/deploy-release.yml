@@ -3,7 +3,7 @@ name: Deploy & Release
 on:
   push:
     branches:
-      - master
+      - detox-tests
 
 jobs:
   deploy-release:
@@ -11,20 +11,17 @@ jobs:
 
     steps:
     - name: Checkout project
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       uses: actions/checkout@v1
 
     - name: Specify node version
       if: "!contains(github.event.head_commit.message, '[skip ci]')"
-      uses: actions/setup-node@v1
       with:
         node-version: 12
 
     - name: Release NPM
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: |
         yarn install --frozen-lockfile
-        npx semantic-release
+        npx semantic-release -d
