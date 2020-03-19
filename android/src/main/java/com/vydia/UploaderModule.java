@@ -1,14 +1,14 @@
 package com.vydia.RNUploader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.facebook.react.bridge.LifecycleEventListener;
-
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -20,9 +20,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-import com.vydia.RNUploader.UploadReceiver;
-import com.vydia.RNUploader.NotificationActionsReceiver;
-
 import net.gotev.uploadservice.BinaryUploadRequest;
 import net.gotev.uploadservice.HttpUploadRequest;
 import net.gotev.uploadservice.MultipartUploadRequest;
@@ -30,7 +27,7 @@ import net.gotev.uploadservice.ServerResponse;
 import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadService;
-import net.gotev.uploadservice.UploadStatusDelegate;
+import net.gotev.uploadservice.UploadServiceBroadcastReceiver;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
 import java.io.File;
@@ -41,19 +38,14 @@ import java.io.File;
 public class UploaderModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
   private static final String TAG = "UploaderBridge";
 
-  private UploadReceiver uploadReceiver;
-  private ReactApplicationContext reactContext;
+  private ReactApplicationContext mReactContext;
 
   public UploaderModule(ReactApplicationContext reactContext) {
     super(reactContext);
 
-    this.reactContext = reactContext;
-    reactContext.addLifecycleEventListener(this);
+    this.mReactContext = reactContext;
 
-    if (uploadReceiver == null) {
-      uploadReceiver = new UploadReceiver();
-      uploadReceiver.register(reactContext);
-    }
+    reactContext.addLifecycleEventListener(this);
 
     UploadService.NAMESPACE = reactContext.getApplicationInfo().packageName;
     UploadService.HTTP_STACK = new OkHttpStack();
@@ -181,8 +173,8 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
 
       request.setMethod(method)
-        .setMaxRetries(maxRetries)
-        .setDelegate(null);
+              .setMaxRetries(maxRetries)
+              .setDelegate(null);
 
       if (notification.getBoolean("enabled")) {
 
@@ -298,11 +290,39 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
     }
   }
 
+  /*
+   * Starts listening events from a foreground service.
+   * Accepts options for listening events notification
+   */
+  @ReactMethod
+  void startEventListener(ReadableMap notificationOptions, final Promise promise) {
+    try {
+      UploadEventsService.start(Arguments.toBundle(notificationOptions), mReactContext);
+      promise.resolve(true);
+    } catch (Exception exc) {
+      Log.e(TAG, exc.getMessage(), exc);
+      promise.reject(exc);
+    }
+  }
+
+  /*
+   * Starts file upload
+   * Accepts upload ID as a first argument, this upload will be cancelled
+   * Event "cancelled" will be fired when upload is cancelled.
+   */
+  @ReactMethod
+  void stopEventListener(final Promise promise) {
+    try {
+      UploadEventsService.stop(mReactContext);
+      promise.resolve(true);
+    } catch (Exception exc) {
+      Log.e(TAG, exc.getMessage(), exc);
+      promise.reject(exc);
+    }
+  }
+
   @Override
   public void onHostResume() {
-    if (uploadReceiver != null) {
-      uploadReceiver.register(reactContext);
-    }
   }
 
   @Override
@@ -311,10 +331,5 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
 
   @Override
   public void onHostDestroy() {
-    try {
-      uploadReceiver.unregister(reactContext);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 }
