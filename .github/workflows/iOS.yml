@@ -3,10 +3,10 @@ name: React Native iOS
 on:
   push:
     branches:
-      - master
+      - detox-test
   pull_request:
     branches:
-      - master
+      - detox-test
 
 jobs:
   react-native-ios:

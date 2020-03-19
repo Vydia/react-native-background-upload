@@ -8,13 +8,14 @@ on:
 jobs:
   deploy-release:
     runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
     - name: Checkout project
       uses: actions/checkout@v1
 
     - name: Specify node version
-      if: "!contains(github.event.head_commit.message, '[skip ci]')"
+      uses: actions/setup-node@v1
       with:
         node-version: 12
 

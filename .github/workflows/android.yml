@@ -3,10 +3,10 @@ name: React Native Android
 on:
   push:
     branches:
-      - master
+      - detox-tests
   pull_request:
     branches:
-      - master
+      - detox-tests
 
 jobs:
   react-native-android:
