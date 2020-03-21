@@ -1,25 +1,20 @@
-const delay = t => new Promise(res => setTimeout(() => res(), t));
-
-describe('TestApp', () => {
-  let mainScreen;
-
-  beforeAll(async () => {
-    mainScreen = await element(by.id('main_screen'));
-  });
+describe('RNBackgroundUploadExample', () => {
+  const delay = t => new Promise(res => setTimeout(() => res(), t));
 
   beforeEach(async () => {
     await device.reloadReactNative();
   });
 
-  it('should load default screen', async () => {
-    await expect(mainScreen).toExist();
-  }, 10000);
+  it('should load the app', async () => {
+    await expect(element(by.id('main_screen'))).toBeVisible();
+  }, 20000);
 
   it('should handle a 502 request', async () => {
     const button = await element(by.id('5_sec_delay_button'));
 
     await button.tap();
 
+    // arbitrary high number
     await delay(10000);
 
     const completed = await element(by.id('5_sec_delay_completed'));

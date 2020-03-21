@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -17,36 +17,35 @@ import {
   StatusBar,
   Button,
   Platform,
-  TouchableOpacity
-} from "react-native";
+  TouchableOpacity,
+} from 'react-native';
 
-import { Header, Colors } from "react-native/Libraries/NewAppScreen";
+import {Header, Colors} from 'react-native/Libraries/NewAppScreen';
 
-import Upload from "react-native-background-upload";
+import Upload from 'react-native-background-upload';
 
-import ImagePicker from 'react-native-image-picker'
+import ImagePicker from 'react-native-image-picker';
 
-import RNFS from "react-native-fs";
+import RNFS from 'react-native-fs';
 
-const url10SecDelayPut = `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:8080/10secDelay`;
-const url5secDelayFail = `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:8080/5secDelayFail`;
+const url10SecDelayPut = 'http://localhost:8080/10secDelay';
+const url5secDelayFail = 'http://localhost:8080/5secDelayFail';
 
-const path = RNFS.TemporaryDirectoryPath + "/test.json";
+const path = RNFS.TemporaryDirectoryPath + '/test.json';
 const prefix = Platform.OS === 'ios' ? 'file://' : '';
 
 const commonOptions = {
-  url: "",
+  url: '',
   path: prefix + path,
-  method: "PUT",
-  type: "raw",
+  method: 'PUT',
+  type: 'raw',
   // only supported on Android
   notification: {
-    enabled: true
-  }
+    enabled: true,
+  },
 };
 
-
-RNFS.writeFile(path, "");
+RNFS.writeFile(path, '');
 
 const App: () => React$Node = () => {
   const [delay10Completed, set10SecDelayCompleted] = useState(false);
@@ -58,7 +57,7 @@ const App: () => React$Node = () => {
 
   const onPressUpload = options => {
     if (isImagePickerShowing) {
-      return
+      return;
     }
 
     setIsImagePickerShowing(true);
@@ -66,70 +65,79 @@ const App: () => React$Node = () => {
     const imagePickerOptions = {
       takePhotoButtonTitle: null,
       title: 'Upload Media',
-      chooseFromLibraryButtonTitle: 'Choose From Library'
-    }
+      chooseFromLibraryButtonTitle: 'Choose From Library',
+    };
 
-    ImagePicker.showImagePicker(imagePickerOptions, (response) => {
-      let didChooseVideo = true
+    ImagePicker.showImagePicker(imagePickerOptions, response => {
+      let didChooseVideo = true;
 
-      console.log('ImagePicker response: ', response)
-      const { customButton, didCancel, error, path, uri } = response
+      console.log('ImagePicker response: ', response);
+      const {customButton, didCancel, error, path, uri} = response;
 
       if (didCancel) {
-        didChooseVideo = false
+        didChooseVideo = false;
       }
 
       if (error) {
-        console.warn('ImagePicker error:', response)
-        didChooseVideo = false
+        console.warn('ImagePicker error:', response);
+        didChooseVideo = false;
       }
 
       // TODO: Should this happen higher?
-      setIsImagePickerShowing(false)
+      setIsImagePickerShowing(false);
 
       if (!didChooseVideo) {
-        return
+        return;
       }
 
       let finalPath = Platform.OS === 'android' ? path : uri;
 
-      if (finalPath) { // Video is stored locally on the device
-        Upload.getFileInfo(finalPath).then((metadata) => {
-          const uploadOpts = Object.assign({
-            path: finalPath,
-            method: 'POST',
-            headers: {
-              'content-type': metadata.mimeType // server requires a content-type header
-            }
-          }, options)
+      if (finalPath) {
+        // Video is stored locally on the device
+        Upload.getFileInfo(finalPath).then(metadata => {
+          const uploadOpts = Object.assign(
+            {
+              path: finalPath,
+              method: 'POST',
+              headers: {
+                'content-type': metadata.mimeType, // server requires a content-type header
+              },
+            },
+            options,
+          );
 
-          Upload.startUpload(uploadOpts).then((uploadId) => {
-            console.log(`Upload started with options: ${JSON.stringify(uploadOpts)}`)
-            setUploadId(uploadId);
-            setProgress(0);
-            Upload.addListener('progress', uploadId, (data) => {
-              if (data.progress % 5 === 0) {
-                setProgress(+data.progress);
-              }
-              console.log(`Progress: ${data.progress}%`)
+          Upload.startUpload(uploadOpts)
+            .then(uploadId => {
+              console.log(
+                `Upload started with options: ${JSON.stringify(uploadOpts)}`,
+              );
+              setUploadId(uploadId);
+              setProgress(0);
+              Upload.addListener('progress', uploadId, data => {
+                if (data.progress % 5 === 0) {
+                  setProgress(+data.progress);
+                }
+                console.log(`Progress: ${data.progress}%`);
+              });
+              Upload.addListener('error', uploadId, data => {
+                console.log(`Error: ${data.error}%`);
+              });
+              Upload.addListener('completed', uploadId, data => {
+                console.log('Completed!');
+              });
             })
-            Upload.addListener('error', uploadId, (data) => {
-              console.log(`Error: ${data.error}%`)
-            })
-            Upload.addListener('completed', uploadId, (data) => {
-              console.log('Completed!')
-            })
-          }).catch(function(err) {
-            setUploadId(null);
-            setProgress(null);
-            console.log('Upload error!', err)
-          })
-        })
-      } else { // Video is stored in google cloud
-        Alert.alert("Video not found");
+            .catch(function(err) {
+              setUploadId(null);
+              setProgress(null);
+              console.log('Upload error!', err);
+            });
+        });
+      } else {
+        // Video is stored in google cloud
+        Alert.alert('Video not found');
       }
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -137,8 +145,7 @@ const App: () => React$Node = () => {
       <SafeAreaView testID="main_screen">
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        >
+          style={styles.scrollView}>
           <Header />
           {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
@@ -160,22 +167,21 @@ const App: () => React$Node = () => {
                       setUploadId(uploadId);
 
                       Upload.addListener(
-                        "completed",
+                        'completed',
                         uploadId,
-                        ({ responseCode }) => {
-                          console.warn({ responseCode });
+                        ({responseCode}) => {
+                          console.warn({responseCode});
 
                           if (responseCode <= 299) {
                             set10SecDelayCompleted(true);
                           }
-                        }
+                        },
                       );
                     })
                     .catch(err => {
                       console.warn(err.message);
                     });
-                }}
-              >
+                }}>
                 <Text>10 Sec Delay Success</Text>
               </TouchableOpacity>
 
@@ -199,26 +205,29 @@ const App: () => React$Node = () => {
                       setUploadId(uploadId);
 
                       Upload.addListener(
-                        "completed",
+                        'completed',
                         uploadId,
-                        ({ responseCode }) => {
+                        ({responseCode}) => {
                           if (responseCode === 502) {
                             set5SecDelayCompleted(true);
                           }
-                        }
+                        },
                       );
 
-                      Upload.addListener("error", uploadId, ({ responseCode }) => {
-                        if (responseCode === 502) {
-                          set5SecDelayCompleted(true);
-                        }
-                      })
+                      Upload.addListener(
+                        'error',
+                        uploadId,
+                        ({responseCode}) => {
+                          if (responseCode === 502) {
+                            set5SecDelayCompleted(true);
+                          }
+                        },
+                      );
                     })
                     .catch(err => {
                       console.warn(err.message);
                     });
-                }}
-              >
+                }}>
                 <Text>5 Sec Delay Error</Text>
               </TouchableOpacity>
 
@@ -230,36 +239,39 @@ const App: () => React$Node = () => {
 
               <Button
                 title="Tap To Upload Multipart"
-                onPress={() => onPressUpload({
-                  url: `http://${Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'}:8080/upload_multipart`,
-                  field: 'uploaded_media',
-                  type: 'multipart'
-                })}
+                onPress={() =>
+                  onPressUpload({
+                    url: `http://${
+                      Platform.OS === 'ios' ? 'localhost' : '10.0.2.2'
+                    }:8080/upload_multipart`,
+                    field: 'uploaded_media',
+                    type: 'multipart',
+                  })
+                }
               />
 
-              <View style={{ height: 32 }}/>
-              <Text style={{ textAlign: 'center' }}>
-                { `Current Upload ID: ${uploadId === null ? 'none' : uploadId}` }
+              <View style={{height: 32}} />
+              <Text style={{textAlign: 'center'}}>
+                {`Current Upload ID: ${uploadId === null ? 'none' : uploadId}`}
               </Text>
-              <Text style={{ textAlign: 'center' }}>
-                { `Progress: ${progress === null ? 'none' : `${progress}%`}` }
+              <Text style={{textAlign: 'center'}}>
+                {`Progress: ${progress === null ? 'none' : `${progress}%`}`}
               </Text>
-              <View/>
+              <View />
               <Button
                 testID="cancel_button"
                 title="Tap to Cancel Upload"
                 onPress={() => {
                   if (!uploadId) {
-                    console.log('Nothing to cancel!')
-                    return
+                    console.log('Nothing to cancel!');
+                    return;
                   }
 
                   Upload.cancelUpload(uploadId).then(() => {
-                    console.log(`Upload ${uploadId} canceled`)
+                    console.log(`Upload ${uploadId} canceled`);
                     setUploadId(null);
                     setProgress(null);
-                  })
-
+                  });
                 }}
               />
             </View>
@@ -272,41 +284,41 @@ const App: () => React$Node = () => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: Colors.lighter
+    backgroundColor: Colors.lighter,
   },
   engine: {
-    position: "absolute",
-    right: 0
+    position: 'absolute',
+    right: 0,
   },
   body: {
-    backgroundColor: Colors.white
+    backgroundColor: Colors.white,
   },
   sectionContainer: {
     marginTop: 32,
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "600",
-    color: Colors.black
+    fontWeight: '600',
+    color: Colors.black,
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
-    fontWeight: "400",
-    color: Colors.dark
+    fontWeight: '400',
+    color: Colors.dark,
   },
   highlight: {
-    fontWeight: "700"
+    fontWeight: '700',
   },
   footer: {
     color: Colors.dark,
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
     padding: 4,
     paddingRight: 12,
-    textAlign: "right"
-  }
+    textAlign: 'right',
+  },
 });
 
 export default App;

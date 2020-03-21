@@ -5,8 +5,11 @@
  * @format
  */
 
+const blacklist = require('metro-config/src/defaults/blacklist');
+
 module.exports = {
   resolver: {
+    blacklistRE: blacklist([/e2e\/.*/, /test\/.*/, /detox\/node_modules\/.*/]),
   },
   transformer: {
     getTransformOptions: async () => ({

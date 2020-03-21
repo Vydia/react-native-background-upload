@@ -1,12 +1,6 @@
-name: React Native iOS
+name: Test iOS Example App
 
-on:
-  push:
-    branches:
-      - detox-tests
-  pull_request:
-    branches:
-      - detox-tests
+on: [push, pull_request]
 
 jobs:
   react-native-ios:
@@ -27,15 +21,20 @@ jobs:
         brew tap wix/brew
         brew install applesimutils
 
-    - name: Install node_modules & deploy
+    - name: Install node_modules
       working-directory: example/RNBackgroundExample/
-      run: |
+      run:
         yarn install --frozen-lockfile
+
+    - name: Deploy
+      working-directory: example/RNBackgroundExample/
+      run:
         yarn deploy/release/ios
 
     - name: iOS test
       working-directory: example/RNBackgroundExample/
-      timeout-minutes: 10
+      timeout-minutes: 8
       run: |
         npx detox clean-framework-cache && npx detox build-framework-cache
+        node e2e/start-server.js &
         yarn e2e/test/ios

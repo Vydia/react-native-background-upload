@@ -1,12 +1,6 @@
-name: React Native Android
+name: Test Android Example App
 
-on:
-  push:
-    branches:
-      - detox-tests
-  pull_request:
-    branches:
-      - detox-tests
+on: [push, pull_request]
 
 jobs:
   react-native-android:
@@ -30,23 +24,34 @@ jobs:
 
     - name: Setup Android emulator
       run: |
-        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86_64"
-        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86_64" -b "x86_64" -c 1G -d 7 -f
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86" > /dev/null
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86" -b "x86" -c 1G -d 7 -f
 
-    - name: Install node_modules & deploy
+    - name: Install node_modules
       working-directory: example/RNBackgroundExample/
-      run: |
+      run:
         yarn install --frozen-lockfile
+
+    - name: Deploy
+      working-directory: example/RNBackgroundExample/
+      run:
         yarn e2e/deploy/android
+
+    - name: Start Emulator
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 5
+      run: |
+        export PATH=$PATH:$ANDROID_HOME/platform-tools
+        $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
+        adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
 
     - name: Android test
       working-directory: example/RNBackgroundExample/
-      timeout-minutes: 10
+      timeout-minutes: 8
       run: |
         mkdir -p ./artifacts
-        export PATH=$PATH:$ANDROID_HOME/platform-tools
-        $ANDROID_HOME/emulator/emulator @emu &
-        adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
+        node e2e/start-server.js &
+        adb reverse tcp:8080 tcp:8080
         yarn e2e/test/android --record-videos all
 
     - uses: actions/upload-artifact@master

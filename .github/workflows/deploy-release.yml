@@ -3,7 +3,7 @@ name: Deploy & Release
 on:
   push:
     branches:
-      - detox-tests
+      - master
 
 jobs:
   deploy-release:
@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: 12
 
-    - name: Release NPM
+    - name: Release to NPM
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

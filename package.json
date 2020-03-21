@@ -2,10 +2,10 @@
   "name": "react-native-background-upload",
   "version": "5.3.0-beta.0",
   "description": "Cross platform http post file uploader with android and iOS background support",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "commit": "git-cz",
-    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "lint": "yarn lint:ci --fix",
+    "lint:ci": "eslint src example",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,16 +30,13 @@
   },
   "homepage": "https://github.com/Vydia/react-native-background-upload#readme",
   "devDependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@commitlint/prompt": "^8.2.0",
+    "@react-native-community/eslint-config": "^0.0.7",
     "@semantic-release/commit-analyzer": "^6.3.3",
     "@semantic-release/git": "^7.0.18",
     "@semantic-release/github": "^5.5.5",
     "@semantic-release/npm": "^5.3.5",
     "@semantic-release/release-notes-generator": "^7.3.5",
-    "commitizen": "^4.0.3",
-    "husky": "^3.1.0"
+    "eslint": "^6.8.0"
   },
   "release": {
     "plugins": [
@@ -65,10 +62,5 @@
       ],
       "@semantic-release/release-notes-generator"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/prompt"
-    }
   }
 }

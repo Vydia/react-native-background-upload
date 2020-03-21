@@ -9,8 +9,6 @@
     "start": "react-native start",
     "test": "jest",
     "test/ci": "jest",
-    "lint": "jest",
-    "lint/ci": "jest",
     "postinstall": "sh scripts/postinstall.sh",
     "deploy/release/ios": "bash scripts/deploy-ios.sh Release",
     "deploy/debug/ios": "bash scripts/deploy-ios.sh Debug",
@@ -22,7 +20,7 @@
   },
   "dependencies": {
     "react": "16.9.0",
-    "react-native": "0.61.4",
+    "react-native": "0.61.5",
     "react-native-background-upload": "../../",
     "react-native-fs": "^2.16.1",
     "react-native-image-picker": "^1.1.0"
@@ -33,7 +31,7 @@
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
     "content-type": "^1.0.4",
-    "detox": "^14.7.0",
+    "detox": "14.5.1",
     "eslint": "^6.6.0",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
@@ -44,11 +42,16 @@
     "uuid": "^3.3.3"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/../../node_modules/react-native/jest/preprocessor.js"
+    },
+    "testMatch": [
+      "<rootDir>/../../(test/unit/**/*.spec.(js|jsx|ts|tsx)|**/__test__/*.(js|jsx|ts|tsx))"
+    ]
   },
   "detox": {
     "test-runner": "jest",
-    "runner-config": "e2e/config.json",
     "configurations": {
       "ios": {
         "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/RNBackgroundExample.app",
