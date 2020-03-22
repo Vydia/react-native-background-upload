@@ -1,0 +1,40 @@
+name: Test iOS Example App
+
+on: [push, pull_request]
+
+jobs:
+  react-native-ios:
+    runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v1
+
+    - name: Specify node version
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Setup Detox
+      run: |
+        brew tap wix/brew
+        brew install applesimutils
+
+    - name: Install node_modules
+      working-directory: example/RNBackgroundExample/
+      run:
+        yarn install --frozen-lockfile
+
+    - name: Deploy
+      working-directory: example/RNBackgroundExample/
+      run:
+        yarn deploy/release/ios
+
+    - name: iOS test
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 8
+      run: |
+        npx detox clean-framework-cache && npx detox build-framework-cache
+        node e2e/start-server.js &
+        yarn e2e/test/ios

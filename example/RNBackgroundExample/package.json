@@ -1,0 +1,69 @@
+{
+  "name": "RNBackgroundExample",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "server": "node e2e/start-server.js",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "test/ci": "jest",
+    "postinstall": "sh scripts/postinstall.sh",
+    "deploy/release/ios": "bash scripts/deploy-ios.sh Release",
+    "deploy/debug/ios": "bash scripts/deploy-ios.sh Debug",
+    "deploy/release/android": "sh scripts/deploy-android.sh Release",
+    "deploy/debug/android": "sh scripts/deploy-android.sh Debug",
+    "e2e/deploy/android": "detox build -c android",
+    "e2e/test/ios": "detox test -c ios",
+    "e2e/test/android": "detox test -c android"
+  },
+  "dependencies": {
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-background-upload": "../../",
+    "react-native-fs": "^2.16.1",
+    "react-native-image-picker": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/runtime": "^7.7.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "content-type": "^1.0.4",
+    "detox": "14.5.1",
+    "eslint": "^6.6.0",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.57.0",
+    "multer": "^1.4.2",
+    "react-test-renderer": "16.9.0",
+    "uuid": "^3.3.3"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/../../node_modules/react-native/jest/preprocessor.js"
+    },
+    "testMatch": [
+      "<rootDir>/../../(test/unit/**/*.spec.(js|jsx|ts|tsx)|**/__test__/*.(js|jsx|ts|tsx))"
+    ]
+  },
+  "detox": {
+    "test-runner": "jest",
+    "configurations": {
+      "ios": {
+        "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/RNBackgroundExample.app",
+        "type": "ios.simulator",
+        "name": "iPhone 11"
+      },
+      "android": {
+        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+        "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd ..",
+        "type": "android.emulator",
+        "name": "emu"
+      }
+    }
+  }
+}

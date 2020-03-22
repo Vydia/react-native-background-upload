@@ -1,0 +1,62 @@
+name: Test Android Example App
+
+on: [push, pull_request]
+
+jobs:
+  react-native-android:
+    runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v1
+
+    - name: Specify node version
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Use specific Java version for sdkmanager to work
+      uses: joschi/setup-jdk@v1
+      with:
+        java-version: 'openjdk8'
+        architecture: 'x64'
+
+    - name: Setup Android emulator
+      run: |
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86" > /dev/null
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86" -b "x86" -c 1G -d 7 -f
+
+    - name: Install node_modules
+      working-directory: example/RNBackgroundExample/
+      run:
+        yarn install --frozen-lockfile
+
+    - name: Deploy
+      working-directory: example/RNBackgroundExample/
+      run:
+        yarn e2e/deploy/android
+
+    - name: Start Emulator
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 5
+      run: |
+        export PATH=$PATH:$ANDROID_HOME/platform-tools
+        $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
+        adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
+
+    - name: Android test
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 8
+      run: |
+        mkdir -p ./artifacts
+        node e2e/start-server.js &
+        adb reverse tcp:8080 tcp:8080
+        yarn e2e/test/android --record-videos failing
+
+    - uses: actions/upload-artifact@master
+      name: Provide videos of failed E2E tests
+      if: failure()
+      with:
+        name: android-failing-e2e-videos
+        path: example/RNBackgroundExample/artifacts
