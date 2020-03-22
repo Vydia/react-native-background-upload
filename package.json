@@ -17,7 +17,8 @@
     "UploadService",
     "background",
     "upload",
-    "react-native"
+    "react-native",
+    "react"
   ],
   "peerDependencies": {
     "react": "*",
