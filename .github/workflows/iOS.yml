@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout project
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Specify node version
       uses: actions/setup-node@v1
