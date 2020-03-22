@@ -25,4 +25,4 @@ jobs:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: |
         yarn install --frozen-lockfile
-        npx semantic-release
+        yarn release
