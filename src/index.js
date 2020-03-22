@@ -2,7 +2,7 @@
 /**
  * Handles HTTP background file uploads from an iOS or Android device.
  */
-import {NativeModules, DeviceEventEmitter} from 'react-native';
+import { NativeModules, DeviceEventEmitter } from 'react-native';
 
 export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled';
 
@@ -20,7 +20,7 @@ export type StartUploadArgs = {
   field?: string,
   customUploadId?: string,
   // parameters are supported only in multipart type
-  parameters?: {[string]: string},
+  parameters?: { [string]: string },
   headers?: Object,
   notification?: NotificationArgs,
 };
@@ -119,4 +119,4 @@ export const addListener = (
   });
 };
 
-export default {startUpload, cancelUpload, addListener, getFileInfo};
+export default { startUpload, cancelUpload, addListener, getFileInfo };
