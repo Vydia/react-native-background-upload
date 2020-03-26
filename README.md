@@ -100,7 +100,8 @@ const options = {
   // Below are options only supported on Android
   notification: {
     enabled: true
-  }
+  },
+  useUtf8Charset: true
 }
 
 Upload.startUpload(options).then((uploadId) => {
@@ -166,6 +167,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`field`|string|Required if `type: 'multipart'`||The form field name for the file.  Only used when `type: 'multipart`|`uploaded-file`|
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|Notification object (see below)|Optional||Android only.  |`{ enabled: true, onProgressTitle: "Uploading...", autoClear: true }`|
+|`useUtf8Charset`|boolean|Optional||Android only. Set to true to use `utf-8` as charset. ||
 
 ### Notification Object (Android Only)
 |Name|Type|Required|Description|Example|
