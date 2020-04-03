@@ -2,7 +2,7 @@ package com.vydia.RNUploader;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
