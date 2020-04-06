@@ -14,7 +14,7 @@ declare module "react-native-background-upload" {
 
     export interface CompletedData extends EventData {
 
-        responseCode: string
+        responseCode: number
         responseBody: string
     }
     export type FileInfo = {
