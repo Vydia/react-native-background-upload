@@ -24,8 +24,8 @@ jobs:
 
     - name: Setup Android emulator
       run: |
-        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86" > /dev/null
-        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86" -b "x86" -c 1G -d 7 -f
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86_64" > /dev/null
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86_64" -b "x86_64" -c 1G -d 7 -f
 
     - name: Install node_modules
       working-directory: example/RNBackgroundExample/
