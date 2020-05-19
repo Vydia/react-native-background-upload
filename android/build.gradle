@@ -59,4 +59,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:$_kotlinStdlib:$_kotlinVersion"
 
     implementation 'net.gotev:uploadservice-okhttp:4.3.0'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }
