@@ -218,7 +218,7 @@ const App: () => React$Node = () => {
                         'error',
                         uploadId,
                         ({responseCode}) => {
-                          console.warn(responseCode);
+                          set5SecDelayCompleted(true);
                         },
                       );
                     })
