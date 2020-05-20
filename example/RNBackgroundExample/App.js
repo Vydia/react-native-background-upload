@@ -217,8 +217,8 @@ const App: () => React$Node = () => {
                       Upload.addListener(
                         'error',
                         uploadId,
-                        (data) => {
-                          console.log(`Error: ${data.error}%`);
+                        ({responseCode}) => {
+                          console.warn(responseCode);
                         },
                       );
                     })
