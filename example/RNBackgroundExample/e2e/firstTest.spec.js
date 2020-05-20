@@ -9,19 +9,6 @@ describe('RNBackgroundUploadExample', () => {
     await expect(element(by.id('main_screen'))).toBeVisible();
   }, 20000);
 
-  it('should handle a 502 request', async () => {
-    const button = await element(by.id('5_sec_delay_button'));
-
-    await button.tap();
-
-    // arbitrary high number
-    await delay(10000);
-
-    const completed = await element(by.id('5_sec_delay_completed'));
-
-    await expect(completed).toBeVisible();
-  }, 20000);
-
   it('should handle a 200 request', async () => {
     const button = await element(by.id('10_sec_delay_button'));
 

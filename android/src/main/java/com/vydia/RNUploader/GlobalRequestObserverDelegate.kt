@@ -27,7 +27,6 @@ class GlobalRequestObserverDelegate(reactContext: ReactApplicationContext) : Req
     params.putString("id", uploadInfo.uploadId)
 
     // Make sure we do not try to call getMessage() on a null object
-    // Make sure we do not try to call getMessage() on a null object
     if (exception != null) {
       params.putString("error", exception.message)
     } else {
