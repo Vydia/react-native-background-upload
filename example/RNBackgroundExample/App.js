@@ -217,10 +217,8 @@ const App: () => React$Node = () => {
                       Upload.addListener(
                         'error',
                         uploadId,
-                        ({responseCode}) => {
-                          if (responseCode === 502) {
-                            set5SecDelayCompleted(true);
-                          }
+                        data => {
+                          console.log(`Error: ${data.error}%`);
                         },
                       );
                     })
