@@ -168,6 +168,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|Notification object (see below)|Optional||Android only.  |`{ enabled: true, onProgressTitle: "Uploading...", autoClear: true }`|
 |`useUtf8Charset`|boolean|Optional||Android only. Set to true to use `utf-8` as charset. ||
+|`appGroup`|string|Optional|iOS only. App group ID needed for share extensions to be able to properly call the library. See: https://developer.apple.com/documentation/foundation/nsfilemanager/1412643-containerurlforsecurityapplicati
 
 ### Notification Object (Android Only)
 |Name|Type|Required|Description|Example|

@@ -88,6 +88,11 @@ declare module "react-native-background-upload" {
         };
         // Android notification settings
         notification?: Partial<NotificationOptions>
+        /**
+         * AppGroup defined in XCode for extensions. Necessary when trying to upload things via this library
+         * in the context of ShareExtension.
+         */
+        appGroup?: string;
     }
 
     export interface MultipartUploadOptions extends UploadOptions {
