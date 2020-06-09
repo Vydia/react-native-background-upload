@@ -88,6 +88,13 @@ declare module "react-native-background-upload" {
         };
         // Android notification settings
         notification?: Partial<NotificationOptions>
+        /**
+         * AppGroup defined in XCode for extensions. Necessary when trying to upload things via this library
+         * in the context of ShareExtension.
+         */
+        appGroup?: string;
+        // Necessary only for multipart type upload
+        field?: string
     }
 
     export interface MultipartUploadOptions extends UploadOptions {
@@ -102,13 +109,13 @@ declare module "react-native-background-upload" {
 
     export type UploadListenerEvent = 'progress' | 'error' | 'completed' | 'cancelled'
 
+
     export default class Upload {
-        static startUpload(options: UploadOptions): Promise<uploadId>
-        static addListener(event: UploadListenerEvent, uploadId: uploadId, data: object): void
-        static addListener(event: 'progress', uploadId: uploadId, data: ProgressData): void
-        static addListener(event: 'error', uploadId: uploadId, data: ErrorData): void
-        static addListener(event: 'completed', uploadId: uploadId, data: CompletedData): void
-        static addListener(event: 'cancelled', uploadId: uploadId, data: EventData): void
+        static startUpload(options: UploadOptions | MultipartUploadOptions): Promise<uploadId>
+        static addListener(event: 'progress', uploadId: uploadId, callback: (data: ProgressData ) => void): void
+        static addListener(event: 'error', uploadId: uploadId, callback: (data: ErrorData) => void): void
+        static addListener(event: 'completed', uploadId: uploadId, callback: (data: CompletedData) => void): void
+        static addListener(event: 'cancelled', uploadId: uploadId, callback: (data: EventData) => void): void
         static getFileInfo(path: string): Promise<FileInfo>
         static cancelUpload(uploadId: uploadId): Promise<boolean>
     }
