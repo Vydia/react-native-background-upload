@@ -22,10 +22,10 @@ import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-class UploaderModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
+class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
   private val TAG = "UploaderBridge"
   private var notificationChannelID = "BackgroundUploadChannel"
-  private val reactContext = reactContext
+  private var isGlobalRequestObserver = false
 
   override fun getName(): String {
     return "RNFileUploader"
@@ -175,7 +175,10 @@ class UploaderModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
     initialize(application, notificationChannelID, BuildConfig.DEBUG)
 
-    GlobalRequestObserver(application, GlobalRequestObserverDelegate(reactContext))
+    if(!isGlobalRequestObserver) {
+      isGlobalRequestObserver = true
+      GlobalRequestObserver(application, GlobalRequestObserverDelegate(reactContext))
+    }
 
     val url = options.getString("url")
     val filePath = options.getString("path")
