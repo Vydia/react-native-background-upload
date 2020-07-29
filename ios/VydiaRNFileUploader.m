@@ -361,6 +361,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+    [session finishTasksAndInvalidate];
+    _urlSession = nil;
     if (backgroundSessionCompletionHandler) {
         NSLog(@"RNBU Did Finish Events For Background URLSession (has backgroundSessionCompletionHandler)");
         // This long delay is set as a security if the JS side does not call :canSuspendIfBackground: promptly
