@@ -1,0 +1,7 @@
+/.github
+/android/.gradle/
+/.gradle/
+/TestApp
+/android/build
+/ios/build
+xcuserdata*

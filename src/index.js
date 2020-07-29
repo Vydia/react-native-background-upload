@@ -2,13 +2,13 @@
 /**
  * Handles HTTP background file uploads from an iOS or Android device.
  */
-import { NativeModules, DeviceEventEmitter, Platform } from 'react-native'
+import { NativeModules, DeviceEventEmitter } from 'react-native';
 
-export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled'
+export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled';
 
 export type NotificationArgs = {
-  enabled: boolean
-}
+  enabled: boolean,
+};
 
 export type StartUploadArgs = {
   url: string,
@@ -22,24 +22,25 @@ export type StartUploadArgs = {
   // parameters are supported only in multipart type
   parameters?: { [string]: string },
   headers?: Object,
-  notification?: NotificationArgs
-}
+  notification?: NotificationArgs,
+};
 
-const NativeModule = NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader // iOS is VydiaRNFileUploader and Android is NativeModules
-const eventPrefix = 'RNFileUploader-'
+const NativeModule =
+  NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader; // iOS is VydiaRNFileUploader and Android is NativeModules
+const eventPrefix = 'RNFileUploader-';
 
 // for IOS, register event listeners or else they don't fire on DeviceEventEmitter
 if (NativeModules.VydiaRNFileUploader) {
-  NativeModule.addListener(eventPrefix + 'progress')
-  NativeModule.addListener(eventPrefix + 'error')
-  NativeModule.addListener(eventPrefix + 'cancelled')
-  NativeModule.addListener(eventPrefix + 'completed')
+  NativeModule.addListener(eventPrefix + 'progress');
+  NativeModule.addListener(eventPrefix + 'error');
+  NativeModule.addListener(eventPrefix + 'cancelled');
+  NativeModule.addListener(eventPrefix + 'completed');
 }
 
 /*
 Gets file information for the path specified.
 Example valid path is:
-  Android: '/storage/extSdCard/DCIM/Camera/20161116_074726.mp4' or 'file:///storage/extSdCard/DCIM/Camera/20161116_074726.mp4'
+  Android: '/storage/extSdCard/DCIM/Camera/20161116_074726.mp4'
   iOS: 'file:///var/mobile/Containers/Data/Application/3C8A0EFB-A316-45C0-A30A-761BF8CCF2F8/tmp/trim.A5F76017-14E9-4890-907E-36A045AF9436.MOV;
 
 Returns an object:
@@ -49,21 +50,21 @@ Returns an object:
 The promise should never be rejected.
 */
 export const getFileInfo = (path: string): Promise<Object> => {
-  return NativeModule.getFileInfo(path)
-    .then(data => {
-      if (data.size) {  // size comes back as a string on android so we convert it here.  if it's already a number this won't hurt anything
-        data.size = +data.size
-      }
-      return data
-    })
-}
+  return NativeModule.getFileInfo(path).then(data => {
+    if (data.size) {
+      // size comes back as a string on android so we convert it here.  if it's already a number this won't hurt anything
+      data.size = +data.size;
+    }
+    return data;
+  });
+};
 
 /*
 Starts uploading a file to an HTTP endpoint.
 Options object:
 {
   url: string.  url to post to.
-  path: string.  path to the file on the device ("file://" prefixed path)
+  path: string.  path to the file on the device
   headers: hash of name/value header pairs
   method: HTTP method to use.  Default is "POST"
   notification: hash for customizing tray notifiaction
@@ -75,7 +76,8 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 It is recommended to add listeners in the .then of this promise.
 
 */
-export const startUpload = (options: StartUploadArgs): Promise<string> => NativeModule.startUpload(options)
+export const startUpload = (options: StartUploadArgs): Promise<string> =>
+  NativeModule.startUpload(options);
 
 /*
 Cancels active upload by string ID of the upload.
@@ -94,7 +96,7 @@ export const cancelUpload = (cancelUploadId: string): Promise<boolean> => {
     return Promise.reject(new Error('Upload ID must be a string'));
   }
   return NativeModule.cancelUpload(cancelUploadId);
-}
+};
 
 /*
 Listens for the given event on the given upload ID (resolved from startUpload).
@@ -105,13 +107,17 @@ Events (id is always the upload ID):
   cancelled - { id: string, error: string }
   completed - { id: string }
 */
-export const addListener = (eventType: UploadEvent, uploadId: string, listener: Function) => {
-  return DeviceEventEmitter.addListener(eventPrefix + eventType, (data) => {
+export const addListener = (
+  eventType: UploadEvent,
+  uploadId: string,
+  listener: Function,
+) => {
+  return DeviceEventEmitter.addListener(eventPrefix + eventType, data => {
     if (!uploadId || !data || !data.id || data.id === uploadId) {
-      listener(data)
+      listener(data);
     }
-  })
-}
+  });
+};
 
 export const canSuspendIfBackground = () => {
   if (Platform.OS === 'ios') {
@@ -119,4 +125,5 @@ export const canSuspendIfBackground = () => {
   }
 };
 
-export default { startUpload, cancelUpload, addListener, getFileInfo, canSuspendIfBackground }
+
+export default { startUpload, cancelUpload, addListener, getFileInfo, canSuspendIfBackground };

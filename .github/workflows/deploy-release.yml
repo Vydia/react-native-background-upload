@@ -1,0 +1,29 @@
+name: Deploy & Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-release:
+    runs-on: ubuntu-18.04
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v2
+
+    - name: Specify node version
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Release to NPM
+      if: github.ref == 'refs/heads/master'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: |
+        yarn install --frozen-lockfile
+        yarn release

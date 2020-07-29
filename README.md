@@ -1,4 +1,5 @@
-# react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload)
+# react-native-background-upload [![npm version](https://badge.fury.io/js/react-native-background-upload.svg)](https://badge.fury.io/js/react-native-background-upload) ![GitHub Actions status](https://github.com/Vydia/react-native-background-upload/workflows/Test%20iOS%20Example%20App/badge.svg) ![GitHub Actions status](https://github.com/Vydia/react-native-background-upload/workflows/Test%20Android%20Example%20App/badge.svg) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 The only React Native http post file uploader with android and iOS background support.  If you are uploading large files like videos, use this so your users can background your app during a long upload.
 
 NOTE: Use major version 4 with RN 47.0 and greater.  If you have RN less than 47, use 3.0.  To view all available versions:
@@ -19,7 +20,17 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 ## 2. Link Native Code
 
-### Automatic Native Library Linking
+### Autolinking (React Native >= 0.60)
+
+##### iOS
+
+`cd ./ios && pod install && cd ../`
+
+##### Android
+
+No further actions required.
+
+### Automatic Native Library Linking (React Native < 0.60)
 
 `react-native link react-native-background-upload`
 
@@ -82,6 +93,7 @@ const options = {
   path: 'file://path/to/file/on/device',
   method: 'POST',
   type: 'raw',
+  maxRetries: 2, // set retry count (Android only). Default 2
   headers: {
     'content-type': 'application/octet-stream', // Customize content-type
     'my-custom-header': 's3headervalueorwhateveryouneed'
@@ -89,7 +101,8 @@ const options = {
   // Below are options only supported on Android
   notification: {
     enabled: true
-  }
+  },
+  useUtf8Charset: true
 }
 
 Upload.startUpload(options).then((uploadId) => {
@@ -136,7 +149,7 @@ All top-level methods are available as named exports or methods on the default e
 
 ### startUpload(options)
 
-The primary method you will use, this starts the upload process.  
+The primary method you will use, this starts the upload process.
 
 Returns a promise with the string ID of the upload.  Will reject if there is a connection problem, the file doesn't exist, or there is some other problem.
 
@@ -155,11 +168,13 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`field`|string|Required if `type: 'multipart'`||The form field name for the file.  Only used when `type: 'multipart`|`uploaded-file`|
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|Notification object (see below)|Optional||Android only.  |`{ enabled: true, onProgressTitle: "Uploading...", autoClear: true }`|
+|`useUtf8Charset`|boolean|Optional||Android only. Set to true to use `utf-8` as charset. ||
+|`appGroup`|string|Optional|iOS only. App group ID needed for share extensions to be able to properly call the library. See: https://developer.apple.com/documentation/foundation/nsfilemanager/1412643-containerurlforsecurityapplicati
 
 ### Notification Object (Android Only)
 |Name|Type|Required|Description|Example|
 |---|---|---|---|---|
-|`enabled`|boolean|Optional|Enable or diasable notifications|`{ enabled: true }`|
+|`enabled`|boolean|Optional|Enable or diasable notifications. Works only on Android version < 8.0 Oreo. On Android versions >= 8.0 Oreo is required by Google's policy to display a notification when a background service run|`{ enabled: true }`|
 |`autoClear`|boolean|Optional|Autoclear notification on complete|`{ autoclear: true }`|
 |`notificationChannel`|string|Optional|Sets android notificaion channel|`{ notificationChannel: "My-Upload-Service" }`|
 |`enableRingTone`|boolean|Optional|Sets whether or not to enable the notification sound when the upload gets completed with success or error|`{ enableRingTone: true }`|
@@ -386,7 +401,7 @@ Is there an example/sandbox app to test out this package?
 
 > Yes, there is a simple react native app that comes with an [express](https://github.com/expressjs/express) server where you can see react-native-background-upload in action and try things out in an isolated local environment.
 
-[ReactNativeBackgroundUploadExample](https://github.com/Vydia/ReactNativeBackgroundUploadExample)
+[RNBackgroundExample](https://github.com/Vydia/react-native-background-upload/blob/master/example/RNBackgroundExample)
 
 Does it support iOS camera roll assets?
 
