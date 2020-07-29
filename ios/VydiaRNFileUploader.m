@@ -48,11 +48,12 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
 - (void)startObserving {
     // JS side is ready to receive events; create the background url session if necessary
     // iOS will then deliver the tasks completed while the app was dead (if any)
+    NSString *appGroup = nil;
     double delayInSeconds = 0.5;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         NSLog(@"RNBU startObserving: recreate urlSession if necessary");
-        [self urlSession];
+        [self urlSession:appGroup];
     });
 }
 
