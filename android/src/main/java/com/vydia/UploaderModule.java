@@ -139,6 +139,16 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
       }
     }
 
+    String customFilename = null;
+
+    if (options.hasKey("customFilename")) {
+      customFilename = options.getString("customFilename");
+      if (customFilename == null) {
+        promise.reject(new IllegalArgumentException("type must be string."));
+        return;
+      }
+    }
+
     WritableMap notification = new WritableNativeMap();
     notification.putBoolean("enabled", true);
 
@@ -178,10 +188,10 @@ public class UploaderModule extends ReactContextBaseJavaModule implements Lifecy
         if(options.hasKey("useUtf8Charset") && options.getBoolean("useUtf8Charset")) {
           request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
             .setUtf8Charset()
-            .addFileToUpload(filePath, options.getString("field"));
+            .addFileToUpload(filePath, options.getString("field"), customFilename);
         } else {
           request = new MultipartUploadRequest(this.getReactApplicationContext(), customUploadId, url)
-            .addFileToUpload(filePath, options.getString("field"));
+            .addFileToUpload(filePath, options.getString("field"), customFilename);
         }
       }
 
