@@ -149,6 +149,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
     NSString *method = options[@"method"] ?: @"POST";
     NSString *uploadType = options[@"type"] ?: @"raw";
     NSString *fieldName = options[@"field"];
+    NSString *customFilename = options[@"customFilename"];
     NSString *customUploadId = options[@"customUploadId"];
     NSString *appGroup = options[@"appGroup"];
     NSDictionary *headers = options[@"headers"];
@@ -195,7 +196,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             NSString *uuidStr = [[NSUUID UUID] UUIDString];
             [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", uuidStr] forHTTPHeaderField:@"Content-Type"];
 
-            NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI parameters: parameters fieldName:fieldName];
+            NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI parameters: parameters fieldName:fieldName customFilename:customFilename];
             [request setHTTPBody: httpBody];
 
             uploadTask = [[self urlSession: appGroup] uploadTaskWithStreamedRequest:request];
@@ -239,6 +240,14 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
                          path:(NSString *)path
                          parameters:(NSDictionary *)parameters
                          fieldName:(NSString *)fieldName {
+   return [self createBodyWithBoundary:boundary path:path parameters:parameters fieldName:fieldName customFilename:nil];
+}
+
+- (NSData *)createBodyWithBoundary:(NSString *)boundary
+                         path:(NSString *)path
+                         parameters:(NSDictionary *)parameters
+                         fieldName:(NSString *)fieldName
+                         customFilename:(NSString *)customFilename {
 
     NSMutableData *httpBody = [NSMutableData data];
 
@@ -248,6 +257,9 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
 
     NSData *data = [[NSFileManager defaultManager] contentsAtPath:pathWithoutProtocol];
     NSString *filename  = [path lastPathComponent];
+    if (customFilename != nil) {
+      filename = customFilename;
+    }
     NSString *mimetype  = [self guessMIMETypeFromFileName:path];
 
     [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
