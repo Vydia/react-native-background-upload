@@ -134,11 +134,12 @@ const options = {
   path: 'file://path/to/file%20on%20device.png',
   method: 'POST',
   field: 'uploaded_media',
+  customFilename: 'new_filename.png',
   type: 'multipart'
 }
 ```
 
-Note the `field` property is required for multipart uploads.
+Note the `field` property is required for multipart uploads. `customFilename` is optional, by default it will take filename from the path.
 
 # API
 
@@ -165,6 +166,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |`customUploadId`|string|Optional||`startUpload` returns a Promise that includes the upload ID, which can be used for future status checks.  By default, the upload ID is automatically generated.  This parameter allows a custom ID to use instead of the default.||
 |`headers`|object|Optional||HTTP headers|`{ 'Accept': 'application/json' }`|
 |`field`|string|Required if `type: 'multipart'`||The form field name for the file.  Only used when `type: 'multipart`|`uploaded-file`|
+|`customFilename`|string|Optional||Override the original filename with a custom name||
 |`parameters`|object|Optional||Additional form fields to include in the HTTP request. Only used when `type: 'multipart`||
 |`notification`|Notification object (see below)|Optional||Android only.  |`{ enabled: true, onProgressTitle: "Uploading...", autoClear: true }`|
 |`useUtf8Charset`|boolean|Optional||Android only. Set to true to use `utf-8` as charset. ||
