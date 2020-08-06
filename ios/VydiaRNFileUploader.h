@@ -6,5 +6,6 @@
 #import <React/RCTBridgeModule.h>
 
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
-    +(void)setBackgroundSessionCompletionHandler:(void (^)(void))handler;
++ (void)setCompletionHandlerWithIdentifier: (NSString *)identifier completionHandler: (void (^)(void))completionHandler;
 @end
+

@@ -57,9 +57,11 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
     });
 }
 
-+ (void)setBackgroundSessionCompletionHandler:(void (^)(void))handler {
-    backgroundSessionCompletionHandler = handler;
-    NSLog(@"RNBU did setBackgroundSessionCompletionHandler");
++ (void)setCompletionHandlerWithIdentifier: (NSString *)identifier completionHandler: (void (^)(void))completionHandler {
+    if ([BACKGROUND_SESSION_ID isEqualToString:identifier]) {
+        backgroundSessionCompletionHandler = completionHandler;
+        NSLog(@"RNBU did setBackgroundSessionCompletionHandler");
+    }
 }
 
 /*
