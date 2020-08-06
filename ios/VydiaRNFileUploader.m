@@ -346,11 +346,9 @@ didCompleteWithError:(NSError *)error {
         for (NSUInteger i = 0, count = [uploadTasks count]; i < count; i++) {
             NSURLSessionTask * newTask = uploadTasks[i];
             if(newTask.state != NSURLSessionTaskStateCompleted) {
-                NSLog(@"RNBU did not invalidate");
                 return;
             }
         }
-        NSLog(@"RNBU did invalidate");
         [session finishTasksAndInvalidate];
         _urlSession = nil;
     }];
@@ -381,8 +379,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    //[session invalidateAndCancel];
-    //_urlSession = nil;
     if (backgroundSessionCompletionHandler) {
         NSLog(@"RNBU Did Finish Events For Background URLSession (has backgroundSessionCompletionHandler)");
         // This long delay is set as a security if the JS side does not call :canSuspendIfBackground: promptly
