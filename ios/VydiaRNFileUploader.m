@@ -57,7 +57,7 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
     });
 }
 
-+ (void)setCompletionHandlerWithIdentifier: (NSString *)identifier completionHandler: (void (^)(void))completionHandler {
++ (void)setCompletionHandlerWithIdentifier: (NSString *)identifier completionHandler: (void (^)())completionHandler {
     if ([BACKGROUND_SESSION_ID isEqualToString:identifier]) {
         backgroundSessionCompletionHandler = completionHandler;
         NSLog(@"RNBU did setBackgroundSessionCompletionHandler");
@@ -341,6 +341,19 @@ didCompleteWithError:(NSError *)error {
             NSLog(@"RNBU did error upload %@", task.taskDescription);
         }
     }
+    
+    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+        for (NSUInteger i = 0, count = [uploadTasks count]; i < count; i++) {
+            NSURLSessionTask * newTask = uploadTasks[i];
+            if(newTask.state != NSURLSessionTaskStateCompleted) {
+                NSLog(@"RNBU did not invalidate");
+                return;
+            }
+        }
+        NSLog(@"RNBU did invalidate");
+        [session finishTasksAndInvalidate];
+        _urlSession = nil;
+    }];
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -368,8 +381,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    [session finishTasksAndInvalidate];
-    _urlSession = nil;
+    //[session invalidateAndCancel];
+    //_urlSession = nil;
     if (backgroundSessionCompletionHandler) {
         NSLog(@"RNBU Did Finish Events For Background URLSession (has backgroundSessionCompletionHandler)");
         // This long delay is set as a security if the JS side does not call :canSuspendIfBackground: promptly
