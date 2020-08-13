@@ -218,9 +218,7 @@ const App: () => React$Node = () => {
                         'error',
                         uploadId,
                         ({responseCode}) => {
-                          if (responseCode === 502) {
-                            set5SecDelayCompleted(true);
-                          }
+                          set5SecDelayCompleted(true);
                         },
                       );
                     })
