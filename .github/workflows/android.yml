@@ -24,8 +24,8 @@ jobs:
 
     - name: Setup Android emulator
       run: |
-        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-28;google_apis;x86_64" > /dev/null
-        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-28;google_apis;x86_64" -b "x86_64" -c 1G -d 7 -f
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-27;google_apis;x86" > /dev/null
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-27;google_apis;x86" -b "x86" -c 1G -d 7 -f
 
     - name: Install node_modules
       working-directory: example/RNBackgroundExample/
@@ -43,7 +43,12 @@ jobs:
       run: |
         export PATH=$PATH:$ANDROID_HOME/platform-tools
         $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
-        adb wait-for-device; adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'; adb shell wm dismiss-keyguard
+
+    - name: Wait for emulator to be ready
+      working-directory: example/RNBackgroundExample/
+      timeout-minutes: 15
+      run: |
+        sh ./wait-for-emulator.sh
 
     - name: Android test
       working-directory: example/RNBackgroundExample/
