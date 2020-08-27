@@ -10,15 +10,17 @@
 		00E356F31AD99517003FC87E /* RNBackgroundExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RNBackgroundExampleTests.m */; };
 		12164684D9AEA96BF779937C /* libPods-RNBackgroundExample-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58233A2DF66C8C6166765E6E /* libPods-RNBackgroundExample-tvOS.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		147B0699617C8EED624E25A0 /* libPods-RNBackgroundExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F71B4E403EB50B230069CECC /* libPods-RNBackgroundExampleTests.a */; };
+		29535F4924F83FC70097787C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29535F4824F83FC70097787C /* App.swift */; };
+		29F1BD0324F6E00900502923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29F1BD0224F6E00900502923 /* LaunchScreen.storyboard */; };
+		29F1BD0424F6E00900502923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29F1BD0224F6E00900502923 /* LaunchScreen.storyboard */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* RNBackgroundExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RNBackgroundExampleTests.m */; };
 		43A3E07C5A51481EF8C9705D /* libPods-RNBackgroundExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6355312C2B5407FB1A454342 /* libPods-RNBackgroundExample.a */; };
+		5B636E22053D7E6A939377A0 /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C37FB7F638A6A104556586E /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a */; };
 		80A9FB58DBDAD584DFACC466 /* libPods-RNBackgroundExample-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE335F7DAB54CB6E0337713F /* libPods-RNBackgroundExample-tvOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -47,18 +49,23 @@
 		13B07F961A680F5B00A75B9A /* RNBackgroundExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RNBackgroundExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RNBackgroundExample/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = RNBackgroundExample/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RNBackgroundExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RNBackgroundExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RNBackgroundExample/main.m; sourceTree = "<group>"; };
 		192F247A2FB83B6E10A57DF3 /* Pods-RNBackgroundExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExampleTests.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExampleTests/Pods-RNBackgroundExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		1A2D1F07459D1A0DB2654B7B /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		29535F4724F83FC70097787C /* RNBackgroundExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNBackgroundExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		29535F4824F83FC70097787C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		29F1BD0224F6E00900502923 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RNBackgroundExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* RNBackgroundExample-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RNBackgroundExample-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* RNBackgroundExample-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RNBackgroundExample-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		58233A2DF66C8C6166765E6E /* libPods-RNBackgroundExample-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExample-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6355312C2B5407FB1A454342 /* libPods-RNBackgroundExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B0F341F6828B66308A1C24B /* Pods-RNBackgroundExample-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-tvOS.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-tvOS/Pods-RNBackgroundExample-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		7C37FB7F638A6A104556586E /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExample-RNBackgroundExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CFA0000B7083D59A84627BE /* Pods-RNBackgroundExample-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-tvOSTests/Pods-RNBackgroundExample-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		86C2167B968C66F579F0B252 /* Pods-RNBackgroundExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.debug.xcconfig"; sourceTree = "<group>"; };
+		932B2E1C5F0C483A80708238 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A8EB4EA2AA6560A43B0F8D66 /* Pods-RNBackgroundExample-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-tvOSTests/Pods-RNBackgroundExample-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		BB19BEAAB0AA53E19D1E78EC /* Pods-RNBackgroundExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExampleTests/Pods-RNBackgroundExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C7E73CCD13C30F71B0347914 /* Pods-RNBackgroundExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -66,7 +73,6 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EE91229EA4D50C4123FD20C0 /* Pods-RNBackgroundExample-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-tvOS/Pods-RNBackgroundExample-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		F71B4E403EB50B230069CECC /* libPods-RNBackgroundExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				147B0699617C8EED624E25A0 /* libPods-RNBackgroundExampleTests.a in Frameworks */,
+				5B636E22053D7E6A939377A0 /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,13 +131,15 @@
 		13B07FAE1A68108700A75B9A /* RNBackgroundExample */ = {
 			isa = PBXGroup;
 			children = (
+				29F1BD0224F6E00900502923 /* LaunchScreen.storyboard */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				29535F4824F83FC70097787C /* App.swift */,
+				29535F4724F83FC70097787C /* RNBackgroundExample-Bridging-Header.h */,
 			);
 			name = RNBackgroundExample;
 			sourceTree = "<group>";
@@ -144,7 +152,7 @@
 				6355312C2B5407FB1A454342 /* libPods-RNBackgroundExample.a */,
 				58233A2DF66C8C6166765E6E /* libPods-RNBackgroundExample-tvOS.a */,
 				CE335F7DAB54CB6E0337713F /* libPods-RNBackgroundExample-tvOSTests.a */,
-				F71B4E403EB50B230069CECC /* libPods-RNBackgroundExampleTests.a */,
+				7C37FB7F638A6A104556586E /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -193,8 +201,9 @@
 				A8EB4EA2AA6560A43B0F8D66 /* Pods-RNBackgroundExample-tvOSTests.release.xcconfig */,
 				BB19BEAAB0AA53E19D1E78EC /* Pods-RNBackgroundExampleTests.debug.xcconfig */,
 				192F247A2FB83B6E10A57DF3 /* Pods-RNBackgroundExampleTests.release.xcconfig */,
+				932B2E1C5F0C483A80708238 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */,
+				1A2D1F07459D1A0DB2654B7B /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -209,6 +218,7 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				CFA072526EB78916A3FA7CAE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -230,6 +240,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				29F1BD0624F6E35400502923 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -292,6 +303,9 @@
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
+					13B07F861A680F5B00A75B9A = {
+						LastSwiftMigration = 1160;
+					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
@@ -308,6 +322,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -337,7 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				29F1BD0324F6E00900502923 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +361,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				29F1BD0424F6E00900502923 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +387,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		29F1BD0624F6E35400502923 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -468,11 +502,29 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RNBackgroundExampleTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-RNBackgroundExample-RNBackgroundExampleTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CFA072526EB78916A3FA7CAE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -528,6 +580,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29535F4924F83FC70097787C /* App.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -565,24 +618,14 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = RNBackgroundExample;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB19BEAAB0AA53E19D1E78EC /* Pods-RNBackgroundExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 932B2E1C5F0C483A80708238 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -590,6 +633,8 @@
 				INFOPLIST_FILE = RNBackgroundExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -603,13 +648,16 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 192F247A2FB83B6E10A57DF3 /* Pods-RNBackgroundExampleTests.release.xcconfig */;
+			baseConfigurationReference = 1A2D1F07459D1A0DB2654B7B /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = RNBackgroundExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -626,9 +674,12 @@
 			baseConfigurationReference = 86C2167B968C66F579F0B252 /* Pods-RNBackgroundExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RNBackgroundExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -637,6 +688,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNBackgroundExample;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNBackgroundExample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -646,8 +700,10 @@
 			baseConfigurationReference = C7E73CCD13C30F71B0347914 /* Pods-RNBackgroundExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = RNBackgroundExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -656,6 +712,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNBackgroundExample;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNBackgroundExample-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -671,10 +729,13 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "RNBackgroundExample-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -703,6 +764,8 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "RNBackgroundExample-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -726,10 +789,13 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "RNBackgroundExample-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -757,6 +823,8 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "RNBackgroundExample-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				NEW_SETTING = "";
+				NEW_SETTING1 = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -19,26 +19,28 @@
     "e2e/test/android": "detox test -c android"
   },
   "dependencies": {
-    "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react": "16.13.1",
+    "react-native": "0.63.2",
     "react-native-background-upload": "../../",
     "react-native-fs": "^2.16.1",
     "react-native-image-picker": "^1.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/runtime": "^7.7.2",
-    "@react-native-community/eslint-config": "^0.0.5",
-    "babel-jest": "^24.9.0",
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/eslint-config": "^1.1.0",
+    "babel-jest": "^26.3.0",
     "content-type": "^1.0.4",
-    "detox": "14.5.1",
+    "detox": "17.4.4",
     "eslint": "^6.6.0",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
-    "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "^0.57.0",
+    "jest": "26.x.x",
+    "jest-circus": "26.x.x",
+    "sanitize-filename": "^1.6.1",
+    "metro-react-native-babel-preset": "^0.59.0",
     "multer": "^1.4.2",
-    "react-test-renderer": "16.9.0",
+    "react-test-renderer": "16.13.1",
     "uuid": "^3.3.3"
   },
   "jest": {

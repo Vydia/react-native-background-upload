@@ -164,6 +164,7 @@ const App: () => React$Node = () => {
 
                   Upload.startUpload(options)
                     .then(uploadId => {
+                      console.warn(uploadId);
                       setUploadId(uploadId);
 
                       Upload.addListener(
@@ -202,12 +203,14 @@ const App: () => React$Node = () => {
 
                   Upload.startUpload(options)
                     .then(uploadId => {
+                      console.warn(uploadId);
                       setUploadId(uploadId);
 
                       Upload.addListener(
                         'completed',
                         uploadId,
                         ({responseCode}) => {
+                          console.warn(responseCode);
                           if (responseCode === 502) {
                             set5SecDelayCompleted(true);
                           }
