@@ -21,7 +21,7 @@ class NotificationActionsReceiver : BroadcastReceiver() {
     }
 
     if (NotificationActions().ACTION_CANCEL_UPLOAD == intent.getStringExtra(NotificationActions().PARAM_ACTION)) {
-      onUserRequestedUploadCancellation(context!!, intent.getStringExtra(NotificationActions().PARAM_UPLOAD_ID))
+      onUserRequestedUploadCancellation(context!!, intent.getStringExtra(NotificationActions().PARAM_UPLOAD_ID)!!)
     }
   }
 
