@@ -76,9 +76,13 @@ declare module "react-native-background-upload" {
         onCancelledMessage: string
     }
 
+    export interface UploadParts {
+        path: string;
+        field: string;
+    }
+
     export interface UploadOptions {
         url: string;
-        path: string;
         type?: 'raw' | 'multipart' | 'json';
         method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
         customUploadId?: string;
@@ -86,22 +90,26 @@ declare module "react-native-background-upload" {
             [index: string]: string
         };
         // Android notification settings
-        notification?: Partial<NotificationOptions>
+        notification?: Partial<NotificationOptions>;
         /**
          * AppGroup defined in XCode for extensions. Necessary when trying to upload things via this library
          * in the context of ShareExtension.
          */
         appGroup?: string;
-        // Necessary only for multipart type upload
-        field?: string
+        parts?: UploadParts[];
+    }
+
+    export interface RawUploadOptions extends UploadOptions {
+        type: 'raw';
+        parts: UploadParts[];
     }
 
     export interface MultipartUploadOptions extends UploadOptions {
-        type: 'multipart'
-        field: string
+        type: 'multipart';
+        parts: UploadParts[];
         parameters?: {
             [index: string]: string
-        }
+        };
     }
 
     type uploadId = string
@@ -110,7 +118,7 @@ declare module "react-native-background-upload" {
 
 
     export default class Upload {
-        static startUpload(options: UploadOptions | MultipartUploadOptions): Promise<uploadId>
+        static startUpload(options: UploadOptions | MultipartUploadOptions | RawUploadOptions): Promise<uploadId>
         static addListener(event: 'progress', uploadId: uploadId, callback: (data: ProgressData ) => void): void
         static addListener(event: 'error', uploadId: uploadId, callback: (data: ErrorData) => void): void
         static addListener(event: 'completed', uploadId: uploadId, callback: (data: CompletedData) => void): void

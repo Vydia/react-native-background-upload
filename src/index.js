@@ -10,19 +10,22 @@ export type NotificationArgs = {
   enabled: boolean,
 };
 
+export type UploadParts = {
+  path: string,
+  field: string,
+};
+
 export type StartUploadArgs = {
   url: string,
-  path: string,
   method?: 'PUT' | 'POST',
   // Optional, because raw is default
   type?: 'raw' | 'multipart' | 'json',
-  // This option is needed for multipart type
-  field?: string,
   customUploadId?: string,
   // parameters are supported only in multipart type
   parameters?: { [string]: string },
   headers?: Object,
   notification?: NotificationArgs,
+  parts?: UploadParts[],
 };
 
 const NativeModule =
