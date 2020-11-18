@@ -182,14 +182,21 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     val url = options.getString("url")
+    val parts = options.getArray("parts")
+
     val filePath = if (options.hasKey("path")) options.getString("path") else null
     val method = if (options.hasKey("method") && options.getType("method") == ReadableType.String) options.getString("method") else "POST"
     val maxRetries = if (options.hasKey("maxRetries") && options.getType("maxRetries") == ReadableType.Number) options.getInt("maxRetries") else 2
     val customUploadId = if (options.hasKey("customUploadId") && options.getType("method") == ReadableType.String) options.getString("customUploadId") else null
     try {
-      val request = if (requestType == "raw") {
-        BinaryUploadRequest(this.reactApplicationContext, url!!)
-                .setFileToUpload(filePath!!)
+      var request = null
+      if (requestType == "raw") {
+        if (parts != null && parts.size() == 1) {
+          promise.reject(java.lang.IllegalArgumentException("For a binary upload, parts can only have a max size of 1!"))
+        }
+        val binaryUploadPart = parts.getMap(0)
+        request = BinaryUploadRequest(this.reactApplicationContext, url!!)
+                .setFileToUpload(binaryUploadPart.path!!)
       } else if (requestType == "multipart") {
         if (!options.hasKey("field")) {
           promise.reject(java.lang.IllegalArgumentException("field is required field for multipart type."))
@@ -199,8 +206,12 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
           promise.reject(java.lang.IllegalArgumentException("field must be string."))
           return
         }
-        MultipartUploadRequest(this.reactApplicationContext, url!!)
-                .addFileToUpload(filePath!!, options.getString("field")!!)
+        request = MultipartUploadRequest(this.reactApplicationContext, url!!)
+
+        for (i in parts.size() - 1) {
+          val part = parts.getMap(i)
+          request.addFileToUpload(part.path!!, part.field!!)
+        }
       } else {
         JSONUploadRequest(this.reactApplicationContext, url!!)
       }
