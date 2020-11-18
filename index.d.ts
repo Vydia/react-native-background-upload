@@ -13,10 +13,10 @@ declare module "react-native-background-upload" {
     }
 
     export interface CompletedData extends EventData {
-
         responseCode: number
         responseBody: string
     }
+
     export type FileInfo = {
         name: string
         exists: boolean
@@ -24,7 +24,6 @@ declare module "react-native-background-upload" {
         extension?: string
         mimeType?: string
     }
-
 
     export type NotificationOptions = {
         /**
@@ -80,7 +79,7 @@ declare module "react-native-background-upload" {
     export interface UploadOptions {
         url: string;
         path: string;
-        type?: 'raw' | 'multipart';
+        type?: 'raw' | 'multipart' | 'json';
         method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
         customUploadId?: string;
         headers?: {

@@ -236,7 +236,7 @@ PODS:
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
   - React-jsinspector (0.63.2)
-  - react-native-background-upload (6.0.0):
+  - react-native-background-upload (6.2.0):
     - React
   - react-native-image-picker (1.1.0):
     - React
@@ -460,7 +460,7 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-background-upload: 32c279ee62c6dc6c8aeb5727b0c56cfc797ef9bc
+  react-native-background-upload: 2c64e040ba7be05c2a39cfe82fc308b404b33318
   react-native-image-picker: 7a85cf7b0a53845f03ae52fb4592a2748ded069b
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
@@ -478,4 +478,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3dbe547d869bf028eb345564fe18f3e80d5e9f76
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

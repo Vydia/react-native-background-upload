@@ -18,6 +18,7 @@ import net.gotev.uploadservice.observer.request.GlobalRequestObserver
 import net.gotev.uploadservice.okhttp.OkHttpStack
 import net.gotev.uploadservice.protocols.binary.BinaryUploadRequest
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
+import net.gotev.uploadservice.protocols.json.JSONUploadRequest
 import okhttp3.OkHttpClient
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -126,7 +127,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
    */
   @ReactMethod
   fun startUpload(options: ReadableMap, promise: Promise) {
-    for (key in arrayOf("url", "path")) {
+    for (key in arrayOf("url")) {
       if (!options.hasKey(key)) {
         promise.reject(java.lang.IllegalArgumentException("Missing '$key' field."))
         return
@@ -152,8 +153,8 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         promise.reject(java.lang.IllegalArgumentException("type must be string."))
         return
       }
-      if (requestType != "raw" && requestType != "multipart") {
-        promise.reject(java.lang.IllegalArgumentException("type should be string: raw or multipart."))
+      if (requestType != "raw" && requestType != "multipart" && requestType != "json") {
+        promise.reject(java.lang.IllegalArgumentException("type should be string: raw, multipart, or json."))
         return
       }
     }
@@ -181,7 +182,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
     }
 
     val url = options.getString("url")
-    val filePath = options.getString("path")
+    val filePath = if (options.hasKey("path")) options.getString("path") else null
     val method = if (options.hasKey("method") && options.getType("method") == ReadableType.String) options.getString("method") else "POST"
     val maxRetries = if (options.hasKey("maxRetries") && options.getType("maxRetries") == ReadableType.Number) options.getInt("maxRetries") else 2
     val customUploadId = if (options.hasKey("customUploadId") && options.getType("method") == ReadableType.String) options.getString("customUploadId") else null
@@ -189,7 +190,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       val request = if (requestType == "raw") {
         BinaryUploadRequest(this.reactApplicationContext, url!!)
                 .setFileToUpload(filePath!!)
-      } else {
+      } else if (requestType == "multipart") {
         if (!options.hasKey("field")) {
           promise.reject(java.lang.IllegalArgumentException("field is required field for multipart type."))
           return
@@ -200,6 +201,8 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         }
         MultipartUploadRequest(this.reactApplicationContext, url!!)
                 .addFileToUpload(filePath!!, options.getString("field")!!)
+      } else {
+        JSONUploadRequest(this.reactApplicationContext, url!!)
       }
       request.setMethod(method!!)
               .setMaxRetries(maxRetries)
@@ -231,7 +234,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       }
       if (options.hasKey("parameters")) {
         if (requestType == "raw") {
-          promise.reject(java.lang.IllegalArgumentException("Parameters supported only in multipart type"))
+          promise.reject(java.lang.IllegalArgumentException("Parameters supported only in multipart or JSON type"))
           return
         }
         val parameters = options.getMap("parameters")

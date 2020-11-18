@@ -15,7 +15,7 @@ export type StartUploadArgs = {
   path: string,
   method?: 'PUT' | 'POST',
   // Optional, because raw is default
-  type?: 'raw' | 'multipart',
+  type?: 'raw' | 'multipart' | 'json',
   // This option is needed for multipart type
   field?: string,
   customUploadId?: string,

@@ -50,6 +50,8 @@ android {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
+    google()
 }
 
 def _ext = ext
@@ -59,12 +61,8 @@ def _kotlinStdlib = _ext.has('detoxKotlinStdlib') ? _ext.detoxKotlinStdlib : 'ko
 
 dependencies {
     implementation "androidx.core:core-ktx:1.0.1"
-
     implementation 'com.facebook.react:react-native:+'
-
     implementation "org.jetbrains.kotlin:$_kotlinStdlib:$_kotlinVersion"
-
-    implementation 'net.gotev:uploadservice-okhttp:4.3.0'
-
+    implementation 'com.github.wellth-app:android-upload-service:4.5.0-0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }
