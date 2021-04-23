@@ -1,4 +1,5 @@
 declare module "react-native-background-upload" {
+    import type { EventSubscription } from 'react-native';
 
     export interface EventData {
         id: string;
@@ -112,10 +113,10 @@ declare module "react-native-background-upload" {
 
     export default class Upload {
         static startUpload(options: UploadOptions | MultipartUploadOptions): Promise<uploadId>
-        static addListener(event: 'progress', uploadId: uploadId, callback: (data: ProgressData ) => void): void
-        static addListener(event: 'error', uploadId: uploadId, callback: (data: ErrorData) => void): void
-        static addListener(event: 'completed', uploadId: uploadId, callback: (data: CompletedData) => void): void
-        static addListener(event: 'cancelled', uploadId: uploadId, callback: (data: EventData) => void): void
+        static addListener(event: 'progress', uploadId: uploadId | null, callback: (data: ProgressData ) => void): EventSubscription
+        static addListener(event: 'error', uploadId: uploadId | null, callback: (data: ErrorData) => void): EventSubscription
+        static addListener(event: 'completed', uploadId: uploadId | null, callback: (data: CompletedData) => void): EventSubscription
+        static addListener(event: 'cancelled', uploadId: uploadId | null, callback: (data: EventData) => void): EventSubscription
         static getFileInfo(path: string): Promise<FileInfo>
         static cancelUpload(uploadId: uploadId): Promise<boolean>
     }
