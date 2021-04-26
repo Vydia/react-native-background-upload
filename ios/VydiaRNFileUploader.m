@@ -22,6 +22,11 @@ void (^backgroundSessionCompletionHandler)(void) = nil;
     return YES;
 }
 
+- (dispatch_queue_t)methodQueue
+ {
+   return dispatch_get_main_queue();
+ }
+
 -(id) init {
     self = [super init];
     if (self) {
