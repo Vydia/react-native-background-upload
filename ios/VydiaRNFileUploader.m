@@ -19,7 +19,7 @@ NSURLSession *_urlSession = nil;
 void (^backgroundSessionCompletionHandler)(void) = nil;
 
 + (BOOL)requiresMainQueueSetup {
-    return NO;
+    return YES;
 }
 
 -(id) init {
