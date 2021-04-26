@@ -346,17 +346,6 @@ didCompleteWithError:(NSError *)error {
             NSLog(@"RNBU did error upload %@", task.taskDescription);
         }
     }
-    
-    [session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        for (NSUInteger i = 0, count = [uploadTasks count]; i < count; i++) {
-            NSURLSessionTask * newTask = uploadTasks[i];
-            if(newTask.state != NSURLSessionTaskStateCompleted) {
-                return;
-            }
-        }
-        [session finishTasksAndInvalidate];
-        _urlSession = nil;
-    }];
 }
 
 - (void)URLSession:(NSURLSession *)session
