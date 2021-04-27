@@ -257,14 +257,12 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
 }
 
 RCT_EXPORT_METHOD(canSuspendIfBackground) {
-    NSLog(@"RNBU canSuspendIfBackground");
-    dispatch_sync(dispatch_get_main_queue(), ^(void){
-        if (backgroundSessionCompletionHandler) {
-            backgroundSessionCompletionHandler();
-            NSLog(@"RNBU did call backgroundSessionCompletionHandler (canSuspendIfBackground)");
-            backgroundSessionCompletionHandler = nil;
-        }
-    });
+    NSLog(@"RNBU canSuspendIfBackground");    
+    if (backgroundSessionCompletionHandler) {
+        backgroundSessionCompletionHandler();
+        NSLog(@"RNBU did call backgroundSessionCompletionHandler (canSuspendIfBackground)");
+        backgroundSessionCompletionHandler = nil;
+    }
 }
 
 - (NSData *)createBodyWithBoundary:(NSString *)boundary
