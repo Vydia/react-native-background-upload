@@ -7,6 +7,5 @@ xcodebuild \
   -scheme 'RNBackgroundExample' \
   -configuration $1 \
   -sdk iphonesimulator \
-  -UseModernBuildSystem=NO \
   -derivedDataPath ios/build \
   -quiet
