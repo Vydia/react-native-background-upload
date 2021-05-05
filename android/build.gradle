@@ -9,7 +9,7 @@ buildscript {
     ext.detoxKotlinVersion = ext.kotlinVersion
 
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
