@@ -252,6 +252,7 @@ Event Data
 |`id`|string|Required|The ID of the upload.|
 |`responseCode`|string|Required|HTTP status code received|
 |`responseBody`|string|Required|HTTP response body|
+|`responseHeaders`|string|Required|HTTP response headers (Android)|
 
 ### cancelled
 
