@@ -81,6 +81,15 @@ declare module "react-native-background-upload" {
     export interface UploadOptions {
         url: string;
         path: string;
+        /**
+        * Android only, to upload multiple files in one request via multipart
+        * `path` & `field` will be ignored and `type` will be multipart if `files` is available
+        */
+        files?: {
+          path: string;
+          // Fallback to file0, file1, file2 etc
+          field?: string;
+        };
         type?: 'raw' | 'multipart';
         method?: 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
         customUploadId?: string;
