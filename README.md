@@ -28,7 +28,10 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 
 ##### Android
 
-No further actions required.
+###### ProGuard
+Add this to your ProGuard configuration:
+
+`-keep class net.gotev.uploadservice.** { *; }`
 
 ### Automatic Native Library Linking (React Native < 0.60)
 
