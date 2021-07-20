@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "react": "16.13.1",
-    "react-native": "0.63.2",
+    "react-native": "0.64.1",
     "react-native-background-upload": "../../",
     "react-native-fs": "^2.16.1",
     "react-native-image-picker": "^1.1.0"
