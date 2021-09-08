@@ -334,7 +334,7 @@ Just add it above (not within) `dependencies` and you'll be fine.
 
 
 ## BREAKING CHANGE IN 2.0
-Two big things happened in version 2.0.  First, thehe Android package name had to be changed, as it conflicted with our own internal app.  My bad.  Second, we updated the android upload service dependency to the latest, but that requires the app have a compileSdkVersion and targetSdkVersion or 25.
+Two big things happened in version 2.0.  First, the Android package name had to be changed, as it conflicted with our own internal app.  My bad.  Second, we updated the android upload service dependency to the latest, but that requires the app have a compileSdkVersion and targetSdkVersion or 25.
 
 To upgrade:
 In `MainApplication.java`:
