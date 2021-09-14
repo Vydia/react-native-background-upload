@@ -26,7 +26,7 @@ export type StartUploadArgs = {
 };
 
 const NativeModule =
-  NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader; // iOS is VydiaRNFileUploader and Android is NativeModules
+  NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader; // iOS is VydiaRNFileUploader and Android is RNFileUploader
 const eventPrefix = 'RNFileUploader-';
 
 // for IOS, register event listeners or else they don't fire on DeviceEventEmitter
