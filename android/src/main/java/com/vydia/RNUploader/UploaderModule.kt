@@ -157,6 +157,16 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         return
       }
     }
+
+    String customFilename = null;
+    if (options.hasKey("customFilename")) {
+      customFilename = options.getString("customFilename");
+      if (customFilename == null) {
+        promise.reject(new IllegalArgumentException("type must be string."));
+        return;
+      }
+    }
+
     val notification: WritableMap = WritableNativeMap()
     notification.putBoolean("enabled", true)
     if (options.hasKey("notification")) {
@@ -199,7 +209,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
           return
         }
         MultipartUploadRequest(this.reactApplicationContext, url!!)
-                .addFileToUpload(filePath!!, options.getString("field")!!)
+                .addFileToUpload(filePath!!, options.getString("field")!!, customFilename)
       }
       request.setMethod(method!!)
               .setMaxRetries(maxRetries)
