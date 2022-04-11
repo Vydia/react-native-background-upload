@@ -158,11 +158,11 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       }
     }
 
-    String customFilename = null;
+    var customFilename: String? = null
     if (options.hasKey("customFilename")) {
       customFilename = options.getString("customFilename");
       if (customFilename == null) {
-        promise.reject(new IllegalArgumentException("type must be string."));
+        promise.reject(java.lang.IllegalArgumentException("type must be string."));
         return;
       }
     }
