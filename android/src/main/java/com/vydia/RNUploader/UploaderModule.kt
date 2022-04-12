@@ -1,5 +1,6 @@
 package com.vydia.RNUploader
 
+import android.R
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,10 +13,13 @@ import com.facebook.react.bridge.*
 import net.gotev.uploadservice.UploadService
 import net.gotev.uploadservice.UploadServiceConfig.httpStack
 import net.gotev.uploadservice.UploadServiceConfig.initialize
+import net.gotev.uploadservice.data.UploadNotificationAction
 import net.gotev.uploadservice.data.UploadNotificationConfig
 import net.gotev.uploadservice.data.UploadNotificationStatusConfig
+import net.gotev.uploadservice.extensions.getCancelUploadIntent
 import net.gotev.uploadservice.observer.request.GlobalRequestObserver
 import net.gotev.uploadservice.okhttp.OkHttpStack
+import net.gotev.uploadservice.placeholders.Placeholder
 import net.gotev.uploadservice.protocols.binary.BinaryUploadRequest
 import net.gotev.uploadservice.protocols.multipart.MultipartUploadRequest
 import okhttp3.OkHttpClient
@@ -237,6 +241,38 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         )
         request.setNotificationConfig { _, _ ->
           notificationConfig
+        }
+      } else {
+        request.setNotificationConfig { context, uploadId ->
+          UploadNotificationConfig(
+            notificationChannelId = notificationChannelID,
+            isRingToneEnabled = false,
+            progress = UploadNotificationStatusConfig(
+              title = "Uploading...",
+              message = "Uploading at ${Placeholder.UploadRate} (${Placeholder.Progress})",
+              actions = arrayListOf(
+                UploadNotificationAction(
+                  icon = android.R.drawable.ic_menu_close_clear_cancel,
+                  title = "Cancel",
+                  intent = context.getCancelUploadIntent(uploadId)
+                )
+              ),
+              autoClear = true
+            ),
+            success = UploadNotificationStatusConfig(
+              title = "Upload",
+              message = "Upload completed successfully in ${Placeholder.ElapsedTime}",
+              autoClear = true
+            ),
+            error = UploadNotificationStatusConfig(
+              title = "File upload failed",
+              message = "Please try again",
+            ),
+            cancelled = UploadNotificationStatusConfig(
+              title = "Upload",
+              message = "Upload cancelled"
+            )
+          )
         }
       }
       if (options.hasKey("parameters")) {
