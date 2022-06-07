@@ -269,17 +269,15 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
             promise.reject(java.lang.IllegalArgumentException("Parameters must be string key/values or array key/List<String>. Value was invalid for '$key'"))
             return
           }
-          if(parameters.getType(key) != ReadableType.String){
+          if(parameters.getType(key) == ReadableType.String){
             request.addParameter(key, parameters.getString(key)!!)
           }else{
-//            val files = options.getArray("files")
-//            for (i in 0 until files!!.size()) {
-//              val file = files.getMap(i)
-
             val valuesParams = parameters.getArray(key)!!
             val convertedValue = mutableListOf<String>()
             for(i in 0 until valuesParams.size()){
-              convertedValue.add(valuesParams.getArray(0).getString(i))
+              val str = valuesParams.getString(i)
+              println("Log: $str")
+              convertedValue.add(str)
             }
             request.addArrayParameter(key, convertedValue)
           }
