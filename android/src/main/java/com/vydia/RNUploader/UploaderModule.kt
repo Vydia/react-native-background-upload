@@ -272,10 +272,14 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
           if(parameters.getType(key) != ReadableType.String){
             request.addParameter(key, parameters.getString(key)!!)
           }else{
+//            val files = options.getArray("files")
+//            for (i in 0 until files!!.size()) {
+//              val file = files.getMap(i)
+
             val valuesParams = parameters.getArray(key)!!
             val convertedValue = mutableListOf<String>()
             for(i in 0 until valuesParams.size()){
-              convertedValue.add(valuesParams.getString(i))
+              convertedValue.add(valuesParams.getArray(0).getString(i))
             }
             request.addArrayParameter(key, convertedValue)
           }
