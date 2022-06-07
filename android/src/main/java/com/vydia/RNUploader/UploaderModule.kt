@@ -265,11 +265,21 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         val keys = parameters!!.keySetIterator()
         while (keys.hasNextKey()) {
           val key = keys.nextKey()
-          if (parameters.getType(key) != ReadableType.String) {
-            promise.reject(java.lang.IllegalArgumentException("Parameters must be string key/values. Value was invalid for '$key'"))
+          if (parameters.getType(key) != ReadableType.String && parameters.getType(key) != ReadableType.Array) {
+            promise.reject(java.lang.IllegalArgumentException("Parameters must be string key/values or array key/List<String>. Value was invalid for '$key'"))
             return
           }
-          request.addParameter(key, parameters.getString(key)!!)
+          if(parameters.getType(key) != ReadableType.String){
+            request.addParameter(key, parameters.getString(key)!!)
+          }else{
+            val valuesParams = parameters.getArray(key)!!
+            val convertedValue = mutableListOf<String>()
+            for(i in 0 until valuesParams.size()){
+              convertedValue.add(valuesParams.getString(i))
+            }
+            request.addArrayParameter(key, convertedValue)
+          }
+
         }
       }
       if (options.hasKey("headers")) {
