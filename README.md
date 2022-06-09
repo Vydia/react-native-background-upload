@@ -165,6 +165,28 @@ const options = {
 
 Note that `type` will always be multipart when `files` is passed
 
+## Android only, multiple parameters in one shot via Multipart
+
+Send parameters as list of string.
+
+```
+const options = {
+  url: 'https://myservice.com/path/to/post',
+  files: [
+    {
+      path: 'file://path/to/file%20on%20device.png',
+      field: 'uploaded_media'
+    }
+  ],
+  paramaters: {
+    urls: ["https://example.com", "http://example.com"]
+  }
+  method: 'POST'
+}
+```
+
+However, if you pass the array with single value array like ["example.com"], it will be count as string in your backend. It is using request.addArrayParameter("key", List<String>) in native code.
+
 # API
 
 ## Top Level Functions
