@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 
 class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), LifecycleEventListener {
   private val TAG = "UploaderBridge"
-  private var notificationChannelID = "BackgroundUploadChannel"
+  private var notificationChannelID = "fn_channel_file_upload"
   private var isGlobalRequestObserver = false
 
   override fun getName(): String {
@@ -184,8 +184,6 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
     if (notification.hasKey("notificationChannel")) {
       notificationChannelID = notification.getString("notificationChannel")!!
     }
-
-    createNotificationChannel()
 
     initialize(application, notificationChannelID, BuildConfig.DEBUG)
 
@@ -348,19 +346,6 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       exc.printStackTrace()
       Log.e(TAG, exc.message, exc)
       promise.reject(exc)
-    }
-  }
-
-  // Customize the notification channel as you wish. This is only for a bare minimum example
-  private fun createNotificationChannel() {
-    if (Build.VERSION.SDK_INT >= 26) {
-      val channel = NotificationChannel(
-              notificationChannelID,
-              "Background Upload Channel",
-              NotificationManager.IMPORTANCE_LOW
-      )
-      val manager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-      manager.createNotificationChannel(channel)
     }
   }
 
