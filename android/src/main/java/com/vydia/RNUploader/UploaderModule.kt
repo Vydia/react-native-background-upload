@@ -185,11 +185,15 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       notificationChannelID = notification.getString("notificationChannel")!!
     }
 
-    initialize(application, notificationChannelID, BuildConfig.DEBUG)
+    try {
+      initialize(application, notificationChannelID, BuildConfig.DEBUG)
 
-    if(!isGlobalRequestObserver) {
-      isGlobalRequestObserver = true
-      GlobalRequestObserver(application, GlobalRequestObserverDelegate(reactContext))
+      if(!isGlobalRequestObserver) {
+        isGlobalRequestObserver = true
+        GlobalRequestObserver(application, GlobalRequestObserverDelegate(reactContext))
+      }
+    }catch (e: Exception){
+      return
     }
 
     val url = options.getString("url")
@@ -308,6 +312,11 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       promise.resolve(uploadId)
     } catch (exc: java.lang.Exception) {
       exc.printStackTrace()
+      exc.message?.let {
+        if ( it.contains("You have to set namespace")){
+          promise.reject(java.lang.IllegalArgumentException("File upload failed"))
+        }
+      }
       Log.e(TAG, exc.message, exc)
       promise.reject(exc)
     }
