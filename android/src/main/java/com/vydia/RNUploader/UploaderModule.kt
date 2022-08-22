@@ -314,7 +314,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       exc.printStackTrace()
       exc.message?.let {
         if ( it.contains("You have to set namespace")){
-          promise.reject(java.lang.IllegalArgumentException("File upload failed"))
+          promise.reject(java.lang.IllegalArgumentException("File upload failed, Please try again"))
         }
       }
       Log.e(TAG, exc.message, exc)
