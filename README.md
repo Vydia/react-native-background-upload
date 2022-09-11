@@ -29,7 +29,7 @@ Note: if you are installing on React Native < 0.47, use `react-native-background
 ##### Android
 
 ###### ProGuard
-Add this to your ProGuard configuration:
+Add this to your ProGuard configuration `(proguard-rules.pro)` :
 
 `-keep class net.gotev.uploadservice.** { *; }`
 
