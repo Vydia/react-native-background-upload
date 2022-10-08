@@ -83,7 +83,7 @@
       "emulator": {
         "type": "android.emulator",
         "device": {
-          "avdName": "xl"
+          "avdName": "emu"
         },
         "utilBinaryPaths": [
           "./cache/test-butler-app.apk"
