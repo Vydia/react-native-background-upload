@@ -51,6 +51,6 @@ describe('RNBackgroundUploadExample', () => {
 
     const completed = await element(by.id('10_sec_delay_completed'));
 
-    await expect(completed).toBeNotVisible();
+    await expect(completed).not.toBeVisible();
   }, 30000);
 });
