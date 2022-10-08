@@ -36,13 +36,13 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RNBackgroundExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RNBackgroundExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RNBackgroundExample/main.m; sourceTree = "<group>"; };
+		19E829459B0BFBAEDD18E5AB /* Pods-RNBackgroundExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.release.xcconfig"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-RNBackgroundExample-RNBackgroundExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExample-RNBackgroundExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-RNBackgroundExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-RNBackgroundExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-RNBackgroundExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNBackgroundExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C961CF13DD9C3E1AC843E6D /* Pods-RNBackgroundExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample/Pods-RNBackgroundExample.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RNBackgroundExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		85F1CFFD335A89CAE05510BA /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B8E98BE67027473CF11EE0E8 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; path = "Target Support Files/Pods-RNBackgroundExample-RNBackgroundExampleTests/Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -121,7 +121,7 @@
 				00E356EF1AD99517003FC87E /* RNBackgroundExampleTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				9FBEB7F2B35740C5F102AFB5 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -137,14 +137,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+		9FBEB7F2B35740C5F102AFB5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-RNBackgroundExample.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-RNBackgroundExample.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */,
+				6C961CF13DD9C3E1AC843E6D /* Pods-RNBackgroundExample.debug.xcconfig */,
+				19E829459B0BFBAEDD18E5AB /* Pods-RNBackgroundExample.release.xcconfig */,
+				85F1CFFD335A89CAE05510BA /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */,
+				B8E98BE67027473CF11EE0E8 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */,
 			);
+			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -430,7 +431,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 85F1CFFD335A89CAE05510BA /* Pods-RNBackgroundExample-RNBackgroundExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -457,7 +458,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */;
+			baseConfigurationReference = B8E98BE67027473CF11EE0E8 /* Pods-RNBackgroundExample-RNBackgroundExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -481,7 +482,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-RNBackgroundExample.debug.xcconfig */;
+			baseConfigurationReference = 6C961CF13DD9C3E1AC843E6D /* Pods-RNBackgroundExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -507,7 +508,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-RNBackgroundExample.release.xcconfig */;
+			baseConfigurationReference = 19E829459B0BFBAEDD18E5AB /* Pods-RNBackgroundExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -562,7 +563,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -596,6 +597,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -633,7 +635,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -659,6 +661,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

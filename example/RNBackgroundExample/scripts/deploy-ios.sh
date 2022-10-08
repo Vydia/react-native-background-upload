@@ -3,7 +3,7 @@
 set -e
 
 xcodebuild \
-  -project ios/RNBackgroundExample.xcodeproj \
+  -workspace ios/RNBackgroundExample.xcworkspace \
   -scheme 'RNBackgroundExample' \
   -configuration $1 \
   -sdk iphonesimulator \
