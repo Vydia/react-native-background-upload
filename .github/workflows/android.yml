@@ -33,6 +33,13 @@ jobs:
       run:
         yarn install --frozen-lockfile
 
+    - name: Use specific Java version for the build
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+        architecture: 'x64'
+
     - name: Deploy
       working-directory: example/RNBackgroundExample/
       run:
