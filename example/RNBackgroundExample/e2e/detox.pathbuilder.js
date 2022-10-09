@@ -1,7 +1,7 @@
 const path = require('path');
 const sanitizeFilename = require('sanitize-filename');
 
-const SANITIZE_OPTIONS = { replacement: '_' };
+const SANITIZE_OPTIONS = {replacement: '_'};
 const sanitize = (filename) => sanitizeFilename(filename, SANITIZE_OPTIONS);
 
 class CustomPathBuilder {

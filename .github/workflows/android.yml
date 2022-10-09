@@ -9,59 +9,67 @@ jobs:
 
     steps:
     - name: Checkout project
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Specify node version
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 16
 
     - name: Use specific Java version for sdkmanager to work
-      uses: joschi/setup-jdk@v2
+      uses: actions/setup-java@v2
       with:
-        java-version: 'openjdk8'
+        distribution: 'temurin'
+        java-version: '8'
         architecture: 'x64'
 
     - name: Setup Android emulator
       run: |
-        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-27;google_apis;x86" > /dev/null
-        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-27;google_apis;x86" -b "x86" -c 1G -d 7 -f
+        echo y | sudo $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-33;google_apis;x86_64" > /dev/null
+        $ANDROID_HOME/tools/bin/avdmanager -s create avd -n emu -k "system-images;android-33;google_apis;x86_64" -b "x86_64" -c 1G -d 7 -f
 
     - name: Install node_modules
       working-directory: example/RNBackgroundExample/
       run:
         yarn install --frozen-lockfile
 
+    - name: Use specific Java version for the build
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+        architecture: 'x64'
+
     - name: Deploy
       working-directory: example/RNBackgroundExample/
       run:
         yarn e2e/deploy/android
 
-    - name: Start Emulator
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 5
-      run: |
-        export PATH=$PATH:$ANDROID_HOME/platform-tools
-        $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
+    # - name: Start Emulator
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 5
+    #   run: |
+    #     export PATH=$PATH:$ANDROID_HOME/platform-tools
+    #     $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
 
-    - name: Wait for emulator to be ready
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 15
-      run: |
-        sh ./wait-for-emulator.sh
+    # - name: Wait for emulator to be ready
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 15
+    #   run: |
+    #     sh ./wait-for-emulator.sh
 
-    - name: Android test
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 8
-      run: |
-        mkdir -p ./artifacts
-        node e2e/start-server.js &
-        adb reverse tcp:8080 tcp:8080
-        yarn e2e/test/android --record-videos failing
+    # - name: Android test
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 8
+    #   run: |
+    #     mkdir -p ./artifacts
+    #     node e2e/start-server.js &
+    #     adb reverse tcp:8080 tcp:8080
+    #     yarn e2e/test/android --record-videos failing
 
-    - uses: actions/upload-artifact@master
-      name: Provide videos of failed E2E tests
-      if: failure()
-      with:
-        name: android-failing-e2e-videos
-        path: example/RNBackgroundExample/artifacts
+    # - uses: actions/upload-artifact@master
+    #   name: Provide videos of failed E2E tests
+    #   if: failure()
+    #   with:
+    #     name: android-failing-e2e-videos
+    #     path: example/RNBackgroundExample/artifacts

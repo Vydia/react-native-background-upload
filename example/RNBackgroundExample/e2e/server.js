@@ -18,7 +18,7 @@ const startTestServer = () => {
   const contentType = require('content-type')
   const { writeFile } = require('fs')
   const getRawBody = require('raw-body')
-  const uuidv4 = require('uuid/v4')
+  const uuidv4 = require('uuid').v4
   const multer  = require('multer')
   const upload = multer({ dest: 'tmp/multipart/' })
 

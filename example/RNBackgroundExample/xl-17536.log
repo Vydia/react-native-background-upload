@@ -1,0 +1,391 @@
+WARNING | unexpected system image feature string, emulator might not function correctly, please try updating the emulator.
+WARNING | cannot add library /Users/marius/Library/Android/sdk/emulator/qemu/darwin-aarch64/lib64/vulkan/libvulkan.dylib: failed
+VERBOSE | autoconfig: -skin 1440x2560
+VERBOSE | autoconfig: -skindir (null)
+VERBOSE | autoconfig: -kernel /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//kernel-ranchu
+VERBOSE | Target arch = 'arm64'
+VERBOSE | Auto-detect: Kernel image requires new device naming scheme.
+VERBOSE | Auto-detect: Kernel does not support YAFFS2 partitions.
+VERBOSE | autoconfig: -ramdisk /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//ramdisk.img
+VERBOSE | Using initial system image: /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//system.img
+VERBOSE | Using initial vendor image: /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//vendor.img
+VERBOSE | autoconfig: -data /Users/marius/.android/avd/xl.avd/userdata-qemu.img
+VERBOSE | autoconfig: -initdata /Users/marius/.android/avd/xl.avd/userdata.img
+VERBOSE | autoconfig: -cache /Users/marius/.android/avd/xl.avd/cache.img
+VERBOSE | INFO: ignore sdcard for arm at api level >= 30
+VERBOSE | Physical RAM size: 4096MB
+VERBOSE | VM heap size 2048MB is above maximum supported 576MB, setting it to that value
+VERBOSE | System image is read only
+VERBOSE | Found 1 DNS servers:
+VERBOSE | 	192.168.1.1
+VERBOSE | Unexpected feature list:
+VERBOSE | Vulkan
+VERBOSE | found magic skin width=1440 height=2560 bpp=16
+
+VERBOSE | Requested console port 17536: Inferring adb port 17537.
+VERBOSE | CPU Acceleration: working
+VERBOSE | CPU Acceleration status: Hypervisor.Framework OS X Version 12.6
+VERBOSE | handleCpuAcceleration: feature check for hvf
+VERBOSE | Bluetooth requested by guest
+VERBOSE | started modem simulator host server at port: 49935
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_posture_requested(int) ((null):0, (null))
+
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_posture_selection_dialog() ((null):0, (null))
+
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_new_resizable_requested(PresetEmulatorSizeType) ((null):0, (null))
+
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_dismiss_resizable_dialog() ((null):0, (null))
+
+VERBOSE | GPU emulation enabled using 'host' mode
+VERBOSE | Initializing hardware OpenGLES emulation support
+VERBOSE | create display 0
+VERBOSE | setDisplayPose 0 x 0 y 0 w 1440 h 2560 dpi 0
+INFO    | added library /Users/marius/Library/Android/sdk/emulator/lib64/vulkan/libvulkan.dylib
+INFO    | configAndStartRenderer: setting vsync to 60 hz
+VERBOSE | INFO: ignore sdcard for arm at api level >= 30
+INFO    | Sending adb public key [QAAAAPVu7ZmjsnyIG/cZTmA1ErXc3Giy3+R6oyG6/+bQYOsMPd8WVFVO3dj8tJQ/muhBEPNfAfyvJjFAq9v0u1eRXuoSsCltXdnUL1+EXDMtcxIdrSXMhJmvcKFCfgV6adK8fDBPgi5b/A6Aw5OvBx9HEsAJicmZ0SPgmlETxzEXxjSyNyu0u9NUF5poSuJrBcwq431yi9S4r/0t0EXI3pHvySZSW8AHA3s29oAcBt7f08+T9T15L7WWgmwV9jlCA6XXn1zPO8vZll3ooy/18/X/7F5Ub3lyE2lvMyfs6lIOHswDnegksXZMZjwjkFRPwLNaozVZ0LxXj/YmFtmhd0aAgqxAzSy7Uq6xDrY0KuDo9Qk/Sw+OpSAs0f9Nw0i3mhl5ko9HTDhp3tPgXxaFm4sVd9vul9R9ve4F2yqlutoodlaEJVUdfGYdr3qvDSQ2CnqycKP2W4p8I/2r/NY8/YIQKvQ9m1AsW1/oycC0p7x8QYh7lIPDKHM13x2bqKtujOX08NjQh9O/REQs3vQwUxhf3FIoEgxKXmNO8brs1Y0NzUlYcgU48Sy4fF8B8xL3Y93p+SjS4MGY72S8Gw1SNH8TULb24S55WwPucW/dl62ph+s7HXBbivMpTS61Fsgf8ODFRbPREeGwjS/N/+aPI/eCsorGNY8crPmp5BA0bK4i2T9/4MLpQwEAAQA= marius@unknown]
+VERBOSE | Found 1 DNS servers:
+VERBOSE | 	192.168.1.1
+INFO    | Content of hardware configuration file:
+INFO    | 	hw.cpu.arch = arm64
+INFO    | 	hw.cpu.ncore = 4
+INFO    | 	hw.ramSize = 4096
+INFO    | 	hw.screen = multi-touch
+INFO    | 	hw.mainKeys = false
+INFO    | 	hw.trackBall = false
+INFO    | 	hw.keyboard = true
+INFO    | 	hw.keyboard.lid = false
+INFO    | 	hw.keyboard.charmap = qwerty2
+INFO    | 	hw.dPad = false
+INFO    | 	hw.rotaryInput = false
+INFO    | 	hw.gsmModem = true
+INFO    | 	hw.gps = true
+INFO    | 	hw.battery = true
+INFO    | 	hw.accelerometer = true
+INFO    | 	hw.gyroscope = true
+INFO    | 	hw.audioInput = true
+INFO    | 	hw.audioOutput = true
+INFO    | 	hw.sdCard = true
+INFO    | 	disk.cachePartition = true
+INFO    | 	disk.cachePartition.path = /Users/marius/.android/avd/xl.avd/cache.img
+INFO    | 	disk.cachePartition.size = 66m
+INFO    | 	test.quitAfterBootTimeOut = -1
+INFO    | 	test.delayAdbTillBootComplete = 0
+INFO    | 	test.monitorAdb = 0
+INFO    | 	hw.lcd.width = 1440
+INFO    | 	hw.lcd.height = 2560
+INFO    | 	hw.lcd.depth = 16
+INFO    | 	hw.lcd.density = 560
+INFO    | 	hw.lcd.backlight = true
+INFO    | 	hw.lcd.vsync = 60
+INFO    | 	hw.gltransport = pipe
+INFO    | 	hw.gltransport.asg.writeBufferSize = 1048576
+INFO    | 	hw.gltransport.asg.writeStepSize = 4096
+INFO    | 	hw.gltransport.asg.dataRingSize = 32768
+INFO    | 	hw.gltransport.drawFlushInterval = 800
+INFO    | 	hw.displayRegion.0.1.xOffset = -1
+INFO    | 	hw.displayRegion.0.1.yOffset = -1
+INFO    | 	hw.displayRegion.0.1.width = 0
+INFO    | 	hw.displayRegion.0.1.height = 0
+INFO    | 	hw.displayRegion.0.2.xOffset = -1
+INFO    | 	hw.displayRegion.0.2.yOffset = -1
+INFO    | 	hw.displayRegion.0.2.width = 0
+INFO    | 	hw.displayRegion.0.2.height = 0
+INFO    | 	hw.displayRegion.0.3.xOffset = -1
+INFO    | 	hw.displayRegion.0.3.yOffset = -1
+INFO    | 	hw.displayRegion.0.3.width = 0
+INFO    | 	hw.displayRegion.0.3.height = 0
+INFO    | 	hw.display1.width = 0
+INFO    | 	hw.display1.height = 0
+INFO    | 	hw.display1.density = 0
+INFO    | 	hw.display1.xOffset = -1
+INFO    | 	hw.display1.yOffset = -1
+INFO    | 	hw.display1.flag = 0
+INFO    | 	hw.display2.width = 0
+INFO    | 	hw.display2.height = 0
+INFO    | 	hw.display2.density = 0
+INFO    | 	hw.display2.xOffset = -1
+INFO    | 	hw.display2.yOffset = -1
+INFO    | 	hw.display2.flag = 0
+INFO    | 	hw.display3.width = 0
+INFO    | 	hw.display3.height = 0
+INFO    | 	hw.display3.density = 0
+INFO    | 	hw.display3.xOffset = -1
+INFO    | 	hw.display3.yOffset = -1
+INFO    | 	hw.display3.flag = 0
+INFO    | 	hw.gpu.enabled = true
+INFO    | 	hw.gpu.mode = host
+INFO    | 	hw.initialOrientation = Portrait
+INFO    | 	hw.camera.back = virtualscene
+INFO    | 	hw.camera.front = emulated
+INFO    | 	vm.heapSize = 576
+INFO    | 	hw.sensors.light = true
+INFO    | 	hw.sensors.pressure = true
+INFO    | 	hw.sensors.humidity = true
+INFO    | 	hw.sensors.proximity = true
+INFO    | 	hw.sensors.magnetic_field = true
+INFO    | 	hw.sensors.magnetic_field_uncalibrated = true
+INFO    | 	hw.sensors.gyroscope_uncalibrated = true
+INFO    | 	hw.sensors.orientation = true
+INFO    | 	hw.sensors.temperature = true
+INFO    | 	hw.sensors.rgbclight = false
+INFO    | 	hw.sensor.hinge = false
+INFO    | 	hw.sensor.hinge.count = 0
+INFO    | 	hw.sensor.hinge.type = 0
+INFO    | 	hw.sensor.hinge.sub_type = 0
+INFO    | 	hw.sensor.hinge.fold_to_displayRegion.0.1_at_posture = 1
+INFO    | 	hw.sensor.roll = false
+INFO    | 	hw.sensor.roll.count = 0
+INFO    | 	hw.sensor.roll.resize_to_displayRegion.0.1_at_posture = 6
+INFO    | 	hw.sensor.roll.resize_to_displayRegion.0.2_at_posture = 6
+INFO    | 	hw.sensor.roll.resize_to_displayRegion.0.3_at_posture = 6
+INFO    | 	hw.sensors.heart_rate = false
+INFO    | 	hw.sensors.wrist_tilt = false
+INFO    | 	hw.useext4 = true
+INFO    | 	hw.arc = false
+INFO    | 	hw.arc.autologin = false
+INFO    | 	hw.device.name = pixel_xl
+INFO    | 	kernel.path = /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//kernel-ranchu
+INFO    | 	kernel.newDeviceNaming = yes
+INFO    | 	kernel.supportsYaffs2 = no
+INFO    | 	disk.ramdisk.path = /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//ramdisk.img
+INFO    | 	disk.systemPartition.initPath = /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//system.img
+INFO    | 	disk.systemPartition.size = 4107m
+INFO    | 	disk.vendorPartition.initPath = /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//vendor.img
+INFO    | 	disk.vendorPartition.size = 800m
+INFO    | 	disk.dataPartition.path = /Users/marius/.android/avd/xl.avd/userdata-qemu.img
+INFO    | 	disk.dataPartition.size = 8g
+INFO    | 	disk.encryptionKeyPartition.path = /Users/marius/.android/avd/xl.avd/encryptionkey.img
+INFO    | 	PlayStore.enabled = false
+INFO    | 	avd.name = xl
+INFO    | 	avd.id = xl
+INFO    | 	fastboot.forceColdBoot = false
+INFO    | 	android.sdk.root = /Users/marius/Library/Android/sdk
+INFO    | 	android.avd.home = /Users/marius/.android/avd
+INFO    | .
+INFO    | QEMU options list:
+INFO    | 	 argv[00] = "/Users/marius/Library/Android/sdk/emulator/qemu/darwin-aarch64/qemu-system-aarch64"
+INFO    | 	 argv[01] = "-dns-server"
+INFO    | 	 argv[02] = "192.168.1.1"
+INFO    | 	 argv[03] = "-no-audio"
+INFO    | 	 argv[04] = "-serial"
+INFO    | 	 argv[05] = "null"
+INFO    | 	 argv[06] = "-android-ports"
+INFO    | 	 argv[07] = "17536,17537"
+INFO    | 	 argv[08] = "-cpu"
+INFO    | 	 argv[09] = "cortex-a53"
+INFO    | 	 argv[10] = "-machine"
+INFO    | 	 argv[11] = "type=virt"
+INFO    | 	 argv[12] = "-enable-hvf"
+INFO    | 	 argv[13] = "-smp"
+INFO    | 	 argv[14] = "cores=4"
+INFO    | 	 argv[15] = "-m"
+INFO    | 	 argv[16] = "4096"
+INFO    | 	 argv[17] = "-lcd-density"
+INFO    | 	 argv[18] = "560"
+INFO    | 	 argv[19] = "-nodefaults"
+INFO    | 	 argv[20] = "-kernel"
+INFO    | 	 argv[21] = "/Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//kernel-ranchu"
+INFO    | 	 argv[22] = "-initrd"
+INFO    | 	 argv[23] = "/Users/marius/.android/avd/xl.avd/initrd"
+INFO    | 	 argv[24] = "-drive"
+INFO    | 	 argv[25] = "index=0,id=vendor,if=none,file=/Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//vendor.img,read-only"
+INFO    | 	 argv[26] = "-device"
+INFO    | 	 argv[27] = "virtio-blk-device,drive=vendor"
+INFO    | 	 argv[28] = "-drive"
+INFO    | 	 argv[29] = "index=1,id=encrypt,if=none,file=/Users/marius/.android/avd/xl.avd/encryptionkey.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576"
+INFO    | 	 argv[30] = "-device"
+INFO    | 	 argv[31] = "virtio-blk-device,drive=encrypt"
+INFO    | 	 argv[32] = "-drive"
+INFO    | 	 argv[33] = "index=2,id=userdata,if=none,file=/Users/marius/.android/avd/xl.avd/userdata-qemu.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576"
+INFO    | 	 argv[34] = "-device"
+INFO    | 	 argv[35] = "virtio-blk-device,drive=userdata"
+INFO    | 	 argv[36] = "-drive"
+INFO    | 	 argv[37] = "index=3,id=cache,if=none,file=/Users/marius/.android/avd/xl.avd/cache.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576"
+INFO    | 	 argv[38] = "-device"
+INFO    | 	 argv[39] = "virtio-blk-device,drive=cache"
+INFO    | 	 argv[40] = "-drive"
+INFO    | 	 argv[41] = "index=4,id=system,if=none,file=/Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//system.img,read-only"
+INFO    | 	 argv[42] = "-device"
+INFO    | 	 argv[43] = "virtio-blk-device,drive=system"
+INFO    | 	 argv[44] = "-netdev"
+INFO    | 	 argv[45] = "user,id=mynet"
+INFO    | 	 argv[46] = "-device"
+INFO    | 	 argv[47] = "virtio-net-device,netdev=mynet"
+INFO    | 	 argv[48] = "-chardev"
+INFO    | 	 argv[49] = "null,id=forhvc0"
+INFO    | 	 argv[50] = "-chardev"
+INFO    | 	 argv[51] = "null,id=forhvc1"
+INFO    | 	 argv[52] = "-device"
+INFO    | 	 argv[53] = "virtio-serial-pci,ioeventfd=off"
+INFO    | 	 argv[54] = "-device"
+INFO    | 	 argv[55] = "virtconsole,chardev=forhvc0"
+INFO    | 	 argv[56] = "-device"
+INFO    | 	 argv[57] = "virtconsole,chardev=forhvc1"
+INFO    | 	 argv[58] = "-chardev"
+INFO    | 	 argv[59] = "rootcanal,id=rootcanal"
+INFO    | 	 argv[60] = "-device"
+INFO    | 	 argv[61] = "virtserialport,chardev=rootcanal,name=bluetooth"
+INFO    | 	 argv[62] = "-device"
+INFO    | 	 argv[63] = "virtio-serial,ioeventfd=off"
+INFO    | 	 argv[64] = "-chardev"
+INFO    | 	 argv[65] = "socket,port=49934,host=::1,nowait,nodelay,ipv6,id=modem"
+INFO    | 	 argv[66] = "-device"
+INFO    | 	 argv[67] = "virtserialport,chardev=modem,name=modem"
+INFO    | 	 argv[68] = "-device"
+INFO    | 	 argv[69] = "virtio-rng-device"
+INFO    | 	 argv[70] = "-show-cursor"
+INFO    | 	 argv[71] = "-device"
+INFO    | 	 argv[72] = "virtio_input_multi_touch_pci_1"
+INFO    | 	 argv[73] = "-device"
+INFO    | 	 argv[74] = "virtio_input_multi_touch_pci_2"
+INFO    | 	 argv[75] = "-device"
+INFO    | 	 argv[76] = "virtio_input_multi_touch_pci_3"
+INFO    | 	 argv[77] = "-device"
+INFO    | 	 argv[78] = "virtio_input_multi_touch_pci_4"
+INFO    | 	 argv[79] = "-device"
+INFO    | 	 argv[80] = "virtio_input_multi_touch_pci_5"
+INFO    | 	 argv[81] = "-device"
+INFO    | 	 argv[82] = "virtio_input_multi_touch_pci_6"
+INFO    | 	 argv[83] = "-device"
+INFO    | 	 argv[84] = "virtio_input_multi_touch_pci_7"
+INFO    | 	 argv[85] = "-device"
+INFO    | 	 argv[86] = "virtio_input_multi_touch_pci_8"
+INFO    | 	 argv[87] = "-device"
+INFO    | 	 argv[88] = "virtio_input_multi_touch_pci_9"
+INFO    | 	 argv[89] = "-device"
+INFO    | 	 argv[90] = "virtio_input_multi_touch_pci_10"
+INFO    | 	 argv[91] = "-device"
+INFO    | 	 argv[92] = "virtio_input_multi_touch_pci_11"
+INFO    | 	 argv[93] = "-device"
+INFO    | 	 argv[94] = "virtio-keyboard-pci"
+INFO    | 	 argv[95] = "-netdev"
+INFO    | 	 argv[96] = "user,id=virtio-wifi,dhcpstart=10.0.2.16"
+INFO    | 	 argv[97] = "-device"
+INFO    | 	 argv[98] = "virtio-wifi-pci,netdev=virtio-wifi"
+INFO    | 	 argv[99] = "-device"
+INFO    | 	 argv[100] = "virtio-vsock-pci,guest-cid=77"
+INFO    | 	 argv[101] = "-L"
+INFO    | 	 argv[102] = "/Users/marius/Library/Android/sdk/emulator/lib/pc-bios"
+INFO    | 	 argv[103] = "-soundhw"
+INFO    | 	 argv[104] = "hda"
+INFO    | 	 argv[105] = "-append"
+INFO    | 	 argv[106] = "no_timer_check keep_bootcon earlyprintk=ttyAMA0 console=0 cma=314M@0-4G loop.max_part=7 printk.devkmsg=on bootconfig"
+INFO    | 	 argv[107] = "-android-hw"
+INFO    | 	 argv[108] = "/Users/marius/.android/avd/xl.avd/hardware-qemu.ini"
+INFO    | Concatenated QEMU options: /Users/marius/Library/Android/sdk/emulator/qemu/darwin-aarch64/qemu-system-aarch64 -dns-server 192.168.1.1 -no-audio -serial null -android-ports 17536,17537 -cpu cortex-a53 -machine type=virt -enable-hvf -smp cores=4 -m 4096 -lcd-density 560 -nodefaults -kernel /Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//kernel-ranchu -initrd /Users/marius/.android/avd/xl.avd/initrd -drive index=0,id=vendor,if=none,file=/Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//vendor.img,read-only -device virtio-blk-device,drive=vendor -drive index=1,id=encrypt,if=none,file=/Users/marius/.android/avd/xl.avd/encryptionkey.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576 -device virtio-blk-device,drive=encrypt -drive index=2,id=userdata,if=none,file=/Users/marius/.android/avd/xl.avd/userdata-qemu.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576 -device virtio-blk-device,drive=userdata -drive index=3,id=cache,if=none,file=/Users/marius/.android/avd/xl.avd/cache.img.qcow2,overlap-check=none,cache=unsafe,l2-cache-size=1048576 -device virtio-blk-device,drive=cache -drive index=4,id=system,if=none,file=/Users/marius/Library/Android/sdk/system-images/android-Tiramisu/google_apis/arm64-v8a//system.img,read-only -device virtio-blk-device,drive=system -netdev user,id=mynet -device virtio-net-device,netdev=mynet -chardev null,id=forhvc0 -chardev null,id=forhvc1 -device virtio-serial-pci,ioeventfd=off -device virtconsole,chardev=forhvc0 -device virtconsole,chardev=forhvc1 -chardev rootcanal,id=rootcanal -device virtserialport,chardev=rootcanal,name=bluetooth -device virtio-serial,ioeventfd=off -chardev socket,port=49934,host=::1,nowait,nodelay,ipv6,id=modem -device virtserialport,chardev=modem,name=modem -device virtio-rng-device -show-cursor -device virtio_input_multi_touch_pci_1 -device virtio_input_multi_touch_pci_2 -device virtio_input_multi_touch_pci_3 -device virtio_input_multi_touch_pci_4 -device virtio_input_multi_touch_pci_5 -device virtio_input_multi_touch_pci_6 -device virtio_input_multi_touch_pci_7 -device virtio_input_multi_touch_pci_8 -device virtio_input_multi_touch_pci_9 -device virtio_input_multi_touch_pci_10 -device virtio_input_multi_touch_pci_11 -device virtio-keyboard-pci -netdev user,id=virtio-wifi,dhcpstart=10.0.2.16 -device virtio-wifi-pci,netdev=virtio-wifi -device virtio-vsock-pci,guest-cid=77 -L /Users/marius/Library/Android/sdk/emulator/lib/pc-bios -soundhw hda -append 'no_timer_check keep_bootcon earlyprintk=ttyAMA0 console=0 cma=314M@0-4G loop.max_part=7 printk.devkmsg=on bootconfig' -android-hw /Users/marius/.android/avd/xl.avd/hardware-qemu.ini
+VERBOSE | Starting hostapd main loop.
+VERBOSE | Android qemu version 31.2.8.0 (build_id 8143646) (CL:N/A)
+VERBOSE | Starting QEMU main loop
+VERBOSE | registered 'boot-properties' qemud service
+VERBOSE | Adding boot property: 'ro.opengles.version' = '196608'
+VERBOSE | Adding boot property: 'qemu.sf.fake_camera' = 'front'
+VERBOSE | Adding boot property: 'dalvik.vm.heapsize' = '576m'
+VERBOSE | Adding boot property: 'qemu.hw.mainkeys' = '0'
+VERBOSE | Adding boot property: 'qemu.sf.lcd_density' = '560'
+INFO    | Rootcanal has  been activated.
+VERBOSE | goldfish_events.have-dpad: false
+VERBOSE | goldfish_events.have-trackball: false
+VERBOSE | goldfish_events.have-camera: true
+VERBOSE | goldfish_events.have-keyboard: false
+VERBOSE | goldfish_events.have-lidswitch: false
+VERBOSE | goldfish_events.have-tabletmode: false
+VERBOSE | goldfish_events.have-touch: false
+VERBOSE | goldfish_events.have-multitouch: false
+VERBOSE | Adding boot property: 'net.wifi_mac_prefix' = '17536'
+WARNING | Requested adb port (17537) is outside the recommended range [5555,5586]. ADB may not function properly for the emulator. See -help-port for details.
+VERBOSE | Not using any http proxy
+VERBOSE | Adding boot property: 'qemu.timezone' = 'Europe/Lisbon'
+VERBOSE | android_hw_fingerprint_init: fingerprint qemud listen service initialized
+VERBOSE | emulator_window_fb_rotate
+VERBOSE | config multidisplay with config.ini 0x0 0x0 0x0
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Found: 3 adb executables
+VERBOSE | Adb: /Users/marius/Library/Android/sdk/platform-tools/adb
+VERBOSE | Adb: /Users/marius/Library/Android/sdk/platform-tools/adb
+VERBOSE | Adb: /Users/marius/Library/Android/sdk/platform-tools/adb
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Path:/Users/marius/Library/Android/sdk/platform-tools/adb protocol version: 41
+VERBOSE | Window was not fully visible: monitor=[0,0,3440,1440] window=[1807,295,648,1152]
+VERBOSE | Window repositioned to [1000,0]
+VERBOSE | emulator window was out of view and was recentered
+VERBOSE | INFO: ignore sdcard for arm at api level >= 30
+INFO    | Your emulator is out of date, please update by launching Android Studio:
+ - Start Android Studio
+ - Select menu "Tools > Android > SDK Manager"
+ - Click "SDK Tools" tab
+ - Check "Android Emulator" checkbox
+ - Click "OK"
+
+VERBOSE | Adding boot property: 'ro.opengles.version' = '196608'
+VERBOSE | Adding boot property: 'qemu.sf.fake_camera' = 'front'
+VERBOSE | Adding boot property: 'dalvik.vm.heapsize' = '576m'
+VERBOSE | Adding boot property: 'qemu.hw.mainkeys' = '0'
+VERBOSE | Adding boot property: 'qemu.sf.lcd_density' = '560'
+VERBOSE | Adding boot property: 'net.wifi_mac_prefix' = '5554'
+VERBOSE | Adding boot property: 'qemu.timezone' = 'Europe/Lisbon'
+VERBOSE | Registering pipe service multidisplay
+VERBOSE | MultiDisplayPipe created 0x6000012ba220
+VERBOSE | _hwFingerprint_connect: connect finger print listen is called
+glTexImage2D: got err pre :( 0x506 internal 0x8058 format 0x1908 type 0x1401
+VERBOSE | Unexpected ether type. Dump frame: Data (Data)
+    :    
+glTexImage2D: got err pre :( 0x506 internal 0x8058 format 0x1908 type 0x1401
+glTexImage2D: got err pre :( 0x506 internal 0x8058 format 0x1908 type 0x1401
+glTexImage2D: got err pre :( 0x506 internal 0x8058 format 0x1908 type 0x1401
+VERBOSE | Unexpected ether type. Dump frame: Data (Data)
+    :    
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() ((null):0, (null))
+
+INFO    | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) ((null):0, (null))
+
+INFO    | Info: 
+
+GLImplementation: 
+Surface Type: OpenGL
+Surface Profile: CoreProfile
+Surface Version: 4.1
+Using Default SG Backend: no
+Using Software Dynamic GL: no
+Using Angle: no
+
+Init Parameters:
+  *  application-name Emulator 
+  *  browser-subprocess-path /Users/marius/Library/Android/sdk/emulator/lib64/qt/libexec/QtWebEngineProcess 
+  *  disable-features DnsOverHttpsUpgrade,ConsolidatedMovementXY,InstalledApp,BackgroundFetch,WebOTP,WebPayments,WebUSB,PictureInPicture 
+  *  disable-gpu  
+  *  disable-speech-api  
+  *  enable-features TracingServiceInProcess 
+  *  enable-threaded-compositing  
+ ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No TLS backend is available ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No TLS backend is available ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+INFO    | Warning: No functional TLS backend was found ((null):0, (null))
+
+glTexImage2D: got err pre :( 0x506 internal 0x8058 format 0x1908 type 0x1401
+VERBOSE | Unexpected ether type. Dump frame: Data (Data)
+    :    
