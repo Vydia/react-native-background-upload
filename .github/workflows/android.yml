@@ -52,11 +52,11 @@ jobs:
         export PATH=$PATH:$ANDROID_HOME/platform-tools
         $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
 
-    - name: Wait for emulator to be ready
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 15
-      run: |
-        sh ./wait-for-emulator.sh
+    # - name: Wait for emulator to be ready
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 15
+    #   run: |
+    #     sh ./wait-for-emulator.sh
 
     - name: Android test
       working-directory: example/RNBackgroundExample/
