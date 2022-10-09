@@ -143,6 +143,25 @@ const options = {
 
 Note the `field` property is required for multipart uploads.
 
+## Android only, multiple files upload in one shot via Multipart
+
+Send all the files in `files` param. In this case `path`, `field` & `type` will be ignored.  Example:
+
+```
+const options = {
+  url: 'https://myservice.com/path/to/post',
+  files: [
+    {
+      path: 'file://path/to/file%20on%20device.png',
+      field: 'uploaded_media'
+    }
+  ],
+  method: 'POST'
+}
+```
+
+Note that `type` will always be multipart when `files` is passed
+
 # API
 
 ## Top Level Functions
@@ -163,6 +182,7 @@ Returns a promise with the string ID of the upload.  Will reject if there is a c
 |---|---|---|---|---|---|
 |`url`|string|Required||URL to upload to|`https://myservice.com/path/to/post`|
 |`path`|string|Required||File path on device|`file://something/coming/from%20the%20device.png`|
+|`files`|array|Optional||Android only, to upload multiple files in one request|`[{path: 'file://path/to/file%20on%20device.png', field: 'uploaded_media'}, {path: '', field: ''}]`
 |`type`|'raw' or 'multipart'|Optional|`raw`|Primary upload type.||
 |`method`|string|Optional|`POST`|HTTP method||
 |`customUploadId`|string|Optional||`startUpload` returns a Promise that includes the upload ID, which can be used for future status checks.  By default, the upload ID is automatically generated.  This parameter allows a custom ID to use instead of the default.||
@@ -308,7 +328,9 @@ Does it support iOS camera roll assets?
 
 Does it support multiple file uploads?
 
-> Yes and No.  It supports multiple concurrent uploads, but only a single upload per request.  That should be fine for 90%+ of cases.
+> Android: Yes, both multiple concurrent uploads as well as multiple files in one request are supported.
+
+> ios: Yes and No.  It supports multiple concurrent uploads, but only a single upload per request.  That should be fine for 90%+ of cases.
 
 Why should I use this file uploader instead of others that I've Googled like [react-native-uploader](https://github.com/aroth/react-native-uploader)?
 

@@ -126,7 +126,24 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
    */
   @ReactMethod
   fun startUpload(options: ReadableMap, promise: Promise) {
-    for (key in arrayOf("url", "path")) {
+    val mandatoryParamsList: MutableList<String> = mutableListOf("url")
+    if (options.hasKey("files")) {
+      if (options.getType("files") != ReadableType.Array) {
+        promise.reject(java.lang.IllegalArgumentException("files must be an array."))
+        return
+      }
+      val files = options.getArray("files")
+      for (i in 0 until files!!.size()) {
+        val file = files.getMap(i)
+        if (!file.hasKey("path")) {
+          promise.reject(java.lang.IllegalArgumentException("Missing path field in files"))
+          return
+        }
+      }
+    } else {
+      mandatoryParamsList.add("path")
+    }
+    for (key in mandatoryParamsList) {
       if (!options.hasKey(key)) {
         promise.reject(java.lang.IllegalArgumentException("Missing '$key' field."))
         return
@@ -146,7 +163,10 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
     }
     configureUploadServiceHTTPStack(options, promise)
     var requestType: String? = "raw"
-    if (options.hasKey("type")) {
+    val files = options.getArray("files")
+    if (files != null) {
+      requestType = "multipart";
+    } else if (options.hasKey("type")) {
       requestType = options.getString("type")
       if (requestType == null) {
         promise.reject(java.lang.IllegalArgumentException("type must be string."))
@@ -186,7 +206,14 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
     val maxRetries = if (options.hasKey("maxRetries") && options.getType("maxRetries") == ReadableType.Number) options.getInt("maxRetries") else 2
     val customUploadId = if (options.hasKey("customUploadId") && options.getType("method") == ReadableType.String) options.getString("customUploadId") else null
     try {
-      val request = if (requestType == "raw") {
+      val request = if (files != null) {
+        var request = MultipartUploadRequest(this.reactApplicationContext, url!!)
+        for (i in 0 until files.size()) {
+          val file = files.getMap(i)
+          request = request.addFileToUpload(file.getString("path")!!, file.getString("field") ?: "file${i}")
+        }
+        request
+      } else if (requestType == "raw") {
         BinaryUploadRequest(this.reactApplicationContext, url!!)
                 .setFileToUpload(filePath!!)
       } else {
