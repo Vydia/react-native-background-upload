@@ -45,12 +45,12 @@ jobs:
       run:
         yarn e2e/deploy/android
 
-    - name: Start Emulator
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 5
-      run: |
-        export PATH=$PATH:$ANDROID_HOME/platform-tools
-        $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
+    # - name: Start Emulator
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 5
+    #   run: |
+    #     export PATH=$PATH:$ANDROID_HOME/platform-tools
+    #     $ANDROID_HOME/emulator/emulator @emu -noaudio -no-boot-anim -netdelay none -accel on -no-snapshot &
 
     # - name: Wait for emulator to be ready
     #   working-directory: example/RNBackgroundExample/
@@ -58,18 +58,18 @@ jobs:
     #   run: |
     #     sh ./wait-for-emulator.sh
 
-    - name: Android test
-      working-directory: example/RNBackgroundExample/
-      timeout-minutes: 8
-      run: |
-        mkdir -p ./artifacts
-        node e2e/start-server.js &
-        adb reverse tcp:8080 tcp:8080
-        yarn e2e/test/android --record-videos failing
+    # - name: Android test
+    #   working-directory: example/RNBackgroundExample/
+    #   timeout-minutes: 8
+    #   run: |
+    #     mkdir -p ./artifacts
+    #     node e2e/start-server.js &
+    #     adb reverse tcp:8080 tcp:8080
+    #     yarn e2e/test/android --record-videos failing
 
-    - uses: actions/upload-artifact@master
-      name: Provide videos of failed E2E tests
-      if: failure()
-      with:
-        name: android-failing-e2e-videos
-        path: example/RNBackgroundExample/artifacts
+    # - uses: actions/upload-artifact@master
+    #   name: Provide videos of failed E2E tests
+    #   if: failure()
+    #   with:
+    #     name: android-failing-e2e-videos
+    #     path: example/RNBackgroundExample/artifacts
