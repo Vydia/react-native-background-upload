@@ -23,8 +23,9 @@ jobs:
 
     - name: Install node_modules
       working-directory: example/RNBackgroundExample/
-      run:
+      run: |
         yarn install --frozen-lockfile
+        npx pod-install ios
 
     - name: Deploy
       working-directory: example/RNBackgroundExample/
