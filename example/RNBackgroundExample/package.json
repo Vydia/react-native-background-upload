@@ -78,16 +78,16 @@
         "type": "ios.simulator",
         "device": {
           "type": "iPhone 11"
-        },
-        "utilBinaryPaths": [
-          "./cache/test-butler-app.apk"
-        ]
+        }
       },
       "emulator": {
         "type": "android.emulator",
         "device": {
           "avdName": "emu"
-        }
+        },
+        "utilBinaryPaths": [
+          "./cache/test-butler-app.apk"
+        ]
       }
     },
     "configurations": {
