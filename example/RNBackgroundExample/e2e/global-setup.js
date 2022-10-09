@@ -10,7 +10,7 @@ async function globalSetup() {
 
 function downloadTestButlerAPKIfNeeded(config) {
   if (isAndroidConfig(config)) {
-    // downloadTestButlerAPK();
+    downloadTestButlerAPK();
   }
 }
 

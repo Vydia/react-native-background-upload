@@ -267,6 +267,10 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    androidTestImplementation('com.wix:detox:+')
+    androidTestImplementation 'com.linkedin.testbutler:test-butler-library:2.2.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
