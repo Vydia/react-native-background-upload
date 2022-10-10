@@ -306,6 +306,7 @@ didCompleteWithError:(NSError *)error {
     if (response != nil)
     {
         [data setObject:[NSNumber numberWithInteger:response.statusCode] forKey:@"responseCode"];
+        [data setObject:response.allHeaderFields forKey:@"responseHeaders"];
     }
     //Add data that was collected earlier by the didReceiveData method
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
