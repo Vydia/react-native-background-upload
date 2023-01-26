@@ -1,16 +1,11 @@
 buildscript {
-    // Simple helper that allows the root project to override versions declared by this library.
-    ext.safeExtGet = { prop, fallback ->
-        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-    }
-
     ext {
+        kotlinVersion = '1.8.0'
         buildToolsVersion = '29.0.2'
         compileSdkVersion = 29
         targetSdkVersion = 29
         minSdkVersion = 18
     }
-    ext.kotlinVersion = safeExtGet('kotlinVersion', '1.6.0')
     ext.detoxKotlinVersion = ext.kotlinVersion
 
     repositories {
@@ -30,6 +25,10 @@ apply plugin: 'kotlin-android-extensions'
 def DEFAULT_COMPILE_SDK_VERSION = 28
 def DEFAULT_BUILD_TOOLS_VERSION = "28.0.3"
 def DEFAULT_TARGET_SDK_VERSION = 28
+
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
 android {
     compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
