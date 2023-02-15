@@ -1,3 +1,4 @@
+
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <React/RCTEventEmitter.h>
@@ -7,6 +8,7 @@
 @interface VydiaRNFileUploader : RCTEventEmitter <RCTBridgeModule, NSURLSessionTaskDelegate>
 {
   NSMutableDictionary *_responsesData;
+  NSMutableDictionary<NSString*, NSURL*> *_filesMap;
 }
 @end
 
@@ -29,6 +31,7 @@ NSURLSession *_urlSession = nil;
   if (self) {
     staticEventEmitter = self;
     _responsesData = [NSMutableDictionary dictionary];
+    _filesMap = @{}.mutableCopy;
   }
   return self;
 }
@@ -125,6 +128,58 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     }];
 }
 
+- (NSURL *)saveMultipartUploadDataToDisk:(NSString *)uploadId data:(NSData *)data {
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+  NSString *cacheDirectory = [paths objectAtIndex:0];
+  NSString *path = [NSString stringWithFormat:@"%@.multipart", uploadId];
+
+  NSString *uploaderDirectory = [cacheDirectory stringByAppendingPathComponent:@"/uploader"];
+
+  NSString *filePath = [uploaderDirectory stringByAppendingPathComponent:path];
+  NSLog(@"Path to save: %@", filePath);
+
+  NSFileManager *manager = [NSFileManager defaultManager];
+  NSError *error;
+
+  //Remove file if needed
+  if ([manager fileExistsAtPath:filePath]) {
+    [manager removeItemAtPath:filePath error:&error];
+    if (error) {
+      NSLog(@"Cannot delete file at path: %@. Error: %@", filePath, error.localizedDescription);
+      return nil;
+    }
+  }
+  //Create directory if needed
+  if (![manager fileExistsAtPath:uploaderDirectory] && [manager createDirectoryAtPath:uploaderDirectory withIntermediateDirectories:NO attributes:nil error:&error]) {
+    NSLog(@"Cannot save data at path %@. Error: %@", filePath, error.localizedDescription);
+    return nil;
+  }
+  //Save NSData to file
+  if (![data writeToFile:filePath options:NSDataWritingAtomic error:&error]) {
+    NSLog(@"Cannot save data at path %@. Error: %@", filePath, error.localizedDescription);
+    return nil;
+  }
+
+  return [NSURL fileURLWithPath:filePath];
+}
+
+- (void)removeFilesForUpload:(NSString *)uploadId {
+  NSFileManager *manager = [NSFileManager defaultManager];
+  NSError *error;
+
+  NSURL *fileUrl = _filesMap[uploadId];
+
+  if (!fileUrl) {
+    return;
+  }
+
+  if (![manager removeItemAtURL:fileUrl error:&error]) {
+    NSLog(@"Cannot delete file at path %@. Error: %@", fileUrl.absoluteString, error.localizedDescription);
+  }
+
+  [_filesMap removeObjectForKey:uploadId];
+}
+
 /*
  * Starts a file upload.
  * Options are passed in as the first argument as a js hash:
@@ -189,16 +244,25 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         }
 
-        NSURLSessionDataTask *uploadTask;
+        NSURLSessionUploadTask *uploadTask;
+        NSString *taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
 
         if ([uploadType isEqualToString:@"multipart"]) {
             NSString *uuidStr = [[NSUUID UUID] UUIDString];
             [request setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@", uuidStr] forHTTPHeaderField:@"Content-Type"];
 
             NSData *httpBody = [self createBodyWithBoundary:uuidStr path:fileURI parameters: parameters fieldName:fieldName];
-            [request setHTTPBody: httpBody];
+            [request setValue:[NSString stringWithFormat:@"%zd", httpBody.length] forHTTPHeaderField:@"Content-Length"];
 
-            uploadTask = [[self urlSession: appGroup] uploadTaskWithStreamedRequest:request];
+            NSURL *fileUrlOnDisk = [self saveMultipartUploadDataToDisk:taskDescription data:httpBody];
+            if (fileUrlOnDisk) {
+              _filesMap[taskDescription] = fileUrlOnDisk;
+              uploadTask = [[self urlSession: appGroup] uploadTaskWithRequest:request fromFile:fileUrlOnDisk];
+            } else {
+              NSLog(@"Cannot save multipart data file to disk, Fallback to old method wtih stream");
+              [request setHTTPBodyStream: [NSInputStream inputStreamWithData:httpBody]];
+              uploadTask = [[self urlSession: appGroup] uploadTaskWithStreamedRequest:request];
+            }
         } else {
             if (parameters.count > 0) {
                 reject(@"RN Uploader", @"Parameters supported only in multipart type", nil);
@@ -208,7 +272,7 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
             uploadTask = [[self urlSession: appGroup] uploadTaskWithRequest:request fromFile:[NSURL URLWithString: fileURI]];
         }
 
-        uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
+        uploadTask.taskDescription = taskDescription;
 
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
@@ -224,11 +288,16 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
  * Event "cancelled" will be fired when upload is cancelled.
  */
 RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+  __weak typeof(self) weakSelf = self;
+
     [_urlSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+      __strong typeof(self) strongSelf = weakSelf;
+
         for (NSURLSessionTask *uploadTask in uploadTasks) {
             if ([uploadTask.taskDescription isEqualToString:cancelUploadId]){
                 // == checks if references are equal, while isEqualToString checks the string value
                 [uploadTask cancel];
+                [strongSelf removeFilesForUpload:cancelUploadId];
             }
         }
     }];
@@ -295,11 +364,14 @@ didCompleteWithError:(NSError *)error {
     NSMutableData *responseData = _responsesData[@(task.taskIdentifier)];
     if (responseData) {
         [_responsesData removeObjectForKey:@(task.taskIdentifier)];
+
         NSString *response = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         [data setObject:response forKey:@"responseBody"];
     } else {
         [data setObject:[NSNull null] forKey:@"responseBody"];
     }
+
+    [self removeFilesForUpload:task.taskDescription];
 
     if (error == nil)
     {
@@ -341,6 +413,22 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     } else {
         [responseData appendData:data];
     }
+}
+
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+ needNewBodyStream:(void (^)(NSInputStream *bodyStream))completionHandler {
+
+    NSInputStream *inputStream = task.originalRequest.HTTPBodyStream;
+
+    if (completionHandler) {
+        completionHandler(inputStream);
+    }
+}
+
+
+-(void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+
 }
 
 @end
