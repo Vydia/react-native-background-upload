@@ -1,4 +1,3 @@
-
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <React/RCTEventEmitter.h>
@@ -440,11 +439,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     if (completionHandler) {
         completionHandler(inputStream);
     }
-}
-
-
--(void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-
 }
 
 @end
