@@ -3,6 +3,8 @@
  * Handles HTTP background file uploads from an iOS or Android device.
  */
 import { NativeModules, DeviceEventEmitter } from 'react-native';
+import { isAndroid } from './consts';
+import { UploadLog } from 'react-native-background-upload';
 
 export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled';
 
@@ -117,6 +119,20 @@ export const addListener = (
       listener(data);
     }
   });
+};
+
+export const getUploadLogs = (): Promise<UploadLog[]> => {
+  if (isAndroid) {
+    return [];
+  }
+  return NativeModule.getUploadLogs();
+};
+
+export const clearUploadLogs = (): Promise<boolean> => {
+  if (isAndroid) {
+    return true;
+  }
+  return NativeModule.clearUploadLogs();
 };
 
 export default { startUpload, cancelUpload, addListener, getFileInfo };

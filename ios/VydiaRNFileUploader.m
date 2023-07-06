@@ -57,7 +57,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
     @try {
         // Escape non latin characters in filename
         NSString *escapedPath = [path stringByAddingPercentEncodingWithAllowedCharacters: NSCharacterSet.URLQueryAllowedCharacterSet];
-       
+
         NSURL *fileUri = [NSURL URLWithString:escapedPath];
         NSString *pathWithoutProtocol = [fileUri path];
         NSString *name = [fileUri lastPathComponent];
@@ -91,11 +91,11 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path resolve:(RCTPromiseResolveBlock)r
 - (NSString *)guessMIMETypeFromFileName: (NSString *)fileName {
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
-    
+
     if (UTI) {
         CFRelease(UTI);
     }
-  
+
     if (!MIMEType) {
         return @"application/octet-stream";
     }
@@ -218,6 +218,28 @@ RCT_EXPORT_METHOD(startUpload:(NSDictionary *)options resolve:(RCTPromiseResolve
 
         uploadTask.taskDescription = customUploadId ? customUploadId : [NSString stringWithFormat:@"%i", thisUploadId];
 
+        // Store uploadId and status in NSUserDefaults
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+        // Create a new upload info dictionary
+        NSDictionary *newUploadInfo = @{
+            @"uploadId": [NSNumber numberWithInt:thisUploadId],
+            @"status": @"Started"
+        };
+
+        // Get the existing uploads info array
+        NSMutableArray *uploadsInfo = [[defaults objectForKey:@"uploadsInfo"] mutableCopy];
+        if (!uploadsInfo) {
+            uploadsInfo = [NSMutableArray new];
+        }
+
+        // Add the new upload info to the array
+        [uploadsInfo addObject:newUploadInfo];
+
+        // Store the updated array back into defaults
+        [defaults setObject:uploadsInfo forKey:@"uploadsInfo"];
+        [defaults synchronize];
+
         [uploadTask resume];
         resolve(uploadTask.taskDescription);
     }
@@ -255,7 +277,7 @@ RCT_EXPORT_METHOD(cancelUpload: (NSString *)cancelUploadId resolve:(RCTPromiseRe
 
     // resolve path
     NSURL *fileUri = [NSURL URLWithString: escapedPath];
-    
+
     NSError* error = nil;
     NSData *data = [NSData dataWithContentsOfURL:fileUri options:NSDataReadingMappedAlways error: &error];
 
@@ -369,5 +391,31 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         completionHandler(inputStream);
     }
 }
+
+
+RCT_EXPORT_METHOD(getUploadLogs:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *uploadsInfo = [defaults objectForKey:@"uploadsInfo"];
+
+    if (uploadsInfo) {
+        resolve(uploadsInfo);
+    } else {
+        reject(@"no_uploads", @"There were no uploads found", nil);
+    }
+}
+
+RCT_EXPORT_METHOD(clearUploadLogs:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+    @try {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults removeObjectForKey:@"uploadsInfo"];
+        [defaults synchronize];
+        resolve(@(YES));
+    } @catch (NSError *error) {
+        reject(@"clear_error", @"Failed to clear uploads information", nil);
+    }
+}
+
 
 @end

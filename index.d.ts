@@ -26,6 +26,12 @@ declare module "react-native-background-upload" {
         mimeType?: string
     }
 
+    export type UploadLog = {
+        uploadId: string
+        status: string
+        progress?: string
+    }
+
 
     export type NotificationOptions = {
         /**
@@ -119,6 +125,8 @@ declare module "react-native-background-upload" {
         static addListener(event: 'cancelled', uploadId: uploadId | null, callback: (data: EventData) => void): EventSubscription
         static getFileInfo(path: string): Promise<BgUploadFileInfo>
         static cancelUpload(uploadId: uploadId): Promise<boolean>
+        static getUploadLogs() : Promise<UploadLog[]>
+        static clearUploadLogs() : Promise<boolean>
     }
 
 }
