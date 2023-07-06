@@ -18,7 +18,7 @@ declare module "react-native-background-upload" {
         responseCode: number
         responseBody: string
     }
-    export type FileInfo = {
+    export type BgUploadFileInfo = {
         name: string
         exists: boolean
         size?: number
@@ -117,7 +117,7 @@ declare module "react-native-background-upload" {
         static addListener(event: 'error', uploadId: uploadId | null, callback: (data: ErrorData) => void): EventSubscription
         static addListener(event: 'completed', uploadId: uploadId | null, callback: (data: CompletedData) => void): EventSubscription
         static addListener(event: 'cancelled', uploadId: uploadId | null, callback: (data: EventData) => void): EventSubscription
-        static getFileInfo(path: string): Promise<FileInfo>
+        static getFileInfo(path: string): Promise<BgUploadFileInfo>
         static cancelUpload(uploadId: uploadId): Promise<boolean>
     }
 
