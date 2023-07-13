@@ -1,6 +1,10 @@
 buildscript {
+    ext.safeExtGet = { prop, fallback ->
+        rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+
     ext {
-        kotlinVersion = '1.6.0'
+        ext.kotlinVersion = safeExtGet('kotlinVersion', '1.6.0')
         buildToolsVersion = '29.0.2'
         compileSdkVersion = 29
         targetSdkVersion = 29
