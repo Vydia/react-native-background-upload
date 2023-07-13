@@ -1,8 +1,8 @@
-// @flow
 /**
  * Handles HTTP background file uploads from an iOS or Android device.
  */
-import {Platform, NativeModules, NativeEventEmitter} from 'react-native';
+import { Platform, NativeModules, NativeEventEmitter } from 'react-native';
+import type { EventSubscription } from 'react-native';
 
 export type UploadEvent =
   | 'progress'
@@ -12,23 +12,23 @@ export type UploadEvent =
   | 'bgExpired';
 
 export type NotificationArgs = {
-  enabled: boolean,
+  enabled: boolean;
 };
 
 export type StartUploadArgs = {
-  url: string,
+  url: string;
   // Optional, if not given, must be multipart, can be used to upload form data
-  path?: string,
-  method?: 'PUT' | 'POST',
+  path?: string;
+  method?: 'PUT' | 'POST';
   // Optional, because raw is default
-  type?: 'raw' | 'multipart',
+  type?: 'raw' | 'multipart';
   // This option is needed for multipart type
-  field?: string,
-  customUploadId?: string,
+  field?: string;
+  customUploadId?: string;
   // parameters are supported only in multipart type
-  parameters?: { [string]: string },
-  headers?: Object,
-  notification?: NotificationArgs,
+  parameters?: Record<string, string>;
+  headers?: Object;
+  notification?: NotificationArgs;
 };
 
 const NativeModule =
@@ -61,7 +61,7 @@ Returns an object:
 The promise should never be rejected.
 */
 export const getFileInfo = (path: string): Promise<Object> => {
-  return NativeModule.getFileInfo(path).then((data) => {
+  return NativeModule.getFileInfo(path).then((data: any) => {
     if (data.size) {
       // size comes back as a string on android so we convert it here.  if it's already a number this won't hurt anything
       data.size = +data.size;
@@ -122,8 +122,8 @@ export const addListener = (
   eventType: UploadEvent,
   uploadId: string,
   listener: Function,
-) => {
-  return eventEmitter.addListener(eventPrefix + eventType, (data) => {
+): EventSubscription => {
+  return eventEmitter.addListener(eventPrefix + eventType, data => {
     if (!uploadId || !data || !data.id || data.id === uploadId) {
       listener(data);
     }
@@ -155,7 +155,7 @@ export const beginBackgroundTask = (): Promise<number> => {
   if (Platform.OS === 'ios') {
     return NativeModule.beginBackgroundTask();
   }
-  return Promise.resolve(null); // TODO: dummy for android
+  return Promise.resolve(-1); // TODO: dummy for android
 };
 
 // marks the end of background task using the id returned by begin

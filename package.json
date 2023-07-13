@@ -3,11 +3,14 @@
   "version": "7.0.0",
   "description": "Cross platform http post file uploader with android and iOS background support",
   "main": "src/index.js",
+  "types": "index.d.ts",
   "scripts": {
-    "lint": "yarn lint:ci --fix",
+    "lint": "npm run lint:ci --fix",
     "lint:ci": "eslint src example",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "build": "tsc",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
@@ -42,7 +45,8 @@
     "eslint": "^6.8.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
-    "semantic-release": "^15.13.31"
+    "semantic-release": "^15.13.31",
+    "typescript": "^5.1.6"
   },
   "release": {
     "plugins": [
