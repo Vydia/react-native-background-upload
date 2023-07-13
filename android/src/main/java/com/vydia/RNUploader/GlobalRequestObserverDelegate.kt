@@ -21,7 +21,7 @@ class GlobalRequestObserverDelegate(reactContext: ReactApplicationContext) : Req
   override fun onCompletedWhileNotObserving() {
   }
 
-  override fun onError(context: Context, uploadInfo: UploadInfo, exception: Throwable) {
+  override fun onError(context: Context, uploadInfo: UploadInfo, exception: Throwable?) {
     val params = Arguments.createMap()
     params.putString("id", uploadInfo.uploadId)
 
