@@ -2,9 +2,14 @@
 /**
  * Handles HTTP background file uploads from an iOS or Android device.
  */
-import { NativeModules, DeviceEventEmitter } from 'react-native';
+import {Platform, NativeModules, NativeEventEmitter} from 'react-native';
 
-export type UploadEvent = 'progress' | 'error' | 'completed' | 'cancelled';
+export type UploadEvent =
+  | 'progress'
+  | 'error'
+  | 'completed'
+  | 'cancelled'
+  | 'bgExpired';
 
 export type NotificationArgs = {
   enabled: boolean,
@@ -12,7 +17,8 @@ export type NotificationArgs = {
 
 export type StartUploadArgs = {
   url: string,
-  path: string,
+  // Optional, if not given, must be multipart, can be used to upload form data
+  path?: string,
   method?: 'PUT' | 'POST',
   // Optional, because raw is default
   type?: 'raw' | 'multipart',
@@ -29,13 +35,18 @@ const NativeModule =
   NativeModules.VydiaRNFileUploader || NativeModules.RNFileUploader; // iOS is VydiaRNFileUploader and Android is RNFileUploader
 const eventPrefix = 'RNFileUploader-';
 
-// for IOS, register event listeners or else they don't fire on DeviceEventEmitter
-if (NativeModules.VydiaRNFileUploader) {
-  NativeModule.addListener(eventPrefix + 'progress');
-  NativeModule.addListener(eventPrefix + 'error');
-  NativeModule.addListener(eventPrefix + 'cancelled');
-  NativeModule.addListener(eventPrefix + 'completed');
-}
+const eventEmitter = new NativeEventEmitter(NativeModule);
+
+// add event listeners so they always fire on the native side
+// no longer needed.
+// if (Platform.OS === 'ios') {
+//   const identity = () => {};
+//   eventEmitter.addListener(eventPrefix + 'progress', identity);
+//   eventEmitter.addListener(eventPrefix + 'error', identity);
+//   eventEmitter.addListener(eventPrefix + 'cancelled', identity);
+//   eventEmitter.addListener(eventPrefix + 'completed', identity);
+//   eventEmitter.addListener(eventPrefix + 'bgExpired', identity);
+// }
 
 /*
 Gets file information for the path specified.
@@ -50,7 +61,7 @@ Returns an object:
 The promise should never be rejected.
 */
 export const getFileInfo = (path: string): Promise<Object> => {
-  return NativeModule.getFileInfo(path).then(data => {
+  return NativeModule.getFileInfo(path).then((data) => {
     if (data.size) {
       // size comes back as a string on android so we convert it here.  if it's already a number this won't hurt anything
       data.size = +data.size;
@@ -64,10 +75,10 @@ Starts uploading a file to an HTTP endpoint.
 Options object:
 {
   url: string.  url to post to.
-  path: string.  path to the file on the device
+  path: string.  path to the file on the device none for no file
   headers: hash of name/value header pairs
   method: HTTP method to use.  Default is "POST"
-  notification: hash for customizing tray notifiaction
+  notification: hash for customizing tray notification
     enabled: boolean to enable/disabled notifications, true by default.
 }
 
@@ -112,11 +123,56 @@ export const addListener = (
   uploadId: string,
   listener: Function,
 ) => {
-  return DeviceEventEmitter.addListener(eventPrefix + eventType, data => {
+  return eventEmitter.addListener(eventPrefix + eventType, (data) => {
     if (!uploadId || !data || !data.id || data.id === uploadId) {
       listener(data);
     }
   });
 };
 
-export default { startUpload, cancelUpload, addListener, getFileInfo };
+// call this to let the OS it can suspend again
+// it will be called after a short timeout if it isn't called at all
+export const canSuspendIfBackground = () => {
+  if (Platform.OS === 'ios') {
+    NativeModule.canSuspendIfBackground();
+  }
+};
+
+// returns remaining background time in seconds
+export const getRemainingBgTime = (): Promise<number> => {
+  if (Platform.OS === 'ios') {
+    return NativeModule.getRemainingBgTime();
+  }
+  return Promise.resolve(10 * 60 * 24); // dummy for android, large number
+};
+
+// marks the beginning of a background task and returns its ID
+// in order to request extra background time
+// do not call more than once without calling endBackgroundTask
+// useful if we need to do more background processing in addition to network requests
+// canSuspendIfBackground should still be called in case we run out of time.
+export const beginBackgroundTask = (): Promise<number> => {
+  if (Platform.OS === 'ios') {
+    return NativeModule.beginBackgroundTask();
+  }
+  return Promise.resolve(null); // TODO: dummy for android
+};
+
+// marks the end of background task using the id returned by begin
+// failing to call this might end up on app termination
+export const endBackgroundTask = (id: number) => {
+  if (Platform.OS === 'ios') {
+    NativeModule.endBackgroundTask(id);
+  }
+};
+
+export default {
+  startUpload,
+  cancelUpload,
+  addListener,
+  getFileInfo,
+  canSuspendIfBackground,
+  getRemainingBgTime,
+  beginBackgroundTask,
+  endBackgroundTask,
+};
