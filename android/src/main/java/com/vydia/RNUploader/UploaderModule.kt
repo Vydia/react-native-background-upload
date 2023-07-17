@@ -36,7 +36,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
   Returns an object such as: {extension: "mp4", size: "3804316", exists: true, mimeType: "video/mp4", name: "20161116_074726.mp4"}
    */
   @ReactMethod
-  fun getFileInfo(path: String, promise: Promise) {
+  fun getFileInfo(path: String?, promise: Promise) {
     try {
       val params = Arguments.createMap()
       val fileInfo = File(path)
@@ -48,7 +48,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
         params.putString("size", fileInfo.length().toString()) //use string form of long because there is no putLong and converting to int results in a max size of 17.2 gb, which could happen.  Javascript will need to convert it to a number
         val extension = MimeTypeMap.getFileExtensionFromUrl(path)
         params.putString("extension", extension)
-        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.lowercase())
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase())
         params.putString("mimeType", mimeType)
       }
       promise.resolve(params)
@@ -316,16 +316,6 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       val manager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       manager.createNotificationChannel(channel)
     }
-  }
-
-  @ReactMethod
-  fun addListener(type: String?) {
-      // Keep: Required for RN built in Event Emitter Calls.
-  }
-
-  @ReactMethod
-  fun removeListeners(type: Int?) {
-      // Keep: Required for RN built in Event Emitter Calls.
   }
 
   override fun onHostResume() {
