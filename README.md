@@ -245,6 +245,8 @@ Event Data
 |---|---|---|---|
 |`id`|string|Required|The ID of the upload.|
 |`error`|string|Required|Error message.|
+|`responseCode`|string|Optional|HTTP status code received (Android)|
+|`responseBody`|string|Optional|HTTP response body (Android)|
 
 ### completed
 
