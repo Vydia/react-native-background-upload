@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.webkit.CookieManager;
 import android.util.Log
 import android.webkit.MimeTypeMap
 import com.facebook.react.BuildConfig
@@ -30,6 +31,7 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
   private val TAG = "UploaderBridge"
   private var notificationChannelID = "fn_channel_file_upload"
   private var isGlobalRequestObserver = false
+  private val cookieManager = CookieManager.getInstance()
 
   override fun getName(): String {
     return "RNFileUploader"
@@ -113,15 +115,32 @@ class UploaderModule(val reactContext: ReactApplicationContext) : ReactContextBa
       }
       readTimeout = options.getInt("readTimeout")
     }
-    httpStack = OkHttpStack(OkHttpClient().newBuilder()
-            .followRedirects(followRedirects)
-            .followSslRedirects(followSslRedirects)
-            .retryOnConnectionFailure(retryOnConnectionFailure)
-            .connectTimeout(connectTimeout.toLong(), TimeUnit.SECONDS)
-            .writeTimeout(writeTimeout.toLong(), TimeUnit.SECONDS)
-            .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
-            .cache(null)
-            .build())
+    if (options.hasKey("isNativeCookie")){
+      if (options.getType("isNativeCookie") != ReadableType.Boolean) {
+        promise.reject(IllegalArgumentException("isNativeCookie must be a boolean."))
+        return
+      }
+      httpStack = OkHttpStack(OkHttpClient().newBuilder()
+        .followRedirects(followRedirects)
+        .followSslRedirects(followSslRedirects)
+        .retryOnConnectionFailure(retryOnConnectionFailure)
+        .connectTimeout(connectTimeout.toLong(), TimeUnit.SECONDS)
+        .writeTimeout(writeTimeout.toLong(), TimeUnit.SECONDS)
+        .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
+        .cookieJar(WebkitCookieManager(cookieManager))
+        .cache(null)
+        .build())
+    }else{
+      httpStack = OkHttpStack(OkHttpClient().newBuilder()
+        .followRedirects(followRedirects)
+        .followSslRedirects(followSslRedirects)
+        .retryOnConnectionFailure(retryOnConnectionFailure)
+        .connectTimeout(connectTimeout.toLong(), TimeUnit.SECONDS)
+        .writeTimeout(writeTimeout.toLong(), TimeUnit.SECONDS)
+        .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
+        .cache(null)
+        .build())
+    }
   }
 
   /*
